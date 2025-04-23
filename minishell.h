@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/22 14:17:18 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/04/23 09:46:49 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 #include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -44,5 +45,8 @@ void free_tokens(t_token *head);
 
 // Read line
 char	*ft_readline(void);
+void	builtin(char *argv[]);
+char **token_to_argv(t_token *token);
+void init_signal(void);
 
 #endif

@@ -6,11 +6,12 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:58:18 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/22 14:15:48 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/04/23 09:55:06 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <readline/readline.h>
 
 static char	*ft_strdup(char *s)
 {
@@ -73,7 +74,7 @@ void add_token(t_token **head, char *value, e_token_type type)
 	t_token *tmp;
 
 	new = new_token(value, type);
-	if(!head)
+	if(!*head)
 		*head = new;
 	else
 	{
@@ -86,16 +87,43 @@ void add_token(t_token **head, char *value, e_token_type type)
 
 void free_tokens(t_token *head)
 {
-    t_token *tmp;
+	t_token *tmp;
 
-    while (head)
-    {
-        tmp = head->next;
-        if (head->value)
-            free(head->value);
-        free(head);
-        head = tmp;
-    }
+	while (head)
+	{
+		tmp = head->next;
+		if (head->value)
+			free(head->value);
+		free(head);
+		head = tmp;
+	}
 }
 
-//ft_strndup
+char **token_to_argv(t_token *token)
+{
+	int count;
+	t_token *tmp;
+	char **argv;
+	int i;
+
+	i = 0;
+	tmp = token;
+	count = 0;
+	while(tmp)
+	{
+		count++;
+		tmp = tmp->next;
+	}
+	argv = malloc(sizeof(char *) * count + 1);
+	if(!argv)
+		return (NULL);
+	tmp = token;
+	while(i < count)
+	{
+		argv[i] = ft_strdup(tmp->value);
+		i++;
+		tmp = tmp->next;
+	}
+	argv[count] = NULL;
+	return (argv);
+}

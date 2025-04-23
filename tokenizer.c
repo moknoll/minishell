@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/22 14:18:09 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/04/23 07:47:57 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,17 @@ static int is_operator(char c)
 
 static void handle_operator(char *input, int *i, t_token **tokens)
 {
-	if (input[*i] == '|')
+	if (input[*i] == '<' && input[*i + 1] == '<')
+	{
+		add_token(tokens, "<<", HEREDOC);
+		*i += 2;
+	}
+	else if (input[*i] == '>' && input[*i + 1] == '>')
+	{
+		add_token(tokens, ">>", REDIRECT_APPEND);
+		*i += 2;
+	}
+	else if (input[*i] == '|')
 	{
 		add_token(tokens, "|", PIPE);
 		(*i)++;
@@ -43,16 +53,6 @@ static void handle_operator(char *input, int *i, t_token **tokens)
 		add_token(tokens, ">", REDIRECT_OUT);
 		(*i)++;
 	}
-	else if(input[*i] == '<' && input[*i+1] == '<')
-	{
-		add_token(tokens, "<<" ,HEREDOC);
-		(*i) += 2;
-	}
-	else if(input[*i] == '>' && input[*i+1] == '>')
-	{
-		add_token(tokens, ">>", REDIRECT_APPEND);
-		(*i) += 2;
-	}
 }
 
 static void handle_word(char *input, int *i, t_token **tokens)
@@ -61,7 +61,7 @@ static void handle_word(char *input, int *i, t_token **tokens)
 	char *word;
 
 	start = *i;
-	while(input[*i] && !ft_isspace(input[*i] && !is_operator(input[*i])))
+	while (input[*i] && !ft_isspace(input[*i]) && !is_operator(input[*i]))
 		(*i)++;
 	word = ft_strndup(&input[start], *i - start);
 	add_token(tokens, word, WORD);
