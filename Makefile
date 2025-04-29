@@ -6,7 +6,7 @@ CFLAGS  = -Wall -Wextra -Werror
 READLINE_FLAGS = -lreadline -lncurses
 
 # Sources and executable
-SRCS    = main.c ft_readline.c token_utils.c tokenizer.c builtin.c handle_signal.c
+SRCS    = main.c ft_readline.c token_utils.c tokenizer.c builtin.c quotations.c expansion_utils.c expand_token.c
 OBJS    = $(SRCS:.c=.o)
 NAME    = minishell
 

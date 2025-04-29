@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/23 09:32:44 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/04/23 11:20:36 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,8 @@ static void ft_pwd(char **argv)
 
 void builtin(char **argv)
 {
-	if (!argv[0] ||!argv)
+	if (!argv[0] || argv[0][0] == '\0')
 		return;
-
 	if (ft_strcmp(argv[0], "exit") == 0)
 		ft_exit(argv);
 	else if (ft_strcmp(argv[0], "cd") == 0)

@@ -6,17 +6,33 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/23 09:46:22 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/04/29 10:25:19 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_tokens(t_token *list) {
-    while (list) {
-        printf("Token: %-10s Type: %d\n", list->value, list->type);
-        list = list->next;
-    }
+const char *quote_type_str(e_quote_type qt)
+{
+	if (qt == NO_QUOTE)
+		return "NO_QUOTE";
+	if (qt == SINGLE_QUOTE)
+		return "SINGLE_QUOTE";
+	if (qt == DOUBLE_QUOTE)
+		return "DOUBLE_QUOTE";
+	return "UNKNOWN";
+}
+
+void print_tokens(t_token *tokens)
+{
+	while (tokens)
+	{
+		printf("Token: %-10s Type: %d Quote: %s\n",
+			tokens->value,
+			tokens->type,
+			quote_type_str(tokens->quote_type));
+		tokens = tokens->next;
+	}
 }
 
 void free_args(char **argv)
@@ -38,7 +54,7 @@ int main(void)
 	t_token	*tokens;
 	char **args;
 
-	init_signal();
+	// init_signal();
 	while(1)
 	{
 		line = ft_readline();
@@ -52,9 +68,15 @@ int main(void)
 		}
 		tokens = tokenizer(line);
 		print_tokens(tokens);
-
-		// //expand variables
 		args = token_to_argv(tokens);
+		expand_tokens(tokens, g_exit_status);
+		for(int i = 0; args[i]; i++)
+		{
+			char *stripped = strip_quotes(args[i]);
+			free(args[i]);
+			args[i] = stripped;
+		}
+
 		for (int j = 0; args[j]; j++)
     		printf("argv[%d]: [%s]\n", j, args[j]);
 		builtin(args);
