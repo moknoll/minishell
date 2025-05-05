@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 10:26:56 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/29 11:50:41 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:53:18 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,7 @@ int	ft_isalnum(int c)
 	if ((c >= '0' && c <= '9')
 		|| ((c >= 65 && c <= 90)
 			|| (c >= 97 && c <= 122)))
-	{
 		return (1);
-	}
 	else
-	{
 		return (0);
-	}
 }

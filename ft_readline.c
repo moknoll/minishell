@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:34:54 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/22 12:04:43 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/05 16:05:49 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,5 @@ char	*ft_readline(void)
 	}
 	if(*line)
 		add_history(line);
-	printf("Read line [%s]\n", line);
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/23 11:20:36 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/05 14:54:14 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ static void ft_cd(char **argv)
 		path = argv[1];
 	else
 		path = getenv("HOME");
-
 	if (!path)
 	{
 		perror("cd: HOME not set\n");

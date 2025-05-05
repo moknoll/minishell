@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:35 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/29 11:54:05 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/05 15:53:22 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int g_exit_status = 0;
 
-/*Append a string to an existing outpit, We'll dynamically allocate space for the output as needed*/
+/*Append a string to an existing outpit, We'll dynamically allocate space for the output as needed */
 
 void append_str(char *str, char **output)
 {
@@ -27,7 +27,7 @@ void append_str(char *str, char **output)
 	else
 	{
 		new_output = ft_strjoin(*output, str);
-		free(output);
+		free(*output);
 		*output = new_output;
 	}
 }
@@ -46,9 +46,9 @@ char *get_variable_value(char *input, int *i)
 
 	start = *i;
 	// Move i forward to the end od the variale name
-	while(input[*i] && (ft_isalnum(input[*i] || input[*i] == '_')))
+	while(input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
 		(*i)++;
-	var_name = ft_strndup(&input[*i], *i - start);
+	var_name = ft_strndup(&input[start], *i - start);
 	var_value = getenv(var_name);
 	free(var_name);
 	if(!var_value)
@@ -79,21 +79,26 @@ void handle_dollar(char *input, int *i, char **output, int g_exit_status)
 
 char *expand_token(t_token *token, int g_exit_status)
 {
-    char *input = token->value;
-    char *output = NULL;
-    int i = 0;
+	if (token->quote_type == SINGLE_QUOTE)
+		return ft_strdup(token->value); // No expansion in single quotes
 
-    while (input[i]) {
-        if (input[i] == '$') {
-            handle_dollar(input, &i, &output, g_exit_status);  // Handle the dollar sign (expansion)
-        } else {
-            append_char(input[i], &output);  // Append normal characters
-            i++;
-        }
-    }
+	const char *input = token->value;
+	char *output = calloc(1, 1); // Start with empty string
+	int i = 0;
 
-    return output;  // Return the expanded value of the token
+	while (input[i])
+	{
+		if (input[i] == '$')
+			handle_dollar((char *)input, &i, &output, g_exit_status);
+		else
+		{
+			append_char(input[i], &output);
+			i++;
+		}
+	}
+	return output;
 }
+
 
 
 void expand_tokens(t_token *tokens, int g_exit_status)
@@ -102,16 +107,17 @@ void expand_tokens(t_token *tokens, int g_exit_status)
 	char *expanded_value;
 
 	current = tokens;
-	printf("Before: [%s] Quote: %d\n", current->value, current->quote_type);
 	while(current)
 	{
 		if(current->type == WORD)
 		{
+			printf("Before: [%s] Quote: %d\n", current->value, current->quote_type);
 			expanded_value = expand_token(current, g_exit_status);
 			free(current->value);
 			current->value = expanded_value;
+			printf("After:  [%s]\n", current->value);
 		}
 		current = current->next;
 	}
-	printf("After:  [%s]\n", current->value);
+
 }
