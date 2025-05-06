@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:08 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/23 14:11:22 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:28:32 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,17 @@ char *strip_quotes(char *str)
 		return(ft_strndup(str+1, len-2));
 	return(ft_strdup(str));
 }
+
+void strip_quotes_inplace(t_token *tokens)
+{
+    while (tokens)
+    {
+        char *stripped = strip_quotes(tokens->value);
+        free(tokens->value);
+        tokens->value = stripped;
+        tokens = tokens->next;
+    }
+}
+
 
 //check unclosed quotes

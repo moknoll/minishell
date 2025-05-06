@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 09:31:52 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:28:09 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,35 +82,36 @@ int main(void)
 
         // Tokenize the input line
         tokens = tokenizer(line);
-        merge_token(&tokens);
 
         // Print the tokens for debugging (can be removed later)
+        // Tokenize the input line (adds tokens with correct quoting info)
+        tokens = tokenizer(line);
+
+        // Print raw tokens for debug
         print_tokens(tokens);
 
-        // Expand the tokens based on $variable and $? handling
+        // Step 1: Expand tokens in place
         expand_tokens(tokens, g_exit_status);
 
-        // Convert tokens to an argv-style array
-        // Counting the number of tokens first to allocate memory
+        // Step 2: Merge tokens where needed (no space between)
+        merge_token(&tokens);
+
+        // Step 3: Strip quotes after merging
+        strip_quotes_inplace(tokens);
+
+        // Step 4: Convert to argv[]
         int token_count = count_tokens(tokens);
         args = malloc((token_count + 1) * sizeof(char *));
 
         t_token *tmp = tokens;
         int i = 0;
-
-        // Iterate through the tokens to handle expansion and strip quotes
         while (tmp)
         {
-            // Expand the token value (handle $USER, $? etc.)
-            char *expanded = expand_token(tmp, g_exit_status);
-            // Strip quotes if necessary
-            char *stripped = strip_quotes(expanded);
-            // Free the expanded value since we don't need it anymore
-            free(expanded);
-            // Store the stripped token in the args array
-            args[i++] = stripped;
-            tmp = tmp->next; // Move to the next token
+            args[i++] = ft_strdup(tmp->value); // already stripped & merged
+            tmp = tmp->next;
         }
+        args[i] = NULL;
+
         // Null-terminate the args array
         args[i] = NULL;
         // Print the final arguments array for debugging

@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:35 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 10:01:31 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 10:43:44 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,6 @@ char *expand_token(t_token *token, int g_exit_status)
 	}
 	return output;
 }
-
-
 
 void expand_tokens(t_token *tokens, int g_exit_status)
 {

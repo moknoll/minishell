@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 09:53:56 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 12:28:43 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ char	**token_to_argv(t_token *token);
 void	init_signal(void);
 int		skip_quotes(const char *input, int i);
 char	*strip_quotes(char *str);
+void strip_quotes_inplace(t_token *tokens);
 char	*ft_strdup(char *s);
 void	expand_tokens(t_token *tokens, int g_exit_status);
 char *expand_token(t_token *token, int g_exit_status);
