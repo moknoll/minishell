@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:35 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/05 15:53:22 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 10:01:31 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int g_exit_status = 0;
 
 /*Append a string to an existing outpit, We'll dynamically allocate space for the output as needed */
 
+// test
 void append_str(char *str, char **output)
 {
 	char *new_output;
