@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:11:03 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/05 15:41:04 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 09:54:53 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,28 @@
 
 void merge_token(t_token **tokens)
 {
+	t_token *current = *tokens;
+	t_token *next;
 	char *merged;
-	t_token *current;
-	t_token *t_to_free;
 
-	current = *tokens;
-	while(current && current->next)
+	if (!current)
+		return;
+	current = current->next; //skip the first command
+	while (current)
 	{
-		if (current->type == WORD && current->next->type == WORD)
+		while (current->type == WORD && current->next && current->next->type == WORD && current->next->has_space_before == 0)
 		{
-			merged = ft_strjoin(current->value, current->next->value);
+			next = current->next;
+			merged = ft_strjoin(current->value, next->value);
+
 			free(current->value);
 			current->value = merged;
-			t_to_free = current->next;
-			current->next = t_to_free;
-			free(t_to_free->value);
-			free(t_to_free);
+
+			current->next = next->next;
+			free(next->value);
+			free(next);
 		}
-		else
-			current = current->next;
+		current = current->next;
 	}
 }
+

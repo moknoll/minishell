@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/05 16:12:45 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 09:31:52 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int main(void)
     t_token *tokens;
     char **args;
 
-    init_signal();
+    // init_signal();
     while (1)
     {
         line = ft_readline();
@@ -82,7 +82,7 @@ int main(void)
 
         // Tokenize the input line
         tokens = tokenizer(line);
-        // merge_token(&tokens);
+        merge_token(&tokens);
 
         // Print the tokens for debugging (can be removed later)
         print_tokens(tokens);

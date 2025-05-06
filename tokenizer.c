@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/24 12:53:05 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 09:53:54 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,36 +26,36 @@ static int is_operator(char c)
 	return (0);
 }
 
-static void handle_operator(char *input, int *i, t_token **tokens)
+static void handle_operator(char *input, int *i, t_token **tokens, int has_space)
 {
 	if (input[*i] == '<' && input[*i + 1] == '<')
 	{
-		add_token(tokens, "<<", HEREDOC, NO_QUOTE);
+		add_token(tokens, "<<", HEREDOC, NO_QUOTE, has_space);
 		*i += 2;
 	}
 	else if (input[*i] == '>' && input[*i + 1] == '>')
 	{
-		add_token(tokens, ">>", REDIRECT_APPEND, NO_QUOTE);
+		add_token(tokens, ">>", REDIRECT_APPEND, NO_QUOTE, has_space);
 		*i += 2;
 	}
 	else if (input[*i] == '|')
 	{
-		add_token(tokens, "|", PIPE, NO_QUOTE);
+		add_token(tokens, "|", PIPE, NO_QUOTE, has_space);
 		(*i)++;
 	}
 	else if (input[*i] == '<')
 	{
-		add_token(tokens, "<", REDIRECT_IN, NO_QUOTE);
+		add_token(tokens, "<", REDIRECT_IN, NO_QUOTE, has_space);
 		(*i)++;
 	}
 	else if (input[*i] == '>')
 	{
-		add_token(tokens, ">", REDIRECT_OUT, NO_QUOTE);
+		add_token(tokens, ">", REDIRECT_OUT, NO_QUOTE, has_space);
 		(*i)++;
 	}
 }
 
-static void parse_quoted_word(char *input, int *i, t_token **tokens)
+static void parse_quoted_word(char *input, int *i, t_token **tokens, int has_space)
 {
 	int start;
 	char quote_char;
@@ -72,14 +72,14 @@ static void parse_quoted_word(char *input, int *i, t_token **tokens)
 	while(input[*i] && input[*i] != quote_char)
 		(*i)++;
 	word = ft_strndup(&input[start], *i - start);
-	add_token(tokens, word, WORD, quote_type);
+	add_token(tokens, word, WORD, quote_type, has_space);
 	free(word);
 	if (input[*i] == quote_char)
 		(*i)++; 	//skip closing quote
 
 }
 
-static void parse_unquoted_word(char *input, int *i, t_token **tokens)
+static void parse_unquoted_word(char *input, int *i, t_token **tokens, int has_space)
 {
 	int start = *i;
 	char *word;
@@ -90,35 +90,46 @@ static void parse_unquoted_word(char *input, int *i, t_token **tokens)
 	if (*i > start)
 	{
 		word = ft_strndup(&input[start], *i - start);
-		add_token(tokens, word, WORD, NO_QUOTE);
+		add_token(tokens, word, WORD, NO_QUOTE, has_space);
 		free(word);
 	}
 }
 
 
-static void handle_word(char *input, int *i, t_token **tokens)
+static void handle_word(char *input, int *i, t_token **tokens, int has_space)
 {
 	if (input[*i] == '\'' || input[*i] == '"')
-		parse_quoted_word(input, i, tokens);
+		parse_quoted_word(input, i, tokens, has_space);
 	else
-		parse_unquoted_word(input, i, tokens);
+		parse_unquoted_word(input, i, tokens, has_space);
 }
 
 t_token *tokenizer(char *input)
 {
 	t_token *tokens;
 	int i;
+	int has_space_before;
 
+	has_space_before = 1;
 	i = 0;
 	tokens = NULL;
 	while(input[i])
 	{
 		if(ft_isspace(input[i]))
+		{
 			i++;
+			has_space_before = 1;
+		}
 		else if (is_operator(input[i]))
-			handle_operator(input, &i, &tokens);
+		{
+			handle_operator(input, &i, &tokens, has_space_before);
+			has_space_before = 0;
+		}
 		else
-			handle_word(input, &i, &tokens);
+		{
+			handle_word(input, &i, &tokens, has_space_before);
+			has_space_before = 0;
+		}
 	}
 	return (tokens);
 }

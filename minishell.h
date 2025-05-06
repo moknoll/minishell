@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/05 15:36:59 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 09:53:56 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_token {
 	e_token_type type;
 	e_quote_type quote_type;
 	struct s_token *next;
+	int has_space_before;
 } t_token;
 
 //Utils
@@ -53,8 +54,8 @@ int		ft_isalnum(int c);
 t_token *tokenizer(char *input);
 void    print_tokens(t_token *list);
 char	*ft_strndup(char *s, size_t n);
-t_token *new_token(char *value, e_token_type type, e_quote_type quote_type);
-void	add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type);
+t_token *new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
+void	add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
 void	free_tokens(t_token *head);
 
 // Read line
@@ -67,6 +68,6 @@ char	*strip_quotes(char *str);
 char	*ft_strdup(char *s);
 void	expand_tokens(t_token *tokens, int g_exit_status);
 char *expand_token(t_token *token, int g_exit_status);
-void merge_token(t_token **tokens); 
+void merge_token(t_token **tokens);
 
 #endif

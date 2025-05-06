@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:58:18 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/04/24 11:48:06 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 09:47:56 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*ft_strndup(char *s, size_t n)
 	return (copy);
 }
 
-t_token *new_token(char *value, e_token_type type, e_quote_type quote_type)
+t_token *new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before)
 {
 	t_token *token;
 
@@ -65,16 +65,17 @@ t_token *new_token(char *value, e_token_type type, e_quote_type quote_type)
 	token->value = ft_strdup(value);
 	token->type = type;
 	token->quote_type = quote_type;
+	token->has_space_before = has_space_before;
 	token->next = NULL;
 	return(token);
 }
 
-void add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type)
+void add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type, int has_space_before)
 {
 	t_token *new;
 	t_token *tmp;
 
-	new = new_token(value, type, quote_type);
+	new = new_token(value, type, quote_type, has_space_before);
 	if(!*head)
 		*head = new;
 	else
