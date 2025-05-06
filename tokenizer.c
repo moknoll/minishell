@@ -6,11 +6,12 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 09:53:54 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 15:14:11 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 static int ft_isspace(char c)
 {
@@ -55,7 +56,7 @@ static void handle_operator(char *input, int *i, t_token **tokens, int has_space
 	}
 }
 
-static void parse_quoted_word(char *input, int *i, t_token **tokens, int has_space)
+static int parse_quoted_word(char *input, int *i, t_token **tokens, int has_space)
 {
 	int start;
 	char quote_char;
@@ -71,12 +72,16 @@ static void parse_quoted_word(char *input, int *i, t_token **tokens, int has_spa
 	start = *i;
 	while(input[*i] && input[*i] != quote_char)
 		(*i)++;
+	if (!(input[*i] == quote_char))
+	{
+		printf("Syntax error: unclosed %c-quote\n", quote_char);
+		return 0;
+	}
 	word = ft_strndup(&input[start], *i - start);
 	add_token(tokens, word, WORD, quote_type, has_space);
 	free(word);
-	if (input[*i] == quote_char)
-		(*i)++; 	//skip closing quote
-
+	(*i)++;
+	return 1;
 }
 
 static void parse_unquoted_word(char *input, int *i, t_token **tokens, int has_space)
@@ -96,12 +101,15 @@ static void parse_unquoted_word(char *input, int *i, t_token **tokens, int has_s
 }
 
 
-static void handle_word(char *input, int *i, t_token **tokens, int has_space)
+static int handle_word(char *input, int *i, t_token **tokens, int has_space)
 {
 	if (input[*i] == '\'' || input[*i] == '"')
-		parse_quoted_word(input, i, tokens, has_space);
+		return parse_quoted_word(input, i, tokens, has_space);
 	else
+	{
 		parse_unquoted_word(input, i, tokens, has_space);
+		return 1;
+	}
 }
 
 t_token *tokenizer(char *input)
@@ -127,7 +135,11 @@ t_token *tokenizer(char *input)
 		}
 		else
 		{
-			handle_word(input, &i, &tokens, has_space_before);
+			if(!handle_word(input, &i, &tokens, has_space_before))
+			{
+				free_tokens(tokens);
+				return NULL;
+			}
 			has_space_before = 0;
 		}
 	}

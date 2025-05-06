@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 12:28:09 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/06 15:17:33 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ int main(void)
             free(line);
             continue;
         }
-
-        // Tokenize the input line
-        tokens = tokenizer(line);
-
-        // Print the tokens for debugging (can be removed later)
         // Tokenize the input line (adds tokens with correct quoting info)
         tokens = tokenizer(line);
+        if(!tokens)
+        {
+            free(line);
+            continue;
+        }
 
         // Print raw tokens for debug
         print_tokens(tokens);
