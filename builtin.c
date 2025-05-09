@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/09 11:17:58 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/05/09 12:01:50 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void ft_echo(char **argv)
 		count++;
 	if (!argv[1])
 		printf("\n");
-	else 
+	else
 	{
 		while(i < count)
 		{
@@ -84,20 +84,19 @@ static void ft_echo(char **argv)
 static void ft_echo_n(char **argv)
 {
 	int count = 0;
+	int i = 2;
 
-	int i = 1;
 	while(argv[count])
 		count++;
-	if (!argv[1])
+	if (!argv[2])
 		return ;
-	else 
+	else
 	{
 		while(i < count)
 		{
 			printf("%s ", argv[i]);
 			i++;
 		}
-		return ;
 	}
 }
 
@@ -107,12 +106,12 @@ static void ft_echo_n(char **argv)
 
 // static void ft_unset(char **argv)
 // {
-	
+
 // }
 
 // static void ft_export(char **argv)
 // {
-	
+
 // }
 
 void builtin(char **argv)
@@ -125,7 +124,7 @@ void builtin(char **argv)
 		ft_cd(argv);
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		ft_pwd(argv);
-	else if (ft_strcmp(argv[0], "echo -n") == 0)
+	else if (ft_strcmp(argv[0], "echo") == 0 && ft_strcmp(argv[1], "-n") == 0)
 		ft_echo_n(argv);
 	else if (ft_strcmp(argv[0], "echo") == 0)
 		ft_echo(argv);
