@@ -5,9 +5,13 @@ CFLAGS  = -Wall -Wextra -Werror
 # Readline includes and libraries (macOS)
 READLINE_FLAGS = -lreadline -lncurses
 
+# DIrectories
+SRC_DIR = src
+OBJ_DIR = obj
+
 # Sources and executable
-SRCS    = main.c ft_readline.c token_utils.c tokenizer.c builtin.c quotations.c expansion_utils.c expand_token.c merge_tokens.c
-OBJS    = $(SRCS:.c=.o)
+SRCS    = $(wildcard $(SRC_DIR)/*.c)
+OBJS    = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 NAME    = minishell
 
 # Default rule
@@ -16,11 +20,14 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(READLINE_FLAGS)
 
-%.o: %.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJ_DIR)/*.o
 
 fclean: clean
 	rm -f $(NAME)
