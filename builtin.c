@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/09 12:01:50 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/09 12:14:15 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,38 +63,34 @@ static void ft_pwd(char **argv)
 
 static void ft_echo(char **argv)
 {
-	int count = 0;
 
 	int i = 1;
-	while(argv[count])
-		count++;
-	if (!argv[1])
-		printf("\n");
-	else
-	{
-		while(i < count)
-		{
-			printf("%s ", argv[i]);
-			i++;
-		}
-		printf("\n");
-	}
-}
 
+	if (!argv[1])
+	{
+		printf("\n");
+		return ;
+	}
+	while(argv[i])
+	{
+		printf("%s", argv[i]);
+		if(argv[i+1])
+			printf(" ");
+		i++;
+	}
+	printf("\n");
+	}
+	
 static void ft_echo_n(char **argv)
 {
-	int count = 0;
 	int i = 2;
 
-	while(argv[count])
-		count++;
-	if (!argv[2])
-		return ;
-	else
 	{
-		while(i < count)
+		while(argv[i])
 		{
-			printf("%s ", argv[i]);
+			printf("%s", argv[i]);
+			if(argv[i+1])
+				printf(" ");
 			i++;
 		}
 	}
@@ -124,10 +120,13 @@ void builtin(char **argv)
 		ft_cd(argv);
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		ft_pwd(argv);
-	else if (ft_strcmp(argv[0], "echo") == 0 && ft_strcmp(argv[1], "-n") == 0)
-		ft_echo_n(argv);
 	else if (ft_strcmp(argv[0], "echo") == 0)
-		ft_echo(argv);
+	{
+		if (argv[1] && ft_strcmp(argv[1], "-n") == 0)
+			ft_echo_n(argv);
+		else
+			ft_echo(argv);
+	}
 	// else if (ft_strcmp(argv[0], "unset") == 0)
 	// 	ft_unset(argv);
 	// else if (ft_strcmp(argv[0], "env") == 0)
