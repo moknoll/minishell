@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 15:14:11 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/09 11:25:01 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static void parse_unquoted_word(char *input, int *i, t_token **tokens, int has_s
 	char *word;
 
 	// Read until space, operator, or quote
-	while (input[*i] && !ft_isspace(input[*i]) && !is_operator(input[*i]) &&input[*i] != '\'' && input[*i] != '"')
+	while (input[*i] && !ft_isspace(input[*i]) && !is_operator(input[*i]) && input[*i] != '\'' && input[*i] != '"')
 		(*i)++;
 	if (*i > start)
 	{

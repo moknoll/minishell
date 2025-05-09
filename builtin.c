@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/05 14:54:14 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/09 11:17:58 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,60 @@ static void ft_pwd(char **argv)
 		perror("pwd");
 }
 
+static void ft_echo(char **argv)
+{
+	int count = 0;
+
+	int i = 1;
+	while(argv[count])
+		count++;
+	if (!argv[1])
+		printf("\n");
+	else 
+	{
+		while(i < count)
+		{
+			printf("%s ", argv[i]);
+			i++;
+		}
+		printf("\n");
+	}
+}
+
+static void ft_echo_n(char **argv)
+{
+	int count = 0;
+
+	int i = 1;
+	while(argv[count])
+		count++;
+	if (!argv[1])
+		return ;
+	else 
+	{
+		while(i < count)
+		{
+			printf("%s ", argv[i]);
+			i++;
+		}
+		return ;
+	}
+}
+
+// static void ft_env(char **argv)
+// {
+// }
+
+// static void ft_unset(char **argv)
+// {
+	
+// }
+
+// static void ft_export(char **argv)
+// {
+	
+// }
+
 void builtin(char **argv)
 {
 	if (!argv[0] || argv[0][0] == '\0')
@@ -71,6 +125,16 @@ void builtin(char **argv)
 		ft_cd(argv);
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		ft_pwd(argv);
+	else if (ft_strcmp(argv[0], "echo -n") == 0)
+		ft_echo_n(argv);
+	else if (ft_strcmp(argv[0], "echo") == 0)
+		ft_echo(argv);
+	// else if (ft_strcmp(argv[0], "unset") == 0)
+	// 	ft_unset(argv);
+	// else if (ft_strcmp(argv[0], "env") == 0)
+	// 	ft_env(argv);
+	// else if (ft_strcmp(argv[0], "export") == 0)
+	// 	ft_export(argv);
 	else
 		perror("command not found");
 }
