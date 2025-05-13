@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 12:28:43 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/13 13:19:09 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	free_tokens(t_token *head);
 
 // Read line
 char	*ft_readline(void);
-void	builtin(char *argv[]);
+void builtin(char **argv, char **env);
 char	**token_to_argv(t_token *token);
 void	init_signal(void);
 int		skip_quotes(const char *input, int i);

@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 15:17:33 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/13 13:20:26 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,34 @@ int count_tokens(t_token *tokens)
     return count;
 }
 
-int main(void)
+// void pipe_and_redirection(t_token **tokens)
+// {
+// 	e_token_type token_type;
+
+// 	if(token_type == PIPE)
+// 		ft_pipe(token_to_argv(*tokens));
+// 	else if(token_type == HEREDOC)
+// 		ft_heredoc();
+// 	else if (token_type == REDIRECT_IN)
+// 		ft_redirect_in();
+// 	else if (token_type == REDIRECT_OUT)
+// 		ft_redirect_out();
+// 	else if (token_type == REDIRECT_APPEND)
+// 		ft_redirect_append();
+// 	else
+// 		return ;
+
+// }
+
+int main(int argc, char *argv[], char *env[])
 {
     char *line;
     t_token *tokens;
     char **args;
 
+
+	(void)argc;
+	(void)argv;
     // init_signal();
     while (1)
     {
@@ -120,7 +142,7 @@ int main(void)
             printf("argv[%d]: [%s]\n", j, args[j]);
         }
         // Call builtin function (or execution logic)
-        builtin(args);
+        builtin(args, env);
         // Clean up memory
         free_tokens(tokens);
         free(line);

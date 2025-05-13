@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/09 12:14:15 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/05/13 13:29:13 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,27 @@ static void ft_echo(char **argv)
 	}
 	printf("\n");
 	}
-	
+
+static int check_multiple_n(char *str)
+{
+	char valid;
+	int i;
+
+	i = 0;
+	valid = 'n';
+	while (str[i] && ft_strcmp(str, "-n"))
+	{
+		if(str[i] == '-')
+			i++;
+		if(str[i] != valid)
+			return (0);
+		i++;
+	}
+	return (1);
+}
 static void ft_echo_n(char **argv)
 {
 	int i = 2;
-
 	{
 		while(argv[i])
 		{
@@ -96,9 +112,17 @@ static void ft_echo_n(char **argv)
 	}
 }
 
-// static void ft_env(char **argv)
-// {
-// }
+void ft_env(char **env)
+{
+	int i;
+
+	i = 0;
+	while(env[i])
+	{
+		printf("%s\n", env[i]);
+		i++;
+	}
+}
 
 // static void ft_unset(char **argv)
 // {
@@ -110,7 +134,7 @@ static void ft_echo_n(char **argv)
 
 // }
 
-void builtin(char **argv)
+void builtin(char **argv, char **env)
 {
 	if (!argv[0] || argv[0][0] == '\0')
 		return;
@@ -122,15 +146,15 @@ void builtin(char **argv)
 		ft_pwd(argv);
 	else if (ft_strcmp(argv[0], "echo") == 0)
 	{
-		if (argv[1] && ft_strcmp(argv[1], "-n") == 0)
+		if (argv[1] && check_multiple_n(argv[1]))
 			ft_echo_n(argv);
 		else
 			ft_echo(argv);
 	}
 	// else if (ft_strcmp(argv[0], "unset") == 0)
 	// 	ft_unset(argv);
-	// else if (ft_strcmp(argv[0], "env") == 0)
-	// 	ft_env(argv);
+	else if (ft_strcmp(argv[0], "env") == 0)
+		ft_env(env);
 	// else if (ft_strcmp(argv[0], "export") == 0)
 	// 	ft_export(argv);
 	else
