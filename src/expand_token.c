@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:35 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 10:43:44 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/14 13:22:05 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,18 @@ void append_char(char c, char **output)
 	append_str(temp, output);
 }
 
-char *get_variable_value(char *input, int *i)
+char *get_variable_value_from_env(t_env *my_env, char *var_name)
+{
+	while (my_env)
+	{
+		if (ft_strcmp(my_env->key, var_name) == 0 && my_env->exported)
+			return ft_strdup(my_env->value); // eigene Kopie
+		my_env = my_env->next;
+	}
+	return ft_strdup(""); // nicht gefunden
+}
+
+char *get_variable_value(char *input, int *i, t_env *my_env)
 {
 	int start;
 	char *var_name;
@@ -50,14 +61,14 @@ char *get_variable_value(char *input, int *i)
 	while(input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
 		(*i)++;
 	var_name = ft_strndup(&input[start], *i - start);
-	var_value = getenv(var_name);
+	var_value = get_variable_value_from_env(my_env ,var_name);
 	free(var_name);
 	if(!var_value)
 		var_value = "";
 	return(ft_strdup(var_value));
 }
 
-void handle_dollar(char *input, int *i, char **output, int g_exit_status)
+void handle_dollar(char *input, int *i, char **output, int g_exit_status, t_env *my_env)
 {
 	char *exit_status_str;
 	char *var_value;
@@ -72,13 +83,13 @@ void handle_dollar(char *input, int *i, char **output, int g_exit_status)
 	}
 	else
 	{
-		var_value = get_variable_value(input, i);
+		var_value = get_variable_value(input, i, my_env);
 		append_str(var_value, output);
 		free(var_value);
 	}
 }
 
-char *expand_token(t_token *token, int g_exit_status)
+char *expand_token(t_token *token, int g_exit_status, t_env *my_env)
 {
 	if (token->quote_type == SINGLE_QUOTE)
 		return ft_strdup(token->value); // No expansion in single quotes
@@ -90,7 +101,7 @@ char *expand_token(t_token *token, int g_exit_status)
 	while (input[i])
 	{
 		if (input[i] == '$')
-			handle_dollar((char *)input, &i, &output, g_exit_status);
+			handle_dollar((char *)input, &i, &output, g_exit_status, my_env);
 		else
 		{
 			append_char(input[i], &output);
@@ -100,7 +111,7 @@ char *expand_token(t_token *token, int g_exit_status)
 	return output;
 }
 
-void expand_tokens(t_token *tokens, int g_exit_status)
+void expand_tokens(t_token *tokens, int g_exit_status, t_env *env)
 {
 	t_token *current;
 	char *expanded_value;
@@ -111,7 +122,7 @@ void expand_tokens(t_token *tokens, int g_exit_status)
 		if(current->type == WORD)
 		{
 			printf("Before: [%s] Quote: %d\n", current->value, current->quote_type);
-			expanded_value = expand_token(current, g_exit_status);
+			expanded_value = expand_token(current, g_exit_status, env);
 			free(current->value);
 			current->value = expanded_value;
 			printf("After:  [%s]\n", current->value);

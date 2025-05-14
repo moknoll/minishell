@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/13 13:20:26 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/14 13:22:13 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,17 @@ int count_tokens(t_token *tokens)
     return count;
 }
 
+t_env *init_env(t_env **env, char **envp)
+{
+    int i = 0;
+    while (envp[i])
+    {
+        set_env(env, envp[i]);  // Reuse deine Funktion, z. B. "PATH=/bin"
+        i++;
+    }
+    return *env;
+}
+
 // void pipe_and_redirection(t_token **tokens)
 // {
 // 	e_token_type token_type;
@@ -83,8 +94,9 @@ int main(int argc, char *argv[], char *env[])
     char *line;
     t_token *tokens;
     char **args;
+    t_env *my_env = NULL;
 
-
+    my_env = init_env(&my_env, env);
 	(void)argc;
 	(void)argv;
     // init_signal();
@@ -113,7 +125,7 @@ int main(int argc, char *argv[], char *env[])
         print_tokens(tokens);
 
         // Step 1: Expand tokens in place
-        expand_tokens(tokens, g_exit_status);
+        expand_tokens(tokens, g_exit_status, my_env);
 
         // Step 2: Merge tokens where needed (no space between)
         merge_token(&tokens);
@@ -135,14 +147,13 @@ int main(int argc, char *argv[], char *env[])
         args[i] = NULL;
 
         // Null-terminate the args array
-        args[i] = NULL;
         // Print the final arguments array for debugging
         for (int j = 0; args[j]; j++)
         {
             printf("argv[%d]: [%s]\n", j, args[j]);
         }
         // Call builtin function (or execution logic)
-        builtin(args, env);
+        builtin(args, &my_env, env);
         // Clean up memory
         free_tokens(tokens);
         free(line);
