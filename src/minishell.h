@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/14 13:21:37 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/21 10:40:26 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ typedef struct s_token {
 	int has_space_before;
 } t_token;
 
+typedef struct s_command {
+	char **argv;
+	struct s_command *next;
+} t_command;
+
+
 //Utils
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_itoa(int num);
@@ -80,5 +86,6 @@ char *expand_token(t_token *token, int g_exit_status, t_env *my_env);
 void merge_token(t_token **tokens);
 void set_env(t_env **env, char *arg);
 int ft_strcmp(char *s1, char *s2);
+t_command *parse_commands(t_token *tokens);
 
 #endif

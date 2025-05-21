@@ -6,11 +6,72 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/14 10:12:01 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/21 10:46:28 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_in_set(char c, const char *set)
+{
+	while (*set)
+	{
+		if (c == *set)
+		{
+			return (1);
+		}
+		set++;
+	}
+	return (0);
+}
+
+static size_t	ft_strlen(char const *str)
+{
+	int	len;
+
+	len = 0;
+	while (str[len])
+	{
+		len++;
+	}
+	return (len);
+}
+
+static char	*ft_strncpy(char *dest, char const *src, int n)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] && i < n)
+	{
+		dest[i] = src [i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	int		start;
+	int		end;
+	int		len;
+	char	*new_str;
+
+	start = 0;
+	end = ft_strlen(s1) - 1;
+	while (s1[start] && is_in_set(s1[start], set))
+		start++;
+	while (end >= start && is_in_set(s1[end], set))
+		end--;
+	len = end - start + 1;
+	new_str = (char *)malloc(len + 1);
+	if (!new_str)
+		return (NULL);
+	ft_strncpy(new_str, &s1[start], len);
+	new_str[len] = '\0';
+	return (new_str);
+}
 
 static int ft_isspace(char c)
 {
@@ -61,6 +122,7 @@ static int parse_quoted_word(char *input, int *i, t_token **tokens, int has_spac
 	char quote_char;
 	e_quote_type quote_type;
 	char *word;
+	char *raw;
 
 	quote_char = input[*i];
 	if (quote_char == '\'')
@@ -76,9 +138,11 @@ static int parse_quoted_word(char *input, int *i, t_token **tokens, int has_spac
 		printf("Syntax error: unclosed %c-quote\n", quote_char);
 		return 0;
 	}
-	word = ft_strndup(&input[start], *i - start);
+	raw = ft_strndup(&input[start], *i - start);
+	word = ft_strtrim(raw, " \t\n\r\v\f");
 	add_token(tokens, word, WORD, quote_type, has_space);
 	free(word);
+	free(raw);
 	(*i)++;
 	return 1;
 }

@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/14 13:22:13 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/21 10:39:18 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,30 @@ t_env *init_env(t_env **env, char **envp)
 
 // }
 
+void free_command_list(t_command *cmd)
+{
+    while (cmd)
+    {
+        t_command *next = cmd->next;
+        free_args(cmd->argv);
+        free(cmd);
+        cmd = next;
+    }
+}
+
+int is_builtin(char *cmd)
+{
+    return (ft_strcmp(cmd, "cd") == 0 || ft_strcmp(cmd, "echo") == 0
+         || ft_strcmp(cmd, "pwd") == 0 || ft_strcmp(cmd, "env") == 0
+         || ft_strcmp(cmd, "exit") == 0 || ft_strcmp(cmd, "export") == 0
+         || ft_strcmp(cmd, "unset") == 0);
+}
+
+
 int main(int argc, char *argv[], char *env[])
 {
     char *line;
     t_token *tokens;
-    char **args;
     t_env *my_env = NULL;
 
     my_env = init_env(&my_env, env);
@@ -133,31 +152,32 @@ int main(int argc, char *argv[], char *env[])
         // Step 3: Strip quotes after merging
         strip_quotes_inplace(tokens);
 
-        // Step 4: Convert to argv[]
-        int token_count = count_tokens(tokens);
-        args = malloc((token_count + 1) * sizeof(char *));
+       // Step 4: Parse tokens into commands
+        t_command *cmd_list = parse_commands(tokens);
 
-        t_token *tmp = tokens;
-        int i = 0;
-        while (tmp)
+        t_command *current = cmd_list;
+        while (current)
         {
-            args[i++] = ft_strdup(tmp->value); // already stripped & merged
-            tmp = tmp->next;
-        }
-        args[i] = NULL;
+            // Debug: print each argv[]
+            printf("Command:\n");
+            for (int j = 0; current->argv && current->argv[j]; j++)
+                printf("  argv[%d]: [%s]\n", j, current->argv[j]);
 
-        // Null-terminate the args array
-        // Print the final arguments array for debugging
-        for (int j = 0; args[j]; j++)
-        {
-            printf("argv[%d]: [%s]\n", j, args[j]);
+            // Execute: entweder builtin oder execve
+            if (is_builtin(current->argv[0]))
+                builtin(current->argv, &my_env, env);
+            // else
+            //     execute_external(current, env);
+
+            current = current->next;
         }
-        // Call builtin function (or execution logic)
-        builtin(args, &my_env, env);
+
+        // Free everything
+        free_command_list(cmd_list);  // ← musst du implementieren
+
         // Clean up memory
         free_tokens(tokens);
         free(line);
-        free_args(args); // Ensure that args is properly freed after usage
     }
     return (0);
 }
