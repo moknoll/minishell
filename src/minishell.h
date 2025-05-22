@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/21 10:40:26 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/22 12:03:59 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,37 @@ typedef struct s_command {
 
 
 //Utils
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_itoa(int num);
-int		ft_isalnum(int c);
+char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_itoa(int num);
+int			ft_isalnum(int c);
 
 // Tokenizer
-t_token *tokenizer(char *input);
-void    print_tokens(t_token *list);
-char	*ft_strndup(char *s, size_t n);
-t_token *new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
-void	add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
-void	free_tokens(t_token *head);
+t_token		*tokenizer(char *input);
+void		print_tokens(t_token *list);
+char		*ft_strndup(char *s, size_t n);
+t_token		*new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
+void		add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
+void		free_tokens(t_token *head);
 
 // Read line
-char	*ft_readline(void);
-void builtin(char **argv, t_env **my_env, char **env);
-char	**token_to_argv(t_token *token);
-void	init_signal(void);
-int		skip_quotes(const char *input, int i);
-char	*strip_quotes(char *str);
-void strip_quotes_inplace(t_token *tokens);
-char	*ft_strdup(char *s);
-void expand_tokens(t_token *tokens, int g_exit_status, t_env *env);
-char *expand_token(t_token *token, int g_exit_status, t_env *my_env);
-void merge_token(t_token **tokens);
-void set_env(t_env **env, char *arg);
-int ft_strcmp(char *s1, char *s2);
-t_command *parse_commands(t_token *tokens);
+char		*ft_readline(void);
+void		builtin(char **argv, t_env **my_env, char **env);
+char		**token_to_argv(t_token *token);
+void		init_signal(void);
+int			skip_quotes(const char *input, int i);
+char		*strip_quotes(char *str);
+void		strip_quotes_inplace(t_token *tokens);
+char		*ft_strdup(char *s);
+void		expand_tokens(t_token *tokens, int g_exit_status, t_env *env);
+char		*expand_token(t_token *token, int g_exit_status, t_env *my_env);
+void		merge_token(t_token **tokens);
+void		set_env(t_env **env, char *arg);
+int			ft_strcmp(char *s1, char *s2);
+t_command	*parse_commands(t_token *tokens);
+char		**ft_split(char const *s, char c);
+int			ft_strncmp(char *s1, char *s2, int n);
+void		ft_pipe(t_command *cmd_list, char *env[]);
+char		*get_path(char *cmd, char *envp[]);
+void		execute_external(t_command *cmd, char **env);
 
 #endif

@@ -6,16 +6,11 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:34:54 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/05 16:05:49 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/22 11:44:01 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// TO do
-// Customize the prompt
-// Handle signal re-prompting (with rl_on_new_line, etc)
-// clean whitesopace-only input lines
 
 char	*ft_readline(void)
 {

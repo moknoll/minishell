@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/14 13:26:29 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/22 11:24:56 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void builtin(char **argv, t_env **my_env, char **env)
 			ft_export(*my_env);
 		else
 			set_env(my_env, argv[1]);
-    }
+	}
 	else if (ft_strcmp(argv[0], "unset") == 0)
 	 	ft_unset(my_env, argv[1]);
 	else if (ft_strcmp(argv[0], "env") == 0)

@@ -6,7 +6,7 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/21 10:39:18 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/22 12:06:20 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,23 +154,15 @@ int main(int argc, char *argv[], char *env[])
 
        // Step 4: Parse tokens into commands
         t_command *cmd_list = parse_commands(tokens);
-
-        t_command *current = cmd_list;
-        while (current)
+        if (cmd_list && !cmd_list->next) // Nur 1 Command = kein Pipe
         {
-            // Debug: print each argv[]
-            printf("Command:\n");
-            for (int j = 0; current->argv && current->argv[j]; j++)
-                printf("  argv[%d]: [%s]\n", j, current->argv[j]);
-
-            // Execute: entweder builtin oder execve
-            if (is_builtin(current->argv[0]))
-                builtin(current->argv, &my_env, env);
-            // else
-            //     execute_external(current, env);
-
-            current = current->next;
+            if (is_builtin(cmd_list->argv[0]))
+                builtin(cmd_list->argv, &my_env, env);
+            else
+                 execute_external(cmd_list, env);
         }
+        else
+            ft_pipe(cmd_list, env);
 
         // Free everything
         free_command_list(cmd_list);  // ← musst du implementieren
