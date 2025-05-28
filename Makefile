@@ -1,9 +1,24 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: radubos <radubos@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
+#    Updated: 2025/05/25 09:12:31 by radubos          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 # Compiler and flags
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror
 
 # Readline includes and libraries (macOS)
 READLINE_FLAGS = -lreadline -lncurses
+
+# Libraries
+LIBFT_LIB = libft/libft.a
 
 # DIrectories
 SRC_DIR = src
@@ -15,10 +30,13 @@ OBJS    = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 NAME    = minishell
 
 # Default rule
-all: $(NAME)
+all: $(LIBFT_LIB) $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(READLINE_FLAGS)
+$(LIBFT_LIB):
+	make -C libft
+
+$(NAME): $(OBJS) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(READLINE_FLAGS) $(LIBFT_LIB)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -28,9 +46,11 @@ $(OBJ_DIR):
 
 clean:
 	rm -f $(OBJ_DIR)/*.o
+	make -C libft clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C libft fclean
 
 re: fclean all
 

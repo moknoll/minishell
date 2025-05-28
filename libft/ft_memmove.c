@@ -1,29 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_readline.c                                      :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:34:54 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/27 22:36:13 by radubos          ###   ########.fr       */
+/*   Created: 2024/10/16 12:35:44 by radubos           #+#    #+#             */
+/*   Updated: 2024/11/08 13:56:03 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-char	*ft_readline(void)//we can use readline
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char *line;
+	unsigned char		*ptr;
+	const unsigned char	*src_ptr;
 
-	line = readline("minishell$ ");
-	if(!line)
+	if (!dest && !src)
+		return (NULL);
+	ptr = (unsigned char *)dest;
+	src_ptr = (const unsigned char *)src;
+	if (ptr > src_ptr && ptr < src_ptr + n)
 	{
-		printf("exit\n");
-		//herecod Ctrl+D
-		exit(0);
+		ptr += n;
+		src_ptr += n;
+		while (n--)
+			*(--ptr) = *(--src_ptr);
 	}
-	if(*line)
-		add_history(line);
-	return (line);
+	else
+	{
+		while (n--)
+			*ptr++ = *src_ptr++;
+	}
+	return (dest);
 }

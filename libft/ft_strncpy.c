@@ -1,15 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_utils.c                                  :+:      :+:    :+:   */
+/*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 10:26:56 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:59:53 by radubos          ###   ########.fr       */
+/*   Created: 2025/05/26 16:55:48 by radubos           #+#    #+#             */
+/*   Updated: 2025/05/26 16:56:15 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-// everythings are in libft
+char	*ft_strncpy(char *dest, char const *src, int n)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] && i < n)
+	{
+		dest[i] = src [i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}

@@ -1,15 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_utils.c                                  :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 10:26:56 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:59:53 by radubos          ###   ########.fr       */
+/*   Created: 2024/10/21 11:10:16 by radubos           #+#    #+#             */
+/*   Updated: 2024/11/12 09:54:47 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-// everythings are in libft
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	total_size;
+
+	total_size = nmemb * size;
+	if (nmemb != 0 && total_size / nmemb != size)
+		return (NULL);
+	if (nmemb == 0 || size == 0)
+	{
+		ptr = malloc(0);
+		if (!ptr)
+			return (NULL);
+		return (ptr);
+	}
+	ptr = malloc(total_size);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, total_size);
+	return (ptr);
+}

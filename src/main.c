@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/22 12:06:20 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/27 22:32:51 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,19 @@ const char *quote_type_str(e_quote_type qt)
 	return "UNKNOWN";
 }
 
-void print_tokens(t_token *tokens)
-{
-	while (tokens)
-	{
-		printf("Token: %-10s Type: %d Quote: %s\n",
-			tokens->value,
-			tokens->type,
-			quote_type_str(tokens->quote_type));
-		tokens = tokens->next;
-	}
-}
-
 void free_args(char **argv)
 {
-	int i ;
+    int i;
 
-	i = 0;
-	while (argv[i])
-	{
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
+    if (!argv)
+        return; 
+    i = 0;
+    while (argv[i])
+    {
+        free(argv[i]);
+        i++;
+    }
+    free(argv);
 }
 
 int count_tokens(t_token *tokens)
@@ -59,7 +49,7 @@ int count_tokens(t_token *tokens)
     return count;
 }
 
-t_env *init_env(t_env **env, char **envp)
+/* t_env *init_env(t_env **env, char **envp)
 {
     int i = 0;
     while (envp[i])
@@ -68,6 +58,23 @@ t_env *init_env(t_env **env, char **envp)
         i++;
     }
     return *env;
+} */
+t_env *init_env(t_env **env, char **envp) 
+{
+    char *eq;
+    
+    while (*envp)
+    {
+        eq = ft_strchr(*envp, '=');
+        if (eq)
+        {
+            *eq = '\0';
+            set_env(env, *envp, eq + 1);
+            *eq = '=';
+        }
+        envp++;
+    }
+    return (*env);
 }
 
 // void pipe_and_redirection(t_token **tokens)
@@ -102,14 +109,106 @@ void free_command_list(t_command *cmd)
 
 int is_builtin(char *cmd)
 {
-    return (ft_strcmp(cmd, "cd") == 0 || ft_strcmp(cmd, "echo") == 0
-         || ft_strcmp(cmd, "pwd") == 0 || ft_strcmp(cmd, "env") == 0
-         || ft_strcmp(cmd, "exit") == 0 || ft_strcmp(cmd, "export") == 0
-         || ft_strcmp(cmd, "unset") == 0);
+    if (!cmd)
+        return (0);   
+    return (ft_strcmp(cmd, "cd") == 0 || 
+            ft_strcmp(cmd, "echo") == 0 ||
+            ft_strcmp(cmd, "pwd") == 0 ||
+            ft_strcmp(cmd, "export") == 0 ||
+            ft_strcmp(cmd, "unset") == 0 ||
+            ft_strcmp(cmd, "env") == 0 ||
+            ft_strcmp(cmd, "exit") == 0);
 }
 
+static void cleanup(t_token *tokens, t_command *cmd_list, char *line)
+{
+    if (tokens)
+        free_tokens(tokens);
+    if (cmd_list)
+        free_command_list(cmd_list);
+    if (line)
+        free(line);
+}
 
-int main(int argc, char *argv[], char *env[])
+static void print_debug_info(t_token *tokens, t_command *cmd_list)
+{
+    #ifdef DEBUG
+    // Debug: print tokens
+    printf("\n--- Tokens ---\n");
+    print_tokens(tokens);
+    
+    // Debug: print commands
+    printf("\n--- Commands ---\n");
+    t_command *current = cmd_list;
+    while (current)
+    {
+        printf("Command:\n");
+        for (int j = 0; current->argv && current->argv[j]; j++)
+            printf("  argv[%d]: [%s]\n", j, current->argv[j]);
+
+        t_redir *r = current->redirs;
+        while (r)
+        {
+            printf("  redir: type=%d file=%s\n", r->type, r->file);
+            r = r->next;
+        }
+        current = current->next;
+    }
+    printf("\n");
+    #endif
+}
+
+static void process_input(char *line, t_env **my_env, char **env)
+{
+    t_token *tokens = NULL;
+    t_command *cmd_list = NULL;
+
+    tokens = tokenizer(line);
+    if (!tokens)
+        return;
+    expand_tokens(tokens, g_exit_status, *my_env);
+    merge_token(&tokens);
+    strip_quotes_inplace(tokens);
+    cmd_list = parse_commands(tokens);
+    if (!cmd_list)
+    {
+        free_tokens(tokens);
+        return;
+    }
+    print_debug_info(tokens, cmd_list);
+    if (cmd_list->next == NULL && is_builtin(cmd_list->argv[0]))
+        builtin(cmd_list->argv, my_env, env);
+    else
+        execute_external(cmd_list, env);
+    cleanup(tokens, cmd_list, NULL);
+}
+
+void free_env(t_env *env)
+{
+    t_env *current = env;
+    t_env *next;
+
+    if (!env)
+        return;
+    while (current)
+    {
+        next = current->next;
+        if (current->key)
+        {
+            free(current->key);
+            current->key = NULL;
+        }
+        if (current->value)
+        {
+            free(current->value);
+            current->value = NULL;
+        }
+        free(current);
+        current = next;
+    }
+}
+
+/* int main(int argc, char *argv[], char *env[])
 {
     char *line;
     t_token *tokens;
@@ -118,7 +217,7 @@ int main(int argc, char *argv[], char *env[])
     my_env = init_env(&my_env, env);
 	(void)argc;
 	(void)argv;
-    // init_signal();
+    init_signal();
     while (1)
     {
         line = ft_readline();
@@ -172,6 +271,36 @@ int main(int argc, char *argv[], char *env[])
         free(line);
     }
     return (0);
+} */
+
+int main(int argc, char *argv[], char *env[])
+{
+    char *line;
+    t_env *my_env = NULL;
+
+    (void)argc;
+    (void)argv;
+    my_env = init_env(&my_env, env);
+    setup_parent_signals();
+    while (1)
+    {
+        line = readline(PROMPT);
+        if (!line)
+        {
+            ft_putendl_fd("exit", STDOUT_FILENO);
+            break;
+        }
+        if (*line == '\0')
+        {
+            free(line);
+            continue;
+        }
+        add_history(line);
+        process_input(line, &my_env, env);
+        free(line);
+    }
+    free_env(my_env);
+    return (g_exit_status);
 }
 
 

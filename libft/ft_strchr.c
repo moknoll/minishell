@@ -1,15 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_utils.c                                  :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 10:26:56 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:59:53 by radubos          ###   ########.fr       */
+/*   Created: 2024/10/17 13:11:22 by radubos           #+#    #+#             */
+/*   Updated: 2024/11/08 14:29:34 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <stddef.h>
 
-// everythings are in libft
+char	*ft_strchr(const char *s, int c)
+{
+	char	*ptr;
+	char	value;
+
+	ptr = (char *)s;
+	value = (char)c;
+	while (*ptr)
+	{
+		if (*ptr == value)
+			return (ptr);
+		ptr++;
+	}
+	if (value == '\0')
+		return (ptr);
+	return (NULL);
+}

@@ -3,57 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:58:18 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 09:47:56 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/27 18:22:48 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
-
-char	*ft_strdup(char *s)
-{
-	int		i;
-	int		len;
-	char	*copy;
-
-	i = 0;
-	len = 0;
-	while (s[len])
-	{
-		len++;
-	}
-	copy = (char *) malloc(len + 1);
-	if (copy == NULL)
-		return (NULL);
-	while (s[i])
-	{
-		copy[i] = s[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
-}
-
-char	*ft_strndup(char *s, size_t n)
-{
-	size_t		i;
-	char	*copy;
-
-	i = 0;
-	copy = (char *) malloc(n + 1);
-	if (copy == NULL)
-		return (NULL);
-	while (i < n && s[i])
-	{
-		copy[i] = s[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
-}
 
 t_token *new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before)
 {
@@ -128,4 +85,16 @@ char **token_to_argv(t_token *token)
 	}
 	argv[count] = NULL;
 	return (argv);
+}
+
+void print_tokens(t_token *tokens)
+{
+    while (tokens)
+    {
+        printf("Token: %-10s Type: %d Quote: %s\n",
+            tokens->value,
+            tokens->type,
+            quote_type_str(tokens->quote_type));
+        tokens = tokens->next;
+    }
 }

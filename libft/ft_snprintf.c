@@ -1,15 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_utils.c                                  :+:      :+:    :+:   */
+/*   ft_snprintf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 10:26:56 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:59:53 by radubos          ###   ########.fr       */
+/*   Created: 2025/05/25 09:56:25 by radubos           #+#    #+#             */
+/*   Updated: 2025/05/25 09:56:48 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-// everythings are in libft
+int ft_snprintf(char *str, size_t size, const char *format, ...)
+{
+    va_list args;
+    int     len;
+
+    va_start(args, format);
+    len = vsnprintf(str, size, format, args);
+    va_end(args);
+    return (len);
+}

@@ -1,15 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_utils.c                                  :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 10:26:56 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:59:53 by radubos          ###   ########.fr       */
+/*   Created: 2024/10/16 11:22:16 by radubos           #+#    #+#             */
+/*   Updated: 2025/05/25 09:59:13 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-// everythings are in libft
+void	*ft_memset(void *s, int c, size_t n)
+{
+    unsigned char *ptr;
+
+    if (!s)
+        return (NULL);
+        
+    ptr = (unsigned char *)s;
+    while (n--)
+        *ptr++ = (unsigned char)c;
+    return (s);
+}

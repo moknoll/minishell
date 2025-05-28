@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_readline.c                                      :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:34:54 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/27 22:36:13 by radubos          ###   ########.fr       */
+/*   Created: 2024/10/29 16:15:48 by radubos           #+#    #+#             */
+/*   Updated: 2024/11/07 11:39:49 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-char	*ft_readline(void)//we can use readline
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	char *line;
+	t_list	*res;
+	t_list	*new;
+	void	*value;
 
-	line = readline("minishell$ ");
-	if(!line)
+	res = NULL;
+	if (lst == NULL || f == NULL || del == NULL)
+		return (NULL);
+	while (lst)
 	{
-		printf("exit\n");
-		//herecod Ctrl+D
-		exit(0);
+		value = f(lst->content);
+		new = ft_lstnew(value);
+		if (!new)
+		{
+			del(value);
+			ft_lstclear(&res, del);
+			return (NULL);
+		}
+		ft_lstadd_back(&res, new);
+		lst = lst->next;
 	}
-	if(*line)
-		add_history(line);
-	return (line);
+	return (res);
 }

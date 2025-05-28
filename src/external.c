@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   external.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 11:59:50 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/22 12:22:07 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/05/26 18:49:56 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void execute_external(t_command *cmd, char **env)
+//not used anymore. i used another in execution.c
+
+/* void execute_external(t_command *cmd, char **env)
 {
 	pid_t pid;
 	int status;
@@ -44,4 +46,4 @@ void execute_external(t_command *cmd, char **env)
 		else if (WIFSIGNALED(status))
 			g_exit_status = 128 + WTERMSIG(status);
 	}
-}
+} */
