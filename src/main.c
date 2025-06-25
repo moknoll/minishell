@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/27 22:32:51 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:05:52 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ static void process_input(char *line, t_env **my_env, char **env)
         free_tokens(tokens);
         return;
     }
-    //print_debug_info(tokens, cmd_list);
     if (cmd_list->next == NULL && is_builtin(cmd_list->argv[0]))
         builtin(cmd_list->argv, my_env, env);
     else

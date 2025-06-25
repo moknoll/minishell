@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/28 17:01:06 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:00:35 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,11 @@ static int ft_cd(char **argv, t_env **env)
     {
         path = argv[1];
     }
-
     if (chdir(path) == -1)
     {
         printf("minishell: cd: %s: %s\n", path, strerror(errno));
         return (1);
     }
-
-    // Update PWD and OLDPWD
     if (getcwd(cwd, sizeof(cwd)))
     {
         set_env(env, "OLDPWD", get_variable_value_from_env(*env, "PWD"));
@@ -106,7 +103,7 @@ int set_env(t_env **env, const char *key, const char *value)
     t_env *new;
 
     if (!key || !value)
-        return (1); // Error: invalid arguments
+        return (1);
     while (tmp)
     {
         if (ft_strcmp(tmp->key, key) == 0)
@@ -114,20 +111,19 @@ int set_env(t_env **env, const char *key, const char *value)
             free(tmp->value);
             tmp->value = ft_strdup(value);
             tmp->exported = 1;
-            return (0); // Success
+            return (0);
         }
         tmp = tmp->next;
     }
-    // If not found, create new entry
     new = malloc(sizeof(t_env));
     if (!new)
-        return (1); // Allocation failed
+        return (1);
     new->key = ft_strdup(key);
     new->value = ft_strdup(value);
     new->exported = 1;
     new->next = *env;
     *env = new;
-    return (0); // Success
+    return (0);
 }
 
 int ft_env(char **env)
@@ -220,7 +216,7 @@ void builtin(char **argv, t_env **my_env, char **env)
             char *eq = ft_strchr(argv[1], '=');
             if (eq)
             {
-                *eq = '\0'; // Split key and value
+                *eq = '\0';
                 status = set_env(my_env, argv[1], eq + 1);
             }
             else

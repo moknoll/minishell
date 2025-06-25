@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 09:36:08 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 18:06:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:04:29 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void setup_parent_signals(void)
     sigaction(SIGQUIT, &sa, NULL);
 }
 
-// SIGINT handler for heredoc: break on newline
 static void sigint_heredoc(int sig)
 {
     (void)sig;
@@ -45,7 +44,6 @@ static void sigint_heredoc(int sig)
     g_exit_status = 130;
 }
 
-// Setup signals during heredoc reading
 void setup_heredoc_signals(void)
 {
     struct sigaction sa;
@@ -59,7 +57,6 @@ void setup_heredoc_signals(void)
     sigaction(SIGQUIT, &sa, NULL);
 }
 
-// Setup default signals for child processes
 void setup_child_signals(void)
 {
     struct sigaction sa;

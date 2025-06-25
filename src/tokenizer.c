@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 19:25:26 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:09:08 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int parse_quoted_word(char *input, int *i, t_token **tokens, int has_spac
 		quote_type = SINGLE_QUOTE;
 	else
 		quote_type = DOUBLE_QUOTE;
-	(*i)++; 	//skip opening quote
+	(*i)++;
 	start = *i;
 	while(input[*i] && input[*i] != quote_char)
 		(*i)++;
@@ -84,7 +84,6 @@ static void parse_unquoted_word(char *input, int *i, t_token **tokens, int has_s
 	int start = *i;
 	char *word;
 
-	// Read until space, operator, or quote
 	while (input[*i] && !ft_isspace(input[*i]) && !is_operator(input[*i]) && input[*i] != '\'' && input[*i] != '"')
 		(*i)++;
 	if (*i > start)
@@ -154,12 +153,12 @@ char **tokens_to_argv(t_token **token)
 	{
 		if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
 		{
-			*token = (*token)->next; // skip operator
+			*token = (*token)->next;
 			if (!*token || (*token)->type != WORD)
 				return NULL;
 			argv[i++] = ft_strdup((*token)->value);
-			*token = (*token)->next; // skip file/word
-			continue; // prevent double increment at end of loop
+			*token = (*token)->next;
+			continue;
 		}
 		*token = (*token)->next;
 	}

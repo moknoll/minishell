@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotations.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:08 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 12:28:32 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/06/25 20:09:54 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,3 @@ void strip_quotes_inplace(t_token *tokens)
     }
 }
 
-
-//check unclosed quotes

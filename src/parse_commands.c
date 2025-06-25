@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:24 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 19:42:41 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 19:58:01 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ static t_redir *build_redirections(t_token **token)
     {
         if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
         {
-			printf("PARSER: found redir type %d, value %s\n", (*token)->type, (*token)->value);
-			fflush(stdout);
             e_redir_type type;
             if ((*token)->type == REDIRECT_IN)
                 type = REDIR_IN;
@@ -69,7 +67,7 @@ static t_redir *build_redirections(t_token **token)
                 type = REDIR_OUT;
             else if ((*token)->type == REDIRECT_APPEND)
                 type = REDIR_APPEND;
-            else /* HEREDOC */
+            else
                 type = REDIR_HEREDOC;
             *token = (*token)->next;
             if (!*token || (*token)->type != WORD)
@@ -79,7 +77,7 @@ static t_redir *build_redirections(t_token **token)
              new->type = type;
              new->file = ft_strdup((*token)->value);
              new->next = NULL;
-             new->fd = -1; // no heredoc yet
+             new->fd = -1;
              if (!head)
                  head = new;
              else

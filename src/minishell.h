@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 19:26:51 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:07:44 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ extern int g_exit_status;
 typedef enum {
 	WORD,
 	PIPE,
-	REDIRECT_IN,      // <
-	REDIRECT_OUT,     // >
-	REDIRECT_APPEND,  // >>
-	HEREDOC           // <<
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	REDIRECT_APPEND,
+	HEREDOC
 } e_token_type;
 
 typedef enum {
@@ -50,12 +50,11 @@ typedef enum {
 } e_quote_type;
 
 typedef struct s_env {
-    char *key;             //  "FOO"
-    char *value;           //  "bar"
-    int exported;         // If exported
-    struct s_env *next;    // Linked list
+    char *key;
+    char *value;
+    int exported;
+    struct s_env *next;
 } t_env;
-
 
 typedef struct s_token {
 	char *value;
@@ -76,14 +75,14 @@ typedef struct s_redir {
     e_redir_type type;
     char *file;
     struct s_redir *next;
-    int fd; // read end of heredoc pipe, -1 if not heredoc
+    int fd;
 } t_redir;
 
 typedef struct s_command {
 	char **argv;
 	struct s_command *next;
 	t_redir *redirs;
-	int heredoc_fd; // File descriptor for heredoc, -1 if not used
+	int heredoc_fd;
 } t_command;
 
 // Tokenizer
@@ -106,7 +105,6 @@ void		strip_quotes_inplace(t_token *tokens);
 void		expand_tokens(t_token *tokens, int g_exit_status, t_env *env);
 char		*expand_token(t_token *token, int g_exit_status, t_env *my_env);
 void		merge_token(t_token **tokens);
-//void		set_env(t_env **env, char *arg);
 int			set_env(t_env **env, const char *key, const char *value);
 char		*get_variable_value_from_env(t_env *my_env, char *var_name);
 
@@ -120,8 +118,6 @@ char		*get_path(char *cmd, char *envp[]);
 void		execute_child_process(t_command *cmd, char **env);
 int			parent_cleanup_and_wait(pid_t pid, int *prev_fd, int pipefd[2], t_command *cmd);
 void		ft_pipe(t_command *cmd_list, char *env[]);
-
-//void		execute_external(t_command *cmd, char **env);//used mine instead
 
 // parse commands
 t_command	*parse_commands(t_token *tokens);

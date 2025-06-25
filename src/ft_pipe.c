@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:24:53 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:42:11 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:03:32 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int create_pipe(t_command *cmd, int pipefd[2])
 			perror("create pipe");
 			return -1;
 		}
-		return 1; // pipe was created
+		return 1;
 	}
-	return 0; // No pipe needed
+	return 0;
 }
 
 void child_process(t_command *cmd, int prev_fd, int pipefd[2])
@@ -157,7 +157,7 @@ void ft_pipe(t_command *cmd_list, char *env[])
 		pid = fork();
 		if (pid == -1)
 		{
-			perror("fork"); //debugging
+			perror("fork");
 			return ;
 		}
 		if (pid == 0)

@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:35 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/27 22:37:14 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 20:02:30 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ char *get_variable_value_from_env(t_env *my_env, char *var_name)
 	while (my_env)
 	{
 		if (ft_strcmp(my_env->key, var_name) == 0 && my_env->exported)
-			return ft_strdup(my_env->value); // eigene Kopie
+			return ft_strdup(my_env->value);
 		my_env = my_env->next;
 	}
-	return ft_strdup(""); // nicht gefunden
+	return ft_strdup("");
 }
 
 char *get_variable_value(char *input, int *i, t_env *my_env)
@@ -57,7 +57,6 @@ char *get_variable_value(char *input, int *i, t_env *my_env)
 	char *var_value;
 
 	start = *i;
-	// Move i forward to the end od the variale name
 	while(input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
 		(*i)++;
 	var_name = ft_strndup(&input[start], *i - start);
@@ -102,8 +101,8 @@ char *expand_token(t_token *token, int g_exit_status, t_env *my_env)
     if (!input)
         return (NULL);
     if (token->quote_type == SINGLE_QUOTE)
-		return ft_strdup(token->value); // No expansion in single quotes
-    output = calloc(1, 1); // Start with empty string
+		return ft_strdup(token->value);
+    output = calloc(1, 1);
 	while (input[i])
 	{
 		if (input[i] == '$' && token->quote_type != SINGLE_QUOTE)

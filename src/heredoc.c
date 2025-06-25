@@ -17,11 +17,9 @@
 
 void handle_heredocs(t_command *cmd_list)
 {
-    // Setup signals for heredoc reading
     setup_heredoc_signals();
     t_command *cmd = cmd_list;
-    printf("DEBUG: handle_heredocs called\n");
-    fflush(stdout);
+
     while (cmd)
     {
         t_redir *r = cmd->redirs;
@@ -36,8 +34,6 @@ void handle_heredocs(t_command *cmd_list)
                     perror("minishell: heredoc pipe");
                     exit(1);
                 }
-                printf("DEBUG: Entering heredoc for delimiter: %s\n", r->file);
-                fflush(stdout);
                 while (1)
                 {
                     line = readline("heredoc> ");
@@ -55,12 +51,9 @@ void handle_heredocs(t_command *cmd_list)
                 close(pipefd[1]);
                 r->fd = pipefd[0];
             }
-            printf("DEBUG: redir type = %d, file = %s\n", r->type, r->file);
-            fflush(stdout);
             r = r->next;
         }
         cmd = cmd->next;
     }
-    // Restore parent signal handlers after heredoc
     setup_parent_signals();
 }
