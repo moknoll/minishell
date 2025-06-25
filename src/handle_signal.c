@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 09:36:08 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 17:20:57 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 18:06:00 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void sigint_handler(int sig)
 {
     (void)sig;
     write(STDOUT_FILENO, "\n", 1);
-    //rl_replace_line("", 0);
+    rl_replace_line("", 0);
     rl_on_new_line();
     rl_redisplay();
 }
@@ -40,7 +40,7 @@ static void sigint_heredoc(int sig)
     (void)sig;
     write(STDOUT_FILENO, "\n", 1);
     rl_on_new_line();
-    //rl_replace_line("", 0);
+    rl_replace_line("", 0);
     rl_redisplay();
     g_exit_status = 130;
 }

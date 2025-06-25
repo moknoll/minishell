@@ -6,12 +6,11 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:30:06 by radubos           #+#    #+#             */
-/*   Updated: 2025/05/27 22:39:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 19:03:11 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <fcntl.h>
 
 void execute_external(t_command *cmd_list, char **env)
 {

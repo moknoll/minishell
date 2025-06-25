@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/27 20:35:50 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 19:26:51 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <string.h>
 #include <limits.h>
 #include <errno.h>
-#include <string.h>
+#include <fcntl.h>
 #include "../libft/libft.h"
 
 #define PROMPT "minishell$ "
@@ -83,6 +83,7 @@ typedef struct s_command {
 	char **argv;
 	struct s_command *next;
 	t_redir *redirs;
+	int heredoc_fd; // File descriptor for heredoc, -1 if not used
 } t_command;
 
 // Tokenizer
@@ -154,6 +155,7 @@ void		add_token(t_token **head, char *value, e_token_type type, e_quote_type quo
 void		free_tokens(t_token *head);
 char		**token_to_argv(t_token *token);
 void		print_tokens(t_token *tokens);
+int			token_list_size(t_token **token);
 
 // Preprocess heredoc redirections before forking
 void    handle_heredocs(t_command *cmd_list);

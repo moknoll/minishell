@@ -6,13 +6,13 @@
 #    By: radubos <radubos@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
-#    Updated: 2025/05/25 09:12:31 by radubos          ###   ########.fr        #
+#    Updated: 2025/06/25 19:31:37 by radubos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compiler and flags
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror
+CFLAGS  = -Wall -Wextra -Werror -g3 -o3
 
 # Readline includes and libraries (macOS)
 READLINE_FLAGS = -lreadline -lncurses

@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/27 22:35:20 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 19:25:26 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,4 +139,43 @@ t_token *tokenizer(char *input)
 		}
 	}
 	return (tokens);
+}
+
+char **tokens_to_argv(t_token **token)
+{
+	char **argv;
+	int i;
+
+	argv = malloc(sizeof(char *) * (token_list_size(token) + 1));
+	if (!argv)
+		return (NULL);
+	i = 0;
+	while (*token && (*token)->type != PIPE)
+	{
+		if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
+		{
+			*token = (*token)->next; // skip operator
+			if (!*token || (*token)->type != WORD)
+				return NULL;
+			argv[i++] = ft_strdup((*token)->value);
+			*token = (*token)->next; // skip file/word
+			continue; // prevent double increment at end of loop
+		}
+		*token = (*token)->next;
+	}
+	argv[i] = NULL;
+	return argv;
+}
+
+int token_list_size(t_token **token)
+{
+	int size;
+
+	size = 0;
+	while (token && *token)
+	{
+		size++;
+		token = &((*token)->next);
+	}
+	return (size);
 }

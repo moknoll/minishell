@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:24 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/26 18:25:12 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 19:42:41 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static t_redir *build_redirections(t_token **token)
     {
         if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
         {
+			printf("PARSER: found redir type %d, value %s\n", (*token)->type, (*token)->value);
+			fflush(stdout);
             e_redir_type type;
             if ((*token)->type == REDIRECT_IN)
                 type = REDIR_IN;
@@ -102,8 +104,8 @@ t_command *parse_commands(t_token *tokens)
 		new_cmd = malloc(sizeof(t_command));
 		if(!new_cmd)
 			return NULL;
-		new_cmd->argv = build_argv(&tokens);
 		new_cmd->redirs = build_redirections(&tokens);
+		new_cmd->argv = build_argv(&tokens);
 		new_cmd->next = NULL;
 		if(!head)
 			head = new_cmd;
