@@ -60,17 +60,27 @@ static t_redir *build_redirections(t_token **token)
     {
         if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
         {
-            e_redir_type type = (e_redir_type)(*token)->type;
+            e_redir_type type;
+            if ((*token)->type == REDIRECT_IN)
+                type = REDIR_IN;
+            else if ((*token)->type == REDIRECT_OUT)
+                type = REDIR_OUT;
+            else if ((*token)->type == REDIRECT_APPEND)
+                type = REDIR_APPEND;
+            else /* HEREDOC */
+                type = REDIR_HEREDOC;
             *token = (*token)->next;
             if (!*token || (*token)->type != WORD)
                 return NULL;
             t_redir *new = malloc(sizeof(t_redir));
-            new->type = type;
-            new->file = ft_strdup((*token)->value);
-            new->next = NULL;
-            if (!head)
-                head = new;
-            else
+            if (!new) return NULL;
+             new->type = type;
+             new->file = ft_strdup((*token)->value);
+             new->next = NULL;
+             new->fd = -1; // no heredoc yet
+             if (!head)
+                 head = new;
+             else
                 current->next = new;
             current = new;
         }

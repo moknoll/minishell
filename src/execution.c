@@ -11,9 +11,12 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <fcntl.h>
 
 void execute_external(t_command *cmd_list, char **env)
 {
+    // Preprocess heredocs: prompt user and fill pipes
+    handle_heredocs(cmd_list);
     int pipefd[2];
     int prev_fd = -1;
     pid_t pid;
@@ -36,6 +39,8 @@ void execute_external(t_command *cmd_list, char **env)
         }
         else if (pid == 0) // Child process
         {
+            // Reset signals for child
+            setup_child_signals();
             // Handle input from previous command
             if (prev_fd != -1)
             {

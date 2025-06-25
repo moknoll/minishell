@@ -20,6 +20,8 @@
 #include <readline/history.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <dirent.h>
 #include <string.h>
 #include <limits.h>
 #include <errno.h>
@@ -74,6 +76,7 @@ typedef struct s_redir {
     e_redir_type type;
     char *file;
     struct s_redir *next;
+    int fd; // read end of heredoc pipe, -1 if not heredoc
 } t_redir;
 
 typedef struct s_command {
@@ -135,9 +138,15 @@ void		append_char(char c, char **output);
 void		free_args(char **argv);
 int			is_builtin(char *cmd);
 const char	*quote_type_str(e_quote_type qt);
+char		*ft_realloc(char * src, int old_size, int new_size);
+char		*ft_malloc(char *src, int size);
 
 // Handle signal
 void		setup_parent_signals(void);
+void    	setup_child_signals(void);
+void    	setup_heredoc_signals(void);
+
+// Heredoc handled in apply_redirections()
 
 // token utils
 t_token		*new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
@@ -145,5 +154,8 @@ void		add_token(t_token **head, char *value, e_token_type type, e_quote_type quo
 void		free_tokens(t_token *head);
 char		**token_to_argv(t_token *token);
 void		print_tokens(t_token *tokens);
+
+// Preprocess heredoc redirections before forking
+void    handle_heredocs(t_command *cmd_list);
 
 #endif

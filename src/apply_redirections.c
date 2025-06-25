@@ -39,21 +39,31 @@ int apply_redirections(t_redir *redirs)
             fd = open(redirs->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
             std_fd = STDOUT_FILENO;
         }
+        else if (redirs->type == REDIR_HEREDOC)
+        {
+            if (redirs->fd == -1)
+            {
+                printf("minishell: heredoc pipe not set\n");
+                return (-1);
+            }
+            fd = redirs->fd;
+            std_fd = STDIN_FILENO;
+        }
         else
         {
-            fprintf(stderr, "minishell: unknown redirection type\n");
+            printf("minishell: unknown redirection type\n");
             return (-1);
         }
 
         if (fd < 0)
         {
-            fprintf(stderr, "minishell: %s: %s\n", redirs->file, strerror(errno));
+            printf("minishell: %s: %s\n", redirs->file, strerror(errno));
             return (-1);
         }
 
         if (dup2(fd, std_fd) == -1)
         {
-            fprintf(stderr, "minishell: dup2 failed\n");
+            printf("minishell: dup2 failed\n");
             close(fd);
             return (-1);
         }

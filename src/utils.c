@@ -11,3 +11,36 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// ft_malloc avec exit
+char	*ft_malloc(char *src, int size)
+{
+	src = malloc(sizeof(char) * size);
+	if (!src)
+		return (exit(1), NULL);
+	return (src);
+}
+
+// ft_realloc
+char *ft_realloc(char * src, int old_size, int new_size)
+{
+	char	*res = NULL;
+	int		i;
+	
+	i = 0;
+	if (!src)
+		return (NULL);
+	if (new_size < 0)
+		return (src);
+	ft_malloc(res, new_size);
+	if (!res)
+		return (NULL);
+	while (old_size--)
+	{
+		res[i] = src[i];
+		i++;
+	}
+	res[i] = '\0';
+	free(src);
+	return (res);
+}

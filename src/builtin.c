@@ -12,27 +12,10 @@
 
 #include "minishell.h"
 
-/* static void ft_cd(char **argv)
-{
-	char *path;
-
-	if (argv[1])
-		path = argv[1];
-	else
-		path = getenv("HOME");
-	if (!path)
-	{
-		perror("cd: HOME not set\n");
-		return;
-	}
-	if (chdir(path) == -1)
-		perror("cd");
-} */
-
 static int ft_cd(char **argv, t_env **env)
 {
     char *path;
-    char cwd[PATH_MAX];
+    char cwd[1024];
 
     if (!argv[1] || ft_strcmp(argv[1], "~") == 0)
     {
@@ -117,42 +100,6 @@ static int ft_echo(char **argv)
     return (0);
 }
 
-/* void set_env(t_env **env, char *arg)
-{
-    int sep = 0;
-    t_env *tmp = *env;
-
-    while (arg[sep] && arg[sep] != '=')
-        sep++;
-
-    if (sep == 0 || !arg[sep])
-        return; // Ungültig: Kein Key oder kein '='
-
-    char *key = ft_strndup(arg, sep);
-    char *value = ft_strdup(arg + sep + 1);
-
-    while (tmp)
-    {
-        if (ft_strcmp(tmp->key, key) == 0)
-        {
-            free(tmp->value);
-            tmp->value = value;
-            tmp->exported = 1;
-            free(key);
-            return;
-        }
-        tmp = tmp->next;
-    }
-
-    // Falls nicht existiert → neuen Eintrag anhängen
-    t_env *new = malloc(sizeof(t_env));
-    new->key = key;
-    new->value = value;
-    new->exported = 1;
-    new->next = *env;
-    *env = new;
-} */
-
 int set_env(t_env **env, const char *key, const char *value)
 {
     t_env *tmp = *env;
@@ -182,19 +129,6 @@ int set_env(t_env **env, const char *key, const char *value)
     *env = new;
     return (0); // Success
 }
-
-
-/* void ft_env(char **env)
-{
-	int i;
-
-	i = 0;
-	while(env[i])
-	{
-		printf("%s\n", env[i]);
-		i++;
-	}
-} */
 
 int ft_env(char **env)
 {
@@ -232,7 +166,7 @@ static int ft_unset(t_env **my_env,const char *key)
 				*my_env = current->next;
 			else
 				previous->next = current->next;
-			return(free(current->value), free(current->key), free(current));
+			return(free(current->value), free(current->key), free(current), 0);
 		}
 		previous = current;
 		current = current ->next;
@@ -240,52 +174,6 @@ static int ft_unset(t_env **my_env,const char *key)
 	printf("unset done");
     return (0);
 }
-
-int ft_unset(t_env **env, const char *key)
-{
-    t_env *current;
-    t_env *prev = NULL;
-
-    if (!key || !*key)
-    {
-        printf("minishell: unset: invalid identifier\n");
-        return (1);
-    }
-
-    current = *env;
-    while (current)
-    {
-        if (ft_strcmp(current->key, key) == 0)
-        {
-            if (prev)
-                prev->next = current->next;
-            else
-                *env = current->next;
-            free(current->key);
-            free(current->value);
-            free(current);
-            return (0);
-        }
-        prev = current;
-        current = current->next;
-    }
-    return (0); // Si la variable n'existe pas, ce n'est pas une erreur
-}
-
-/* static void ft_export(t_env *my_env)
-{
-	while (my_env)
-	{
-		if(my_env->exported)
-		{
-			printf("declare -x %s", my_env->key);
-			if(my_env->value)
-				printf("=\"%s\"", my_env->value);
-			printf("\n");
-		}
-		my_env = my_env->next;
-	}
-} */
 
 int ft_export(t_env *env)
 {
@@ -307,38 +195,6 @@ int ft_export(t_env *env)
     }
     return (0);
 }
-
-/* void builtin(char **argv, t_env **my_env, char **env)
-{
-	if (!argv[0] || argv[0][0] == '\0')
-		return;
-	if (ft_strcmp(argv[0], "exit") == 0)
-		ft_exit(argv);
-	else if (ft_strcmp(argv[0], "cd") == 0)
-		ft_cd(argv);
-	else if (ft_strcmp(argv[0], "pwd") == 0)
-		ft_pwd(argv);
-	else if (ft_strcmp(argv[0], "echo") == 0)
-	{
-		if (argv[1] && check_multiple_n(argv[1]))
-			ft_echo_n(argv);
-		else
-			ft_echo(argv);
-	}
-	else if (ft_strcmp(argv[0], "export") == 0)
-	{
-		if (!argv[1])
-			ft_export(*my_env);
-		else
-			set_env(my_env, argv[1]);
-	}
-	else if (ft_strcmp(argv[0], "unset") == 0)
-	 	ft_unset(my_env, argv[1]);
-	else if (ft_strcmp(argv[0], "env") == 0)
-		ft_env(env);
-	else
-		perror("command not found");
-} */
 
 void builtin(char **argv, t_env **my_env, char **env)
 {

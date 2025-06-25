@@ -14,9 +14,6 @@
 
 int g_exit_status = 0;
 
-/*Append a string to an existing outpit, We'll dynamically allocate space for the output as needed */
-
-// test
 void append_str(const char *str, char **output)
 {
     char *new;
@@ -75,7 +72,6 @@ void handle_dollar(char *input, int *i, char **output, int g_exit_status, t_env 
 {
 	char *exit_status_str;
 	char *var_value;
-    int start;
 
 	(*i)++;
 	if(input[*i] == '?')
@@ -87,7 +83,6 @@ void handle_dollar(char *input, int *i, char **output, int g_exit_status, t_env 
 	}
     else if (ft_isalpha(input[*i]) || input[*i] == '_')
     {
-        start = *i;
         while (input[*i] && (ft_isalnum(input[*i]) || input[*i] == '_'))
             (*i)++;
         var_value = get_variable_value(input, i, my_env);
