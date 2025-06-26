@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 02:57:02 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 03:23:59 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,15 @@ char		**token_to_argv(t_token *token);
 int			skip_quotes(const char *input, int i);
 char		*strip_quotes(char *str);
 void		strip_quotes_inplace(t_token *tokens);
-void		expand_tokens(t_token *tokens, int g_exit_status, t_env *env);
-char		*expand_token(t_token *token, int g_exit_status, t_env *my_env);
+void		expand_tokens(t_token *tokens, int *g_exit_status, t_env *env);
+char		*expand_token(t_token *token, t_expand_ctx *ctx);
 void		merge_token(t_token **tokens);
 int			set_env(t_env **env, const char *key, const char *value);
 char		*get_variable_value_from_env(t_env *my_env, char *var_name);
 
 // pipe
 int			create_pipe(t_command *cmd, int pipefd[2]);
-void		child_process(t_command *cmd, int prev_fd, int pipefd[2]);
+void		child_process(t_command *cmd, int prev_fd, int pipefd[2], char **env);
 void		ft_free_tab(char **tab);
 char		*get_env_path(char *env[]);
 char		**split_path(char *envp[]);

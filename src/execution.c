@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:30:06 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/26 00:09:55 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 03:21:18 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	apply_redirections(t_redir *redirs)
 	return (0);
 }
 
-static void	child_process(t_command *cmd, int prev_fd, int *pipefd, char **env)
+void	child_process(t_command *cmd, int prev_fd, int pipefd[2], char **env)
 {
 	setup_child_signals();
 	if (prev_fd != -1)
@@ -120,7 +120,7 @@ void	execute_external(t_command *cmd_list, char **env)
 	handle_heredocs(cmd_list);
 	while (cmd_list)
 	{
-		launch_child_and_manage_pipes(cmd_list, &prev_fd, pipefd, env);
+		pid = launch_child_and_manage_pipes(cmd_list, &prev_fd, pipefd, env);
 		last_pid = pid;
 		cmd_list = cmd_list->next;
 	}

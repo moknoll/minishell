@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:24:53 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 01:06:25 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 03:36:28 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,6 @@ int	create_pipe(t_command *cmd, int pipefd[2])
 		return (1);
 	}
 	return (0);
-}
-
-void	child_process(t_command *cmd, int prev_fd, int pipefd[2])
-{
-	if (prev_fd != -1)
-	{
-		dup2(prev_fd, STDIN_FILENO);
-		close(prev_fd);
-	}
-	if (cmd->next)
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-	}
 }
 
 void	execute_child_process(t_command *cmd, char **env)
@@ -69,7 +54,7 @@ static void	pipe_fork_and_exec(t_command *cmd_list, int prev_fd, int pipefd[2],
 	}
 	if (pid == 0)
 	{
-		child_process(cmd_list, prev_fd, pipefd);
+		child_process(cmd_list, prev_fd, pipefd, env);
 		execute_child_process(cmd_list, env);
 	}
 	else
