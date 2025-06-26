@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:22:16 by radubos           #+#    #+#             */
-/*   Updated: 2025/05/25 09:59:13 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 22:04:20 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 void	*ft_memset(void *s, int c, size_t n)
 {
-    unsigned char *ptr;
+	unsigned char	*ptr;
 
-    if (!s)
-        return (NULL);
-        
-    ptr = (unsigned char *)s;
-    while (n--)
-        *ptr++ = (unsigned char)c;
-    return (s);
+	if (!s)
+		return (NULL);
+	ptr = (unsigned char *)s;
+	while (n--)
+		*ptr++ = (unsigned char)c;
+	return (s);
 }

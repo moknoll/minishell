@@ -6,13 +6,13 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 16:41:56 by radubos           #+#    #+#             */
-/*   Updated: 2025/05/26 16:42:45 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 22:04:48 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_isspace(char c)
+int	ft_isspace(char c)
 {
-    return (c == ' ' || (c >= '\t' && c <= '\r'));
+	return (c == ' ' || (c >= '\t' && c <= '\r'));
 }
