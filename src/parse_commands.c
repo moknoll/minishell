@@ -6,111 +6,100 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:24 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 19:58:01 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 02:31:32 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int count_args(t_token *token)
+static e_redir_type	get_redir_type(e_token_type token_type)
 {
-	int count;
-
-	count = 0;
-	while(token && token->type != PIPE)
-	{
-		if(token->type == WORD)
-			count++;
-		else if (token->type >= REDIRECT_IN && token->type <= HEREDOC)
-			token = token->next;
-		token = token->next;
-	}
-	return (count);
+	if (token_type == REDIRECT_IN)
+		return (REDIR_IN);
+	else if (token_type == REDIRECT_OUT)
+		return (REDIR_OUT);
+	else if (token_type == REDIRECT_APPEND)
+		return (REDIR_APPEND);
+	else
+		return (REDIR_HEREDOC);
 }
 
-static char **build_argv(t_token **token)
+static t_redir	*create_redir_node(e_redir_type type, char *file)
 {
-	int argc;
-	char **argv;
-	int i;
+	t_redir	*new;
 
-	argc = count_args(*token);
-	argv = malloc(sizeof(char *) * (argc + 1));
-	i = 0;
-	if(!argv)
-		return NULL;
-	while(*token && (*token)->type != PIPE)
-	{
-		if((*token)->type == WORD)
-			argv[i++] = ft_strdup((*token)->value);
-		else if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
-			*token = (*token)->next;
-		*token = (*token)->next;
-	}
-	argv[i] = NULL;
-	return argv;
+	new = malloc(sizeof(t_redir));
+	if (!new)
+		return (NULL);
+	new->type = type;
+	new->file = ft_strdup(file);
+	new->next = NULL;
+	new->fd = -1;
+	return (new);
 }
 
-static t_redir *build_redirections(t_token **token)
+static int	add_redir_node(t_redir **head, t_redir **current, e_redir_type type,
+																	char *file)
 {
-    t_redir *head = NULL;
-    t_redir *current = NULL;
+	t_redir	*new;
 
-    while (*token && (*token)->type != PIPE)
-    {
-        if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
-        {
-            e_redir_type type;
-            if ((*token)->type == REDIRECT_IN)
-                type = REDIR_IN;
-            else if ((*token)->type == REDIRECT_OUT)
-                type = REDIR_OUT;
-            else if ((*token)->type == REDIRECT_APPEND)
-                type = REDIR_APPEND;
-            else
-                type = REDIR_HEREDOC;
-            *token = (*token)->next;
-            if (!*token || (*token)->type != WORD)
-                return NULL;
-            t_redir *new = malloc(sizeof(t_redir));
-            if (!new) return NULL;
-             new->type = type;
-             new->file = ft_strdup((*token)->value);
-             new->next = NULL;
-             new->fd = -1;
-             if (!head)
-                 head = new;
-             else
-                current->next = new;
-            current = new;
-        }
-        *token = (*token)->next;
-    }
-    return head;
+	new = create_redir_node(type, file);
+	if (!new)
+		return (1);
+	if (!*head)
+		*head = new;
+	else
+		(*current)->next = new;
+	*current = new;
+	return (0);
 }
 
-t_command *parse_commands(t_token *tokens)
+static t_redir	*build_redirections(t_token **token)
 {
-	t_command *head;
-	t_command *current;
-	t_command *new_cmd;
+	t_redir			*head;
+	t_redir			*current;
+	e_redir_type	type;
 
 	head = NULL;
 	current = NULL;
-	while(tokens)
+	while (*token && (*token)->type != PIPE)
+	{
+		if ((*token)->type >= REDIRECT_IN && (*token)->type <= HEREDOC)
+		{
+			type = get_redir_type((*token)->type);
+			*token = (*token)->next;
+			if (!*token || (*token)->type != WORD)
+				return (NULL);
+			if (add_redir_node(&head, &current, type, (*token)->value))
+				return (NULL);
+		}
+		*token = (*token)->next;
+	}
+	return (head);
+}
+
+t_command	*parse_commands(t_token *tokens)
+{
+	t_command	*head;
+	t_command	*current;
+	t_command	*new_cmd;
+
+	head = NULL;
+	current = NULL;
+	while (tokens)
 	{
 		new_cmd = malloc(sizeof(t_command));
-		if(!new_cmd)
-			return NULL;
+		if (!new_cmd)
+			return (NULL);
 		new_cmd->redirs = build_redirections(&tokens);
 		new_cmd->argv = build_argv(&tokens);
 		new_cmd->next = NULL;
-		if(!head)
+		if (!head)
 			head = new_cmd;
 		else
 			current->next = new_cmd;
 		current = new_cmd;
-		if(tokens && tokens->type == PIPE)
+		if (tokens && tokens->type == PIPE)
 			tokens = tokens->next;
 	}
 	return (head);

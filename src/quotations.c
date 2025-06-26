@@ -6,15 +6,15 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:08 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 20:09:54 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 02:37:20 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int skip_quotes(const char *input, int i)
+int	skip_quotes(const char *input, int i)
 {
-	if(input[i] == '\'')
+	if (input[i] == '\'')
 	{
 		i++;
 		while (input[i] && input[i] != '\'')
@@ -27,8 +27,8 @@ int skip_quotes(const char *input, int i)
 		i++;
 		while (input[i] && input[i] != '"')
 		{
-			if (input[i] == '\\' && input[i+1])
-				i+=2;
+			if (input[i] == '\\' && input[i + 1])
+				i += 2;
 			else
 				i++;
 		}
@@ -38,28 +38,30 @@ int skip_quotes(const char *input, int i)
 	return (i);
 }
 
-char *strip_quotes(char *str)
+char	*strip_quotes(char *str)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
 	if (!str)
-		return NULL;
+		return (NULL);
 	while (str[len])
 		len++;
-	if ((str[0] == '\'' && str[len-1] == '\'') || (str[0] == '"' && str[len-1] == '"'))
-		return(ft_strndup(str+1, len-2));
-	return(ft_strdup(str));
+	if ((str[0] == '\'' && str[len - 1] == '\'') || \
+		(str[0] == '"' && str[len - 1] == '"'))
+		return (ft_strndup(str + 1, len - 2));
+	return (ft_strdup(str));
 }
 
-void strip_quotes_inplace(t_token *tokens)
+void	strip_quotes_inplace(t_token *tokens)
 {
-    while (tokens)
-    {
-        char *stripped = strip_quotes(tokens->value);
-        free(tokens->value);
-        tokens->value = stripped;
-        tokens = tokens->next;
-    }
-}
+	char	*stripped;
 
+	while (tokens)
+	{
+		stripped = strip_quotes(tokens->value);
+		free(tokens->value);
+		tokens->value = stripped;
+		tokens = tokens->next;
+	}
+}

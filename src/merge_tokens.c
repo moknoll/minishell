@@ -3,24 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   merge_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:11:03 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/05/06 12:36:38 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2025/06/26 02:19:38 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void merge_token(t_token **tokens)
+void	merge_token(t_token **tokens)
 {
-	t_token *current = *tokens;
-	t_token *next;
-	char *merged;
+	t_token	*current;
+	t_token	*next;
+	char	*merged;
 
+	current = *tokens;
 	while (current && current->next)
 	{
-		if (current->type == WORD && current->next && current->next->type == WORD && current->next->has_space_before == 0)
+		if (current->type == WORD && current->next && \
+			current->next->type == WORD && current->next->has_space_before == 0)
 		{
 			next = current->next;
 			merged = ft_strjoin(current->value, next->value);
@@ -34,4 +36,3 @@ void merge_token(t_token **tokens)
 			current = current->next;
 	}
 }
-

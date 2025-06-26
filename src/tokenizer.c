@@ -6,55 +6,89 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:59:19 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 20:09:08 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 03:11:38 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int is_operator(char c)
+static int	is_operator(char c)
 {
-	if (c == '|' || c == '<' || c == '>')
-		return (1);
-	return (0);
+	return (c == '|' || c == '<' || c == '>');
 }
 
-static void handle_operator(char *input, int *i, t_token **tokens, int has_space)
+static void	add_operator_token(t_token **tokens, t_operator_info *op, int *i)
 {
+	t_token_info	info;
+
+	info.value = op->value;
+	info.type = op->type;
+	info.quote_type = NO_QUOTE;
+	info.has_space_before = op->has_space;
+	add_token(tokens, &info);
+	*i += op->step;
+}
+
+static void	init_operator_info(t_operator_info *op, char *value, e_token_type type, int step, int has_space)
+{
+	op->value = value;
+	op->type = type;
+	op->step = step;
+	op->has_space = has_space;
+}
+
+static void	handle_operator(char *input, int *i, t_token **tokens,
+																int has_space)
+{
+	t_operator_info	op;
+
 	if (input[*i] == '<' && input[*i + 1] == '<')
-	{
-		add_token(tokens, "<<", HEREDOC, NO_QUOTE, has_space);
-		*i += 2;
-	}
+		init_operator_info(&op, "<<", HEREDOC, 2, has_space);
 	else if (input[*i] == '>' && input[*i + 1] == '>')
-	{
-		add_token(tokens, ">>", REDIRECT_APPEND, NO_QUOTE, has_space);
-		*i += 2;
-	}
+		init_operator_info(&op, ">>", REDIRECT_APPEND, 2, has_space);
 	else if (input[*i] == '|')
-	{
-		add_token(tokens, "|", PIPE, NO_QUOTE, has_space);
-		(*i)++;
-	}
+		init_operator_info(&op, "|", PIPE, 1, has_space);
 	else if (input[*i] == '<')
-	{
-		add_token(tokens, "<", REDIRECT_IN, NO_QUOTE, has_space);
-		(*i)++;
-	}
+		init_operator_info(&op, "<", REDIRECT_IN, 1, has_space);
 	else if (input[*i] == '>')
-	{
-		add_token(tokens, ">", REDIRECT_OUT, NO_QUOTE, has_space);
-		(*i)++;
-	}
+		init_operator_info(&op, ">", REDIRECT_OUT, 1, has_space);
+	else
+		return ;
+	add_operator_token(tokens, &op, i);
 }
 
-static int parse_quoted_word(char *input, int *i, t_token **tokens, int has_space)
+static int	check_unclosed_quote(char *input, int *i, char quote_char)
 {
-	int start;
-	char quote_char;
-	e_quote_type quote_type;
-	char *word;
-	char *raw;
+	if (!(input[*i] == quote_char))
+	{
+		printf("Syntax error: unclosed %c-quote\n", quote_char);
+		return (0);
+	}
+	return (1);
+}
+
+static void	add_quoted_token(char *raw, int has_space, e_quote_type quote_type,
+															t_token **tokens)
+{
+	char			*word;
+	t_token_info	info;
+
+	word = ft_strtrim(raw, " \t\n\r\v\f");
+	info.value = word;
+	info.type = WORD;
+	info.quote_type = quote_type;
+	info.has_space_before = has_space;
+	add_token(tokens, &info);
+	free(word);
+}
+
+static int	parse_quoted_word(char *input, int *i, t_token **tokens,
+																int has_space)
+{
+	int				start;
+	char			quote_char;
+	e_quote_type	quote_type;
+	char			*raw;
 
 	quote_char = input[*i];
 	if (quote_char == '\'')
@@ -63,87 +97,104 @@ static int parse_quoted_word(char *input, int *i, t_token **tokens, int has_spac
 		quote_type = DOUBLE_QUOTE;
 	(*i)++;
 	start = *i;
-	while(input[*i] && input[*i] != quote_char)
+	while (input[*i] && input[*i] != quote_char)
 		(*i)++;
-	if (!(input[*i] == quote_char))
-	{
-		printf("Syntax error: unclosed %c-quote\n", quote_char);
-		return 0;
-	}
+	if (!check_unclosed_quote(input, i, quote_char))
+		return (0);
 	raw = ft_strndup(&input[start], *i - start);
-	word = ft_strtrim(raw, " \t\n\r\v\f");
-	add_token(tokens, word, WORD, quote_type, has_space);
-	free(word);
+	add_quoted_token(raw, has_space, quote_type, tokens);
 	free(raw);
 	(*i)++;
-	return 1;
+	return (1);
 }
 
-static void parse_unquoted_word(char *input, int *i, t_token **tokens, int has_space)
+static void	add_unquoted_token(char *word, int has_space, t_token **tokens)
 {
-	int start = *i;
-	char *word;
+	t_token_info	info;
 
-	while (input[*i] && !ft_isspace(input[*i]) && !is_operator(input[*i]) && input[*i] != '\'' && input[*i] != '"')
+	info.value = word;
+	info.type = WORD;
+	info.quote_type = NO_QUOTE;
+	info.has_space_before = has_space;
+	add_token(tokens, &info);
+	free(word);
+}
+
+static void	parse_unquoted_word(char *input, int *i, t_token **tokens,
+																int has_space)
+{
+	int		start;
+	char	*word;
+
+	start = *i;
+	while (input[*i] && !ft_isspace(input[*i]) && !is_operator(input[*i])
+		&& input[*i] != '\'' && input[*i] != '"')
 		(*i)++;
 	if (*i > start)
 	{
 		word = ft_strndup(&input[start], *i - start);
-		add_token(tokens, word, WORD, NO_QUOTE, has_space);
-		free(word);
+		add_unquoted_token(word, has_space, tokens);
 	}
 }
 
-
-static int handle_word(char *input, int *i, t_token **tokens, int has_space)
+static int	handle_word(char *input, int *i, t_token **tokens, int has_space)
 {
 	if (input[*i] == '\'' || input[*i] == '"')
-		return parse_quoted_word(input, i, tokens, has_space);
-	else
-	{
-		parse_unquoted_word(input, i, tokens, has_space);
-		return 1;
-	}
+		return (parse_quoted_word(input, i, tokens, has_space));
+	parse_unquoted_word(input, i, tokens, has_space);
+	return (1);
 }
 
-t_token *tokenizer(char *input)
+static void	handle_space(const char *input, int *i, int *has_space_before)
 {
-	t_token *tokens;
-	int i;
-	int has_space_before;
+	(void)input;
+	(*i)++;
+	*has_space_before = 1;
+}
+
+static int	handle_token(const char *input, int *i, t_token **tokens,
+														int *has_space_before)
+{
+	if (ft_isspace(input[*i]))
+		handle_space(input, i, has_space_before);
+	else if (is_operator(input[*i]))
+	{
+		handle_operator((char *)input, i, tokens, *has_space_before);
+		*has_space_before = 0;
+	}
+	else
+	{
+		if (!handle_word((char *)input, i, tokens, *has_space_before))
+			return (0);
+		*has_space_before = 0;
+	}
+	return (1);
+}
+
+t_token	*tokenizer(char *input)
+{
+	t_token	*tokens;
+	int		i;
+	int		has_space_before;
 
 	has_space_before = 1;
 	i = 0;
 	tokens = NULL;
-	while(input[i])
+	while (input[i])
 	{
-		if(ft_isspace(input[i]))
+		if (!handle_token(input, &i, &tokens, &has_space_before))
 		{
-			i++;
-			has_space_before = 1;
-		}
-		else if (is_operator(input[i]))
-		{
-			handle_operator(input, &i, &tokens, has_space_before);
-			has_space_before = 0;
-		}
-		else
-		{
-			if(!handle_word(input, &i, &tokens, has_space_before))
-			{
-				free_tokens(tokens);
-				return NULL;
-			}
-			has_space_before = 0;
+			free_tokens(tokens);
+			return (NULL);
 		}
 	}
 	return (tokens);
 }
 
-char **tokens_to_argv(t_token **token)
+char	**tokens_to_argv(t_token **token)
 {
-	char **argv;
-	int i;
+	char	**argv;
+	int		i;
 
 	argv = malloc(sizeof(char *) * (token_list_size(token) + 1));
 	if (!argv)
@@ -155,20 +206,20 @@ char **tokens_to_argv(t_token **token)
 		{
 			*token = (*token)->next;
 			if (!*token || (*token)->type != WORD)
-				return NULL;
+				return (NULL);
 			argv[i++] = ft_strdup((*token)->value);
 			*token = (*token)->next;
-			continue;
+			continue ;
 		}
 		*token = (*token)->next;
 	}
 	argv[i] = NULL;
-	return argv;
+	return (argv);
 }
 
-int token_list_size(t_token **token)
+int	token_list_size(t_token **token)
 {
-	int size;
+	int	size;
 
 	size = 0;
 	while (token && *token)

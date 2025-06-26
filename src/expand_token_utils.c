@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_readline.c                                      :+:      :+:    :+:   */
+/*   expand_token_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 11:34:54 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 02:16:39 by radubos          ###   ########.fr       */
+/*   Created: 2025/06/26 00:17:56 by radubos           #+#    #+#             */
+/*   Updated: 2025/06/26 00:31:27 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_readline(void)
+void	append_str(const char *str, char **output)
 {
-	char	*line;
+	char	*new;
 
-	line = readline("minishell$ ");
-	if (!line)
+	if (!str)
+		return ;
+	if (!*output)
 	{
-		printf("exit\n");
-		exit(0);
+		*output = ft_strdup(str);
+		return ;
 	}
-	if (*line)
-		add_history(line);
-	return (line);
+	new = ft_strjoin(*output, str);
+	free(*output);
+	*output = new;
+}
+
+void	append_char(char c, char **output)
+{
+	char	temp[2];
+
+	temp[0] = c;
+	temp[1] = '\0';
+	append_str(temp, output);
 }

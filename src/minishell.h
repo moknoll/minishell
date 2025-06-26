@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/25 20:07:44 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 02:57:02 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,32 @@ typedef struct s_command {
 	int heredoc_fd;
 } t_command;
 
+typedef struct s_expand_ctx {
+    int		*g_exit_status;
+    t_env	*my_env;
+}	t_expand_ctx;
+
+typedef struct s_token_info {
+    char			*value;
+    e_token_type	type;
+    e_quote_type	quote_type;
+    int				has_space_before;
+}	t_token_info;
+
+typedef struct s_operator_info
+{
+    char			*value;
+    e_token_type	type;
+    int				step;
+    int				has_space;
+}	t_operator_info;
+
 // Tokenizer
 t_token		*tokenizer(char *input);
 void		print_tokens(t_token *list);
 char		*ft_strndup(char *s, size_t n);
 t_token		*new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
-void		add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
+void		add_token(t_token **head, t_token_info *info);
 void		free_tokens(t_token *head);
 
 // Read line
@@ -122,10 +142,6 @@ void		ft_pipe(t_command *cmd_list, char *env[]);
 // parse commands
 t_command	*parse_commands(t_token *tokens);
 
-// Execution
-void		execute_external(t_command *cmd_list, char **env);
-int			apply_redirections(t_redir *redirs);
-
 // Builtin
 
 
@@ -138,7 +154,7 @@ const char	*quote_type_str(e_quote_type qt);
 char		*ft_realloc(char * src, int old_size, int new_size);
 char		*ft_malloc(char *src, int size);
 
-// Handle signal
+// handle_signal.c
 void		setup_parent_signals(void);
 void    	setup_child_signals(void);
 void    	setup_heredoc_signals(void);
@@ -147,13 +163,46 @@ void    	setup_heredoc_signals(void);
 
 // token utils
 t_token		*new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
-void		add_token(t_token **head, char *value, e_token_type type, e_quote_type quote_type, int has_space_before);
+void		add_token(t_token **head, t_token_info *info);
 void		free_tokens(t_token *head);
 char		**token_to_argv(t_token *token);
 void		print_tokens(t_token *tokens);
 int			token_list_size(t_token **token);
 
-// Preprocess heredoc redirections before forking
+// heredoc.c
 void    handle_heredocs(t_command *cmd_list);
+
+// free.c
+void	free_args(char **argv);
+void	free_command_list(t_command *cmd);
+void	free_env(t_env *env);
+void	cleanup(t_token *tokens, t_command *cmd_list, char *line);
+void	ft_free_tab(char **tab);
+
+// execution.c
+void		execute_external(t_command *cmd_list, char **env);
+
+// apply_redirections.c
+int	open_redir_file(t_redir *redir, int *fd, int *std_fd);
+
+// expand_token_utils.c
+void		append_str(const char *str, char **output);
+void		append_char(char c, char **output);
+
+// builtin.c
+void	builtin(char **argv, t_env **my_env, char **env);
+
+// builtin2.c
+int	ft_unset(t_env **my_env, const char *key);
+int	ft_env(char **env);
+int	set_env(t_env **env, const char *key, const char *value);
+int	ft_echo(char **argv);
+
+// builtin3.c
+int	ft_cd(char **argv, t_env **env);
+int	ft_pwd(char **argv);
+
+// parse_commands2.c
+char	**build_argv(t_token **token);
 
 #endif

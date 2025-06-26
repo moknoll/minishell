@@ -6,12 +6,13 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:31:08 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/25 20:11:51 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/25 23:01:34 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// not implemented yet
 char	*ft_malloc(char *src, int size)
 {
 	src = malloc(sizeof(char) * size);
@@ -20,11 +21,13 @@ char	*ft_malloc(char *src, int size)
 	return (src);
 }
 
-char *ft_realloc(char * src, int old_size, int new_size)
+// not implemented yet
+char	*ft_realloc(char *src, int old_size, int new_size)
 {
-	char	*res = NULL;
+	char	*res;
 	int		i;
-	
+
+	res = NULL;
 	i = 0;
 	if (!src)
 		return (NULL);

@@ -6,70 +6,55 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:29:50 by radubos           #+#    #+#             */
-/*   Updated: 2025/05/24 17:29:55 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 00:12:09 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
 
-int apply_redirections(t_redir *redirs)
+static int	open_infile(t_redir *redir, int *fd, int *std_fd)
 {
-    int fd;
-    int std_fd;
+	*fd = open(redir->file, O_RDONLY);
+	*std_fd = STDIN_FILENO;
+	return (0);
+}
 
-    while (redirs)
-    {
-        if (redirs->type == REDIR_IN)
-        {
-            fd = open(redirs->file, O_RDONLY);
-            std_fd = STDIN_FILENO;
-        }
-        else if (redirs->type == REDIR_OUT)
-        {
-            fd = open(redirs->file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-            std_fd = STDOUT_FILENO;
-        }
-        else if (redirs->type == REDIR_APPEND)
-        {
-            fd = open(redirs->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
-            std_fd = STDOUT_FILENO;
-        }
-        else if (redirs->type == REDIR_HEREDOC)
-        {
-            if (redirs->fd == -1)
-            {
-                printf("minishell: heredoc pipe not set\n");
-                return (-1);
-            }
-            fd = redirs->fd;
-            std_fd = STDIN_FILENO;
-        }
-        else
-        {
-            printf("minishell: unknown redirection type\n");
-            return (-1);
-        }
+static int	open_outfile(t_redir *redir, int *fd, int *std_fd)
+{
+	*fd = open(redir->file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	*std_fd = STDOUT_FILENO;
+	return (0);
+}
 
-        if (fd < 0)
-        {
-            printf("minishell: %s: %s\n", redirs->file, strerror(errno));
-            return (-1);
-        }
+static int	open_appendfile(t_redir *redir, int *fd, int *std_fd)
+{
+	*fd = open(redir->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	*std_fd = STDOUT_FILENO;
+	return (0);
+}
 
-        if (dup2(fd, std_fd) == -1)
-        {
-            printf("minishell: dup2 failed\n");
-            close(fd);
-            return (-1);
-        }
+static int	open_heredoc(t_redir *redir, int *fd, int *std_fd)
+{
+	if (redir->fd == -1)
+	{
+		printf("minishell: heredoc pipe not set\n");
+		return (-1);
+	}
+	*fd = redir->fd;
+	*std_fd = STDIN_FILENO;
+	return (0);
+}
 
-        close(fd);
-        redirs = redirs->next;
-    }
-    return (0);
+int	open_redir_file(t_redir *redir, int *fd, int *std_fd)
+{
+	if (redir->type == REDIR_IN)
+		return (open_infile(redir, fd, std_fd));
+	else if (redir->type == REDIR_OUT)
+		return (open_outfile(redir, fd, std_fd));
+	else if (redir->type == REDIR_APPEND)
+		return (open_appendfile(redir, fd, std_fd));
+	else if (redir->type == REDIR_HEREDOC)
+		return (open_heredoc(redir, fd, std_fd));
+	printf("minishell: unknown redirection type\n");
+	return (-1);
 }
