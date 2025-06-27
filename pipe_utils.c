@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:25:47 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 07:48:36 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 11:44:02 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ char	**split_path(char *envp[])
 
 	envp_path = get_env_path(envp);
 	if (!envp_path)
-#include "minishell.h"
 		return (NULL);
 	all_paths = ft_split(envp_path, ':');
 	return (all_paths);
@@ -81,4 +80,3 @@ char	*get_path(char *cmd, char *envp[])
 	ft_free_tab(all_paths);
 	return (NULL);
 }
-

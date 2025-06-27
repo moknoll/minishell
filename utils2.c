@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:31:10 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/26 08:18:19 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 12:15:07 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,10 @@ t_env	*init_env(t_env **env, char **envp)
 	return (*env);
 }
 
-
 int	is_builtin(char *cmd)
 {
 	if (!cmd)
-		return(0);
+		return (0);
 	return (ft_strcmp(cmd, "cd") == 0
 		|| ft_strcmp(cmd, "echo") == 0
 		|| ft_strcmp(cmd, "pwd") == 0
@@ -67,4 +66,18 @@ void	cleanup(t_token *tokens, t_command *cmd_list, char *line)
 		free_command_list(cmd_list);
 	if (line)
 		free(line);
+}
+
+void	free_tokens(t_token *head)
+{
+	t_token	*tmp;
+
+	while (head)
+	{
+		tmp = head->next;
+		if (head->value)
+			free(head->value);
+		free(head);
+		head = tmp;
+	}
 }

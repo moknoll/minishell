@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:24:53 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 07:48:03 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 11:44:33 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	child_process(t_command *cmd, int prev_fd, int pipefd[2])
 		close(pipefd[1]);
 	}
 }
-
 
 void	execute_child_process(t_command *cmd, char **env)
 {

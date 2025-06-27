@@ -6,37 +6,11 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:29:10 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/26 07:29:49 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 15:59:19 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	set_env(t_env **env, const char *key, const char *value)
-{
-	t_env	*tmp;
-	t_env	*new;
-
-	tmp = *env;
-	if (!key || !value)
-		return (1);
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, key) == 0)
-			return (free(tmp->value), tmp->value = ft_strdup(value),
-				tmp->exported = 1, 0);
-		tmp = tmp->next;
-	}
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return (1);
-	new->key = ft_strdup(key);
-	new->value = ft_strdup(value);
-	new->exported = 1;
-	new->next = *env;
-	*env = new;
-	return (0);
-}
 
 int	ft_env(char **env)
 {
@@ -49,6 +23,17 @@ int	ft_env(char **env)
 	{
 		printf("%s\n", *env);
 		env++;
+	}
+	return (0);
+}
+
+int	ft_env_custom(t_env *env)
+{
+	while (env)
+	{
+		if (env->value)
+			printf("%s=%s\n", env->key, env->value);
+		env = env->next;
 	}
 	return (0);
 }
@@ -83,55 +68,32 @@ int	ft_unset(t_env **my_env, const char *key)
 	return (0);
 }
 
-
-int	ft_export(t_env *env)
+int	set_env(t_env **env, const char *key, const char *value)
 {
-	if (!env)
-	{
-		printf("minishell: export: no environment variables\n");
+	t_env	*tmp;
+	char	*new_value;
+
+	if (!key || !value)
 		return (1);
-	}
-	while (env)
+	tmp = *env;
+	while (tmp)
 	{
-		if (env->exported)
+		if (ft_strcmp(tmp->key, key) == 0)
 		{
-			printf("declare -x %s", env->key);
-			if (env->value)
-				printf("=\"%s\"", env->value);
-			printf("\n");
+			new_value = ft_strdup(value);
+			if (!new_value)
+				return (1);
+			return (free(tmp->value), tmp->value = new_value,
+				tmp->exported = 1, 0);
 		}
-		env = env->next;
+		tmp = tmp->next;
 	}
-	return (0);
-}
-
-int	handle_export(char **argv, t_env **env)
-{
-	int		status;
-	char	*eq;
-	int		i;
-
-	i = 1;
-	if (!argv[1])
-		return (ft_export(*env));
-	while (argv[i])
-	{
-		eq = ft_strchr(argv[i], '=');
-		if (eq)
-		{
-			*eq = '\0';
-			status = set_env(env, argv[i], eq + 1);
-			*eq = '=';
-			if (status != 0)
-				return (status);
-		}
-		else
-		{
-			status = set_env(env, argv[i], "");
-			if (status != 0)
-				return (status);
-		}
-		i++;
-	}
-	return (0);
+	tmp = malloc(sizeof(t_env));
+	if (!tmp)
+		return (1);
+	tmp->key = ft_strdup(key);
+	tmp->value = ft_strdup(value);
+	if (!tmp->key || !tmp->value)
+		return (free(tmp->key), free(tmp->value), free(tmp), 1);
+	return (tmp->exported = 1, tmp->next = *env, *env = tmp, 0);
 }

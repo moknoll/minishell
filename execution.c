@@ -6,14 +6,11 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:30:06 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/26 14:28:32 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 16:19:23 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-extern int g_exit_status;
 
 void	handle_child_process(t_command *cmd, int prev_fd,
 						int pipefd[2], char *env[])
@@ -85,6 +82,7 @@ int	execute_external(t_command *cmd_list, char **env)
 
 	i = 0;
 	prev_fd = -1;
+	handle_heredocs(cmd_list);
 	while (cmd_list)
 	{
 		if (cmd_list->next && pipe(pipefd) == -1)

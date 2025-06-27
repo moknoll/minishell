@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 14:45:13 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 16:01:21 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	ft_cd(char **argv, t_env **env)
 	return (0);
 }
 
-static void	ft_exit(char **argv)
+void	ft_exit(char **argv)
 {
 	if (argv[1])
 		perror("exit: too many arguments\n");
@@ -88,37 +88,28 @@ static int	ft_echo(char **argv)
 	return (0);
 }
 
-
-
-void builtin(char **argv, t_env **my_env, char **env)
+int	handle_builtin(char **argv, t_env **my_env)
 {
-	int	status = 0;
-
-	if (!argv[0])
-		return ;
-	if (ft_strcmp(argv[0], "exit") == 0)
-		ft_exit(argv);
-	else if (ft_strcmp(argv[0], "cd") == 0)
-		status = ft_cd(argv, my_env);
+	if (ft_strcmp(argv[0], "cd") == 0)
+		return (ft_cd(argv, my_env));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
-		status = ft_pwd(argv);
+		return (ft_pwd(argv));
 	else if (ft_strcmp(argv[0], "echo") == 0)
 	{
-		if (argv[1] && check_multiple_n(argv[1]))
-			status = ft_echo_n(argv);
+		if (check_multiple_n(argv[1]))
+			return (ft_echo_n(argv));
 		else
-			status = ft_echo(argv);
+			return (ft_echo(argv));
 	}
 	else if (ft_strcmp(argv[0], "export") == 0)
-		status = handle_export(argv, my_env);
+		return (handle_export(argv, my_env));
 	else if (ft_strcmp(argv[0], "unset") == 0)
-		status = ft_unset(my_env, argv[1]);
+		return (ft_unset(my_env, argv[1]));
 	else if (ft_strcmp(argv[0], "env") == 0)
-		status = ft_env(env);
+		return (ft_env_custom(*my_env));
 	else
 	{
 		printf("minishell: %s: command not found\n", argv[0]);
-		status = 127;
+		return (127);
 	}
-	g_exit_status = status;
 }

@@ -6,11 +6,9 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:31:08 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/26 07:31:29 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 10:04:53 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "minishell.h"
 
 #include "minishell.h"
 

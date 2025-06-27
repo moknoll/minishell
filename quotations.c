@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:08 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 07:43:35 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 11:33:05 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ char	*strip_quotes(char *str)
 		return (NULL);
 	while (str[len])
 		len++;
-	if ((str[0] == '\'' && str[len-1] == '\'')
-		|| (str[0] == '"' && str[len-1] == '"'))
-		return (ft_strndup(str+1, len-2));
+	if ((str[0] == '\'' && str[len - 1] == '\'')
+		|| (str[0] == '"' && str[len - 1] == '"'))
+		return (ft_strndup(str + 1, len - 2));
 	return (ft_strdup(str));
 }
 
@@ -65,4 +65,3 @@ void	strip_quotes_inplace(t_token *tokens)
 		tokens = tokens->next;
 	}
 }
-

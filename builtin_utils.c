@@ -6,10 +6,9 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:28:05 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/26 07:28:13 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 16:00:54 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -46,4 +45,20 @@ int	ft_echo_n(char **argv)
 		}
 	}
 	return (0);
+}
+
+
+void	builtin(char **argv, t_env **my_env, char **env)
+{
+	int	status;
+
+	status = 0;
+	(void)env;
+	if (!argv[0])
+		return ;
+	if (ft_strcmp(argv[0], "exit") == 0)
+		ft_exit(argv);
+	else
+		status = handle_builtin(argv, my_env);
+	g_exit_status = status;
 }

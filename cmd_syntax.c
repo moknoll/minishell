@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:07:25 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/26 13:51:17 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 11:42:35 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_syntax_error(t_token *prev, t_token *curr)
 		printf("syntax error: `|'\n");
 		return (0);
 	}
-	if (prev != NULL && (prev->type >= REDIRECT_IN && prev->type <= HEREDOC))
+	if (prev != NULL && (prev->type >= R_IN && prev->type <= HEREDOC))
 	{
 		if (curr->type != WORD)
 		{
@@ -33,7 +33,6 @@ int	check_syntax_error(t_token *prev, t_token *curr)
 	return (1);
 }
 
-
 int	check_final_token(t_token *last)
 {
 	if (last != NULL)
@@ -43,7 +42,7 @@ int	check_final_token(t_token *last)
 			printf("syntax error: unexpected end of input after pipe\n");
 			return (0);
 		}
-		else if (last->type >= REDIRECT_IN && last->type <= HEREDOC)
+		else if (last->type >= R_IN && last->type <= HEREDOC)
 		{
 			if (last->value != NULL)
 				printf("syntax error: missing file after redirection `%s'\n",

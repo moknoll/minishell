@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:58:18 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 07:45:43 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 12:16:03 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ t_token	*new_token(char *value, e_token_type type, e_quote_type quote_type,
 	return (token);
 }
 
-void	add_token(t_token **head, char *value, e_token_type type,
-		e_quote_type quote_type, int has_space_before)
+void	add_token(t_token **head, t_token_data data)
 {
 	t_token	*new;
 	t_token	*tmp;
 
-	new = new_token(value, type, quote_type, has_space_before);
+	new = new_token(data.value, data.type,
+			data.quote_type, data.has_space_before);
 	if (!*head)
 		*head = new;
 	else
@@ -43,20 +43,6 @@ void	add_token(t_token **head, char *value, e_token_type type,
 		while (tmp->next)
 			tmp = tmp->next;
 		tmp->next = new;
-	}
-}
-
-void	free_tokens(t_token *head)
-{
-	t_token	*tmp;
-
-	while (head)
-	{
-		tmp = head->next;
-		if (head->value)
-			free(head->value);
-		free(head);
-		head = tmp;
 	}
 }
 
@@ -75,7 +61,7 @@ char	**token_to_argv(t_token *token)
 		count++;
 		tmp = tmp->next;
 	}
-	argv = malloc(sizeof(char *) * count + 1);
+	argv = malloc(sizeof(char *) * (count + 1));
 	if (!argv)
 		return (NULL);
 	tmp = token;
@@ -89,12 +75,30 @@ char	**token_to_argv(t_token *token)
 	return (argv);
 }
 
-void	print_tokens(t_token *tokens)
+int	is_operator(char c)
 {
-	while (tokens)
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+int	handle_token(char *input, int *i, t_token **tokens, int *has_space)
+{
+	if (ft_isspace(input[*i]))
 	{
-		printf("Token: %-10s Type: %d Quote: %s\n",
-			tokens->value, tokens->type, quote_type_str(tokens->quote_type));
-		tokens = tokens->next;
+		(*has_space) = 1;
+		(*i)++;
 	}
+	else if (is_operator(input[*i]))
+	{
+		handle_operator(input, i, tokens, *has_space);
+		(*has_space) = 0;
+	}
+	else
+	{
+		if (!handle_word(input, i, tokens, *has_space))
+			return (0);
+		(*has_space) = 0;
+	}
+	return (1);
 }

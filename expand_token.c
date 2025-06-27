@@ -6,13 +6,13 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:48:35 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 14:31:42 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/27 11:44:52 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_status = 0;
+int	g_exit_status = 0;
 
 void	append_str(const char *str, char **output)
 {
@@ -39,8 +39,7 @@ void	append_char(char c, char **output)
 	append_str(temp, output);
 }
 
-void	handle_dollar(char *input, int *i, char **output,
-		int g_exit_status, t_env *my_env)
+void	handle_dollar(char *input, int *i, char **output, t_env *my_env)
 {
 	char	*exit_status_str;
 	char	*var_value;
@@ -63,7 +62,7 @@ void	handle_dollar(char *input, int *i, char **output,
 		append_char('$', output);
 }
 
-char	*expand_token(t_token *token, int g_exit_status, t_env *my_env)
+char	*expand_token(t_token *token, t_env *my_env)
 {
 	const char		*input;
 	char			*output;
@@ -80,7 +79,7 @@ char	*expand_token(t_token *token, int g_exit_status, t_env *my_env)
 	while (input[i])
 	{
 		if (input[i] == '$' && token->quote_type != SINGLE_QUOTE)
-			handle_dollar((char *)input, &i, &output, g_exit_status, my_env);
+			handle_dollar((char *)input, &i, &output, my_env);
 		else
 		{
 			append_char(input[i], &output);
@@ -90,7 +89,7 @@ char	*expand_token(t_token *token, int g_exit_status, t_env *my_env)
 	return (output);
 }
 
-void	expand_tokens(t_token *tokens, int g_exit_status, t_env *env)
+void	expand_tokens(t_token *tokens, t_env *env)
 {
 	t_token	*current;
 	char	*expanded_value;
@@ -100,7 +99,7 @@ void	expand_tokens(t_token *tokens, int g_exit_status, t_env *env)
 	{
 		if (current->type == WORD)
 		{
-			expanded_value = expand_token(current, g_exit_status, env);
+			expanded_value = expand_token(current, env);
 			if (!expanded_value)
 			{
 				current = current->next;
