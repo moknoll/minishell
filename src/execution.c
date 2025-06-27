@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:30:06 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/26 03:21:18 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/27 00:09:44 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,23 @@ void	child_process(t_command *cmd, int prev_fd, int pipefd[2], char **env)
 		perror("minishell: redirection");
 		exit(1);
 	}
+	// === DEBUG: Affichage de argv ===
+	printf("=== DEBUG: EXEC ARGV ===\n");
+	for (int j = 0; cmd->argv && cmd->argv[j]; j++)
+		printf("EXEC: argv[%d]=%s\n", j, cmd->argv[j]);
+	printf("========================\n");
+	// === FIN DEBUG ===
 	if (cmd->argv[0][0] == '/' || cmd->argv[0][0] == '.')
 		execve(cmd->argv[0], cmd->argv, env);
 	else
-		execvp(cmd->argv[0], cmd->argv);
+	{
+		char *path = get_path(cmd->argv[0], env); // À implémenter si besoin
+		if (path)
+		{
+			execve(path, cmd->argv, env);
+			free(path);
+		}
+	}
 	perror("minishell");
 	exit(127);
 }

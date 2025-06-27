@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 03:27:24 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/27 00:00:53 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,14 @@ static void	process_input(char *line, t_env **my_env, char **env)
 	expand_tokens(tokens, &g_exit_status, *my_env);
 	merge_token(&tokens);
 	strip_quotes_inplace(tokens);
+
+	// === DEBUG: Affichage des tokens ===
+	printf("=== DEBUG: TOKENS ===\n");
+	for (t_token *t = tokens; t; t = t->next)
+		printf("TOKEN: type=%d, value='%s'\n", t->type, t->value);
+	printf("=====================\n");
+	// === FIN DEBUG ===
+
 	cmd_list = parse_commands(tokens);
 	if (!cmd_list)
 	{

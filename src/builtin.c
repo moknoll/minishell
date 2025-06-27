@@ -6,7 +6,7 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/26 02:14:42 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/26 23:12:03 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ void	builtin(char **argv, t_env **my_env, char **env)
 
 	status = 0;
 	if (!argv[0])
+	{
+		printf("DEBUG: argv[0] is NULL\n");
 		return ;
+	}
 	if (ft_strcmp(argv[0], "exit") == 0)
 		ft_exit(argv);
 	else
