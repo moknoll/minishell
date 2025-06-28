@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:25:47 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/27 11:44:02 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/28 09:28:51 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,18 @@ char	*get_path(char *cmd, char *envp[])
 	char	*temp;
 	char	**all_paths;
 
+	if (!cmd || !envp)
+		return (NULL);
 	all_paths = split_path(envp);
+	if (!all_paths)
+		return (NULL);
 	i = 0;
-	while (all_paths && all_paths[i])
+	while (all_paths[i])
 	{
 		temp = ft_strjoin(all_paths[i], "/");
 		full_path = ft_strjoin(temp, cmd);
 		free(temp);
-		if (access(full_path, F_OK | X_OK) == 0)
+		if (access(full_path, X_OK) == 0)
 		{
 			ft_free_tab(all_paths);
 			return (full_path);

@@ -3,17 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 17:30:06 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/27 16:19:23 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/28 09:29:37 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	is_printing_builtin(const char *cmd)
+{
+	return (ft_strcmp(cmd, "export") == 0
+		|| ft_strcmp(cmd, "env") == 0
+		|| ft_strcmp(cmd, "echo") == 0
+		|| ft_strcmp(cmd, "pwd") == 0);
+}
+
 void	handle_child_process(t_command *cmd, int prev_fd,
-						int pipefd[2], char *env[])
+						int pipefd[2], char *envp[], t_env **my_env)
 {
 	if (prev_fd != -1)
 	{
@@ -31,13 +39,20 @@ void	handle_child_process(t_command *cmd, int prev_fd,
 		perror("minishell: redirection");
 		exit(1);
 	}
+	if (is_printing_builtin(cmd->argv[0]))
+	{
+		handle_builtin(cmd->argv, my_env);
+		exit(0);
+	}
 	if (cmd->argv[0][0] == '/' || cmd->argv[0][0] == '.')
-		execve(cmd->argv[0], cmd->argv, env);
+		execve(cmd->argv[0], cmd->argv, envp);
 	else
 		execvp(cmd->argv[0], cmd->argv);
 	perror("minishell: exec failed");
 	exit(127);
 }
+
+
 
 int	handle_parent_process(int *prev_fd, int pipefd[2], int has_next)
 {
@@ -73,7 +88,7 @@ void	wait_for_children(pid_t *pids, int count)
 	}
 }
 
-int	execute_external(t_command *cmd_list, char **env)
+int	execute_external(t_command *cmd_list, char **env, t_env **my_env)
 {
 	int		pipefd[2];
 	int		prev_fd;
@@ -91,7 +106,7 @@ int	execute_external(t_command *cmd_list, char **env)
 		if (pids[i] < 0)
 			return (perror("minishell: fork"), 0);
 		else if (pids[i] == 0)
-			handle_child_process(cmd_list, prev_fd, pipefd, env);
+			handle_child_process(cmd_list, prev_fd, pipefd, env, my_env);
 		handle_parent_process(&prev_fd, pipefd, cmd_list->next != NULL);
 		cmd_list = cmd_list->next;
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:29:10 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/27 15:59:19 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/28 09:21:30 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_env_custom(t_env *env)
 {
 	while (env)
 	{
-		if (env->value)
+		if (env->value && env->exported)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
@@ -64,7 +64,6 @@ int	ft_unset(t_env **my_env, const char *key)
 		previous = current;
 		current = current ->next;
 	}
-	printf("unset done");
 	return (0);
 }
 

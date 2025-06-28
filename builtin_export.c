@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:04:11 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/27 15:52:34 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/28 09:09:18 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,16 +100,24 @@ int set_env_export_only(t_env **my_env, const char *key)
 int	handle_export(char **argv, t_env **my_env)
 {
 	char	*eq;
+	char	*key = NULL;
+	char	*value = NULL;
 
 	if (!argv[1])
 		return (ft_export(*my_env));
+
 	eq = ft_strchr(argv[1], '=');
 	if (eq)
 	{
-		*eq = '\0';
-		if (set_env(my_env, argv[1], eq + 1) != 0)
-            return 1; 
-		return (0);
+		key = ft_substr(argv[1], 0, eq - argv[1]);
+		value = ft_strdup(eq + 1);
+		if (!key || !value)
+			return (free(key), free(value), 1);
+		int res = set_env(my_env, key, value);
+		free(key);
+		free(value);
+		return (res);
 	}
-	return (set_env_export_only(my_env, argv[1]));
+	return set_env_export_only(my_env, argv[1]);
 }
+

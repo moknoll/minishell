@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 22:46:27 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/25 22:52:31 by radubos          ###   ########.fr       */
+/*   Updated: 2025/06/28 09:02:05 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_heredocs(t_command *cmd_list)
 	t_command	*cmd;
 	t_redir		*r;
 
-	setup_heredoc_signals();
+	// setup_heredoc_signals();
 	cmd = cmd_list;
 	while (cmd)
 	{
@@ -58,5 +58,5 @@ void	handle_heredocs(t_command *cmd_list)
 		}
 		cmd = cmd->next;
 	}
-	setup_parent_signals();
+	// setup_parent_signals();
 }

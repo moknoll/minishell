@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:46:07 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/27 16:18:48 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/06/28 09:16:37 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 #define PROMPT "minishell$ "
 #define DEBUG 1
-#define PATH_MAX 4096
+#define PATH_MAX 1024
 
 extern int g_exit_status;
 
@@ -134,7 +134,7 @@ int	fill_argv_loop(t_command *cmd, t_token **tok,
 	char **argv, t_redir **last_redir);
 
 // Execution
-int			execute_external(t_command *cmd_list, char **env);
+int			execute_external(t_command *cmd_list, char **env, t_env **my_env);
 int			apply_redirections(t_redir *redirs);
 
 // Builtin
