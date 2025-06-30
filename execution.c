@@ -51,7 +51,7 @@ void	handle_child_process(t_command *cmd, int prev_fd,
 	perror("minishell: exec failed");
 	exit(127);
 }
-
+// fix execve 
 
 
 int	handle_parent_process(int *prev_fd, int pipefd[2], int has_next)
@@ -118,7 +118,7 @@ int	execute_external(t_command *cmd_list, char **env, t_env **my_env)
 }
 
 int	execute_builtin_with_redirection(t_command *cmd,
-		t_env **env, char **environ)
+		t_env **env, char **environ, t_token *tokens)
 {
 	int	saved_stdin;
 	int	saved_stdout;
@@ -135,7 +135,7 @@ int	execute_builtin_with_redirection(t_command *cmd,
 				close(saved_stdout), 0);
 		redirected = 1;
 	}
-	builtin(cmd->argv, env, environ);
+	builtin(cmd, env, environ, tokens);
 	if (redirected)
 	{
 		dup2(saved_stdin, STDIN_FILENO);

@@ -48,17 +48,17 @@ int	ft_echo_n(char **argv)
 }
 
 
-void	builtin(char **argv, t_env **my_env, char **env)
+void	builtin(t_command *cmd, t_env **my_env, char **env, t_token *tokens)
 {
 	int	status;
 
 	status = 0;
 	(void)env;
-	if (!argv[0])
+	if (!cmd->argv[0])
 		return ;
-	if (ft_strcmp(argv[0], "exit") == 0)
-		ft_exit(argv);
+	if (ft_strcmp(cmd->argv[0], "exit") == 0)
+		ft_exit(cmd->argv, my_env, tokens, cmd);
 	else
-		status = handle_builtin(argv, my_env);
+		status = handle_builtin(cmd->argv, my_env);
 	g_exit_status = status;
 }

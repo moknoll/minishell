@@ -23,14 +23,12 @@
 #include <sys/wait.h>
 #include <string.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <errno.h>
 #include <string.h>
 #include "../libft/libft.h"
 
 #define PROMPT "minishell$ "
 #define DEBUG 1
-#define PATH_MAX 1024
 
 extern int g_exit_status;
 
@@ -57,12 +55,6 @@ typedef struct s_token_data {
     int has_space_before;
 } t_token_data;
 
-typedef struct s_env {
-    char *key;             //  "FOO"
-    char *value;           //  "bar"
-    int exported;         // If exported
-    struct s_env *next;    // Linked list
-} t_env;
 
 typedef struct s_token {
 	char *value;
@@ -92,6 +84,14 @@ typedef struct s_command {
 	t_redir *redirs;
 } t_command;
 
+typedef struct s_env {
+    char *key;             //  "FOO"
+    char *value;           //  "bar"
+    int exported;         // If exported
+    struct s_env *next;    // Linked list
+} t_env;
+
+
 // Tokenizer
 t_token		*tokenizer(char *input);
 void		print_tokens(t_token *list);
@@ -104,7 +104,7 @@ void		free_tokens(t_token *head);
 char		*ft_readline(void);
 
 //
-void		builtin(char **argv, t_env **my_env, char **env);
+void	builtin(t_command *cmd, t_env **my_env, char **env, t_token *tokens);
 char		**token_to_argv(t_token *token);
 int			skip_quotes(const char *input, int i);
 char		*strip_quotes(char *str);
@@ -146,8 +146,7 @@ int	handle_export(char **argv, t_env **env);
 int	check_multiple_n(char *str);
 int	ft_echo_n(char **argv);
 int	handle_builtin(char **argv, t_env **my_env);
-void	builtin(char **argv, t_env **my_env, char **env);
-void	ft_exit(char **argv);
+void	ft_exit(char **argv, t_env **env, t_token *tokens, t_command *cmd_list);
 int	set_env(t_env **env, const char *key, const char *value);
 int	ft_env_custom(t_env *env);
 
@@ -166,10 +165,11 @@ int	is_builtin(char *cmd);
 const char	*quote_type_str(e_quote_type qt);
 t_env	*init_env(t_env **env, char **envp);
 int	check_syntax(t_token *tokens);
-int execute_builtin_with_redirection(t_command *cmd, t_env **my_env, char **env);
+int	execute_builtin_with_redirection(t_command *cmd, t_env **env, char **environ, t_token *tokens);
 void	handle_heredocs(t_command *cmd_list);
 void	setup_heredoc_signals(void);
 int	is_operator(char c);
+void cleanup_all(t_token *tokens, t_command *cmd, char *line, t_env **env);
 
 // buitin export tools
 void	ft_sort_str_array(char **arr);

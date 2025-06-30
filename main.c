@@ -51,12 +51,12 @@ static void	process_input(char *line, t_env **my_env, char **env)
 	}
 	if (cmd_list->next == NULL && is_builtin(cmd_list->argv[0]))
 	{
-		if (!execute_builtin_with_redirection(cmd_list, my_env, env))
+		if (!execute_builtin_with_redirection(cmd_list, my_env, env, tokens))
 			return ;
 	}
 	else
 		execute_external(cmd_list, env, my_env);
-	cleanup(tokens, cmd_list, NULL);
+	cleanup(tokens, cmd_list, line);
 }
 
 static void	minishell_loop(t_env **my_env, char **env)
@@ -89,7 +89,7 @@ int	main(int argc, char *argv[], char *env[])
 	my_env = NULL;
 	(void)argc, (void)argv;
 	my_env = init_env(&my_env, env);
-	// setup_parent_signals();
+	setup_parent_signals();
 	minishell_loop(&my_env, env);
 	free_env(my_env);
 	return (g_exit_status);
