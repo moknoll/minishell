@@ -39,36 +39,30 @@ int	ft_export(t_env *env)
 {
 	char	**arr;
 	int		i;
+	char	*equal;
 
 	i = 0;
 	arr = env_to_sorted_array(env);
 	if (!arr)
-	{
-		printf("minishell: export: allocation error\n");
-		return (1);
-	}
+		return (printf("minishell: export: allocation error\n"), 1);
 	while (arr[i])
 	{
-		char	*equal = ft_strchr(arr[i], '=');
-
+		equal = ft_strchr(arr[i], '=');
 		if (equal)
 		{
-			// Trenne key und value an '='
 			*equal = '\0';
 			printf("declare -x %s=\"%s\"\n", arr[i], equal + 1);
-			*equal = '='; // Rückgängig machen (optional, für Debugging/Freigabe)
+			*equal = '=';
 		}
 		else
 			printf("declare -x %s\n", arr[i]);
 		free(arr[i]);
 		i++;
 	}
-	free(arr);
-	return (0);
+	return (free(arr), 0);
 }
 
-
-t_env *get_env(t_env *env, const char *key)
+t_env	*get_env(t_env *env, const char *key)
 {
 	while (env)
 	{
@@ -79,15 +73,17 @@ t_env *get_env(t_env *env, const char *key)
 	return (NULL);
 }
 
-
-int set_env_export_only(t_env **my_env, const char *key)
+int	set_env_export_only(t_env **my_env, const char *key)
 {
-	t_env *var = get_env(*my_env, key);
+	t_env	*var;
+	t_env	*new;
+
+	var = get_env(*my_env, key);
 	if (var)
 		var->exported = 1;
 	else
 	{
-		t_env *new = malloc(sizeof(t_env));
+		new = malloc(sizeof(t_env));
 		new->key = ft_strdup(key);
 		new->value = NULL;
 		new->exported = 1;
@@ -100,12 +96,14 @@ int set_env_export_only(t_env **my_env, const char *key)
 int	handle_export(char **argv, t_env **my_env)
 {
 	char	*eq;
-	char	*key = NULL;
-	char	*value = NULL;
+	char	*key;
+	char	*value;
+	int		res;
 
+	key = NULL;
+	value = NULL;
 	if (!argv[1])
 		return (ft_export(*my_env));
-
 	eq = ft_strchr(argv[1], '=');
 	if (eq)
 	{
@@ -113,11 +111,10 @@ int	handle_export(char **argv, t_env **my_env)
 		value = ft_strdup(eq + 1);
 		if (!key || !value)
 			return (free(key), free(value), 1);
-		int res = set_env(my_env, key, value);
+		res = set_env(my_env, key, value);
 		free(key);
 		free(value);
 		return (res);
 	}
-	return set_env_export_only(my_env, argv[1]);
+	return (set_env_export_only(my_env, argv[1]));
 }
-

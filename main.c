@@ -59,17 +59,19 @@ static void	process_input(char *line, t_env **my_env, char **env)
 	cleanup(tokens, cmd_list, line);
 }
 
-static void	minishell_loop(t_env **my_env, char **env)
+static void	minishell_loop(t_env **my_env, char **envp)
 {
 	char	*line;
 
 	while (1)
 	{
-		line = ft_readline();
+		setup_parent_signals();
+		line = readline("minishell$ ");
 		if (!line)
 		{
-			ft_putendl_fd("exit", STDOUT_FILENO);
-			break ;
+			printf("exit\n");
+			cleanup_all(NULL, NULL, NULL, my_env);
+			exit(g_exit_status);
 		}
 		if (*line == '\0')
 		{
@@ -77,8 +79,7 @@ static void	minishell_loop(t_env **my_env, char **env)
 			continue ;
 		}
 		add_history(line);
-		process_input(line, my_env, env);
-		free(line);
+		process_input(line, my_env, envp);
 	}
 }
 
@@ -89,7 +90,6 @@ int	main(int argc, char *argv[], char *env[])
 	my_env = NULL;
 	(void)argc, (void)argv;
 	my_env = init_env(&my_env, env);
-	setup_parent_signals();
 	minishell_loop(&my_env, env);
 	free_env(my_env);
 	return (g_exit_status);

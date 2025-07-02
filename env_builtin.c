@@ -38,7 +38,6 @@ int	ft_env_custom(t_env *env)
 	return (0);
 }
 
-
 int	ft_unset(t_env **my_env, const char *key)
 {
 	t_env	*current;

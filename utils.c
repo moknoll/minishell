@@ -79,14 +79,15 @@ void	free_env(t_env *env)
 	}
 }
 
-void cleanup_all(t_token *tokens, t_command *cmd_list, char *line, t_env** env)
+void	cleanup_all(t_token *tokens, t_command *cmd_list,
+			char *line, t_env **env)
 {
+	cleanup(tokens, cmd_list, NULL);
+	free(line);
 	if (env && *env)
 	{
-		cleanup(tokens, cmd_list, line);
 		free_env(*env);
+		*env = NULL;
 	}
-	if (line)
-		free(line);
-	rl_clear_history(); // optional: readline History aufräumen
+	rl_clear_history();
 }

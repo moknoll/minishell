@@ -43,7 +43,7 @@ static int	ft_cd(char **argv, t_env **env)
 
 void	ft_exit(char **argv, t_env **env, t_token *tokens, t_command *cmd_list)
 {
-	char *line; 
+	char	*line;
 
 	line = NULL;
 	if (argv[1])

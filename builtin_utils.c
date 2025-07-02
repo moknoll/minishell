@@ -47,7 +47,6 @@ int	ft_echo_n(char **argv)
 	return (0);
 }
 
-
 void	builtin(t_command *cmd, t_env **my_env, char **env, t_token *tokens)
 {
 	int	status;

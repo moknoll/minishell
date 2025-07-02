@@ -167,7 +167,7 @@ t_env	*init_env(t_env **env, char **envp);
 int	check_syntax(t_token *tokens);
 int	execute_builtin_with_redirection(t_command *cmd, t_env **env, char **environ, t_token *tokens);
 void	handle_heredocs(t_command *cmd_list);
-void	setup_heredoc_signals(void);
+
 int	is_operator(char c);
 void cleanup_all(t_token *tokens, t_command *cmd, char *line, t_env **env);
 
@@ -178,6 +178,8 @@ int	env_size(t_env *env);
 
 // Handle signal
 void		setup_parent_signals(void);
+void	setup_child_signals(void);
+void	setup_heredoc_signals(void);
 
 // token utils
 t_token		*new_token(char *value, e_token_type type, e_quote_type quote_type, int has_space_before);

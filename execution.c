@@ -23,6 +23,7 @@ int	is_printing_builtin(const char *cmd)
 void	handle_child_process(t_command *cmd, int prev_fd,
 						int pipefd[2], char *envp[], t_env **my_env)
 {
+	setup_child_signals();
 	if (prev_fd != -1)
 	{
 		dup2(prev_fd, STDIN_FILENO);
@@ -51,7 +52,7 @@ void	handle_child_process(t_command *cmd, int prev_fd,
 	perror("minishell: exec failed");
 	exit(127);
 }
-// fix execve 
+// fix execvp
 
 
 int	handle_parent_process(int *prev_fd, int pipefd[2], int has_next)
@@ -72,6 +73,7 @@ void	wait_for_children(pid_t *pids, int count)
 {
 	int	status;
 	int	i;
+	int	sig;
 
 	i = 0;
 	while (i < count)
@@ -81,6 +83,13 @@ void	wait_for_children(pid_t *pids, int count)
 		{
 			if (WIFEXITED(status))
 				g_exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+			{
+				sig = WTERMSIG(status);
+				if (sig == SIGQUIT)
+					write(STDOUT_FILENO, "Quit\n", 20);
+				g_exit_status = 128 + sig;
+			}
 			else
 				g_exit_status = 1;
 		}
