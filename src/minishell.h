@@ -156,8 +156,11 @@ char		*ft_malloc(char *src, int size);
 
 // handle_signal.c
 void		setup_parent_signals(void);
+void        restore_parent_signals(void);
 void    	setup_child_signals(void);
 void    	setup_heredoc_signals(void);
+void        restore_heredoc_signals(void);
+void		ignore_signals(void);
 
 // Heredoc handled in apply_redirections()
 

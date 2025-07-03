@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <errno.h>
 
 t_env	*init_env(t_env **env, char **envp)
 {
@@ -83,18 +84,18 @@ static void	minishell_loop(t_env **my_env, char **env)
 
 	while (1)
 	{
-		line = ft_readline();
+		errno = 0;                     // reset errno before calling readline
+		line = readline(PROMPT);
 		if (!line)
 		{
-			ft_putendl_fd("exit", STDOUT_FILENO);
-			break ;
+			if (errno == EINTR)       // readline interrupted by SIGINT
+				continue;             // on boucle pour réafficher une seule fois le prompt
+			printf("exit\n");         // EOF ou autre -> on sort
+			break;
 		}
-		if (*line == '\0')
-		{
-			free(line);
-			continue ;
-		}
-		add_history(line);
+		if (*line)
+			add_history(line);
+
 		process_input(line, my_env, env);
 		free(line);
 	}

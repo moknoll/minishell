@@ -15,7 +15,10 @@ CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -g3 -o3
 
 # Readline includes and libraries (macOS)
-READLINE_FLAGS = -lreadline -lncurses
+READLINE_DIR = $(shell brew --prefix readline)
+CFLAGS   += -I$(READLINE_DIR)/include
+LDFLAGS  += -L$(READLINE_DIR)/lib
+LDLIBS   += -lreadline -lcurses
 
 # Libraries
 LIBFT_LIB = libft/libft.a
@@ -36,7 +39,7 @@ $(LIBFT_LIB):
 	make -C libft
 
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(READLINE_FLAGS) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
