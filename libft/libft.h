@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef LIBFT_H
+# define LIBFT_H
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -47,7 +50,8 @@ int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strdup(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(const char *s1, const char *s2);
+char	*ft_strjoin_free(char *s1, const char *s2);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
@@ -72,3 +76,8 @@ int		ft_isnumeric(const char *str);
 int		ft_isspace(char c);
 char	*ft_strndup(char *s, size_t n);
 char	*ft_strncpy(char *dest, char const *src, int n);
+void	ft_free_tab(char **tab);
+int	ft_tablen(char **tab);
+char	**ft_tabdup(char **tab);
+
+#endif

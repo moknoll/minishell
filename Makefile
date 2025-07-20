@@ -24,12 +24,23 @@ LDLIBS   += -lreadline -lcurses
 LIBFT_LIB = libft/libft.a
 
 # DIrectories
-SRC_DIR = src
+SRC_DIR = .
 OBJ_DIR = obj
 
 # Sources and executable
-SRCS    = $(wildcard $(SRC_DIR)/*.c)
-OBJS    = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+SRCS    = src/main.c src/builtins/builtins.c src/builtins/builtin_utils.c \
+src/builtins/builtin_export.c src/utils/env_list.c src/utils/env_utils.c \
+src/utils/env_utils_advanced.c src/utils/signal.c src/utils/signal_hd.c \
+src/utils/free_utils.c src/utils/export_utils.c src/parsing/tokenizer.c \
+src/parsing/tokenizer_utils.c src/parsing/token_utils.c \
+src/parsing/expand_utils.c src/redirections/heredoc.c \
+src/redirections/heredoc_read_utils.c src/redirections/heredoc_file_utils.c \
+src/redirections/redirections.c src/redirections/redirect_utils.c \
+src/redirections/redirect_process.c src/execution/pipes.c \
+src/execution/pipe_execution.c src/execution/pipe_utils.c \
+src/execution/pipe_redirections.c src/execution/external_commands.c \
+src/execution/command_execution.c src/execution/path.c src/execution/path_utils.c
+OBJS    = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 NAME    = minishell
 
 # Default rule
@@ -41,8 +52,9 @@ $(LIBFT_LIB):
 $(NAME): $(OBJS) $(LIBFT_LIB)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -Iincludes -Ilibft -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)

@@ -1,0 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_file_utils.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
+/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+int	create_tmp_heredoc_file(char **filename)
+{
+	*filename = heredoc_tmp();
+	if (!*filename)
+		return (-1);
+	return (open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0600));
+}
+
+int	should_cleanup_file(int ret)
+{
+	return (ret == -1 || g_exit_status == 130);
+}
+
+void	setup_heredoc_signals(struct sigaction *old_int, int *saved)
+{
+	*saved = g_exit_status;
+	disable_echoctl();
+	hd_set_signals(old_int);
+	g_exit_status = 0;
+}
+
+void	cleanup_heredoc_signals(const struct sigaction *old_int, 
+		int saved, int ret, char *delimiter)
+{
+	enable_echoctl();
+	hd_restore_signals(old_int);
+	if (ret == 1 && g_exit_status != 130)
+	{
+		ft_putstr_fd("minishell: warning: here-document delimited by end-of-file ", 2);
+		ft_putstr_fd("(wanted `", 2);
+		ft_putstr_fd(delimiter, 2);
+		ft_putstr_fd("')\n", 2);
+	}
+	if (g_exit_status != 130)
+		g_exit_status = saved;
+}

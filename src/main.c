@@ -5,112 +5,98 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/22 09:48:17 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/27 00:00:53 by radubos          ###   ########.fr       */
+/*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
+/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <errno.h>
 
-t_env	*init_env(t_env **env, char **envp)
+int g_exit_status = 0;
+
+void	print_error(char *cmd, char *msg)
 {
-	char	*eq;
-
-	while (*envp)
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	if (cmd)
 	{
-		eq = ft_strchr(*envp, '=');
-		if (eq)
+		ft_putstr_fd(cmd, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+	}
+	if (msg)
+		ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putchar_fd('\n', STDERR_FILENO);
+}
+
+int	is_empty_line(char *line)
+{
+	int	i;
+
+	i = 0;
+	if (!line)
+		return (1);
+	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+		i++;
+	return (line[i] == '\0');
+}
+
+static void	process_command_line(t_data *data)
+{
+	int	i;
+
+	add_history(data->line);
+	data->args = tokenize(data->line);
+	if (data->args)
+	{
+		i = 0;
+		while (data->args[i])
 		{
-			*eq = '\0';
-			set_env(env, *envp, eq + 1);
-			*eq = '=';
+			char *expanded = expand_and_parse_token(data->args[i], data->env);
+			free(data->args[i]);
+			data->args[i] = expanded;
+			i++;
 		}
-		envp++;
+		execute(data);
+		ft_free_tab(data->args);
 	}
-	return (*env);
 }
 
-int	is_builtin(char *cmd)
+void	minishell_loop(t_env *env)
 {
-	if (!cmd)
-		return (0);
-	return (ft_strcmp(cmd, "cd") == 0 || \
-			ft_strcmp(cmd, "echo") == 0 || \
-			ft_strcmp(cmd, "pwd") == 0 || \
-			ft_strcmp(cmd, "export") == 0 || \
-			ft_strcmp(cmd, "unset") == 0 || \
-			ft_strcmp(cmd, "env") == 0 || \
-			ft_strcmp(cmd, "exit") == 0);
-}
-
-static void	process_input(char *line, t_env **my_env, char **env)
-{
-	t_token		*tokens;
-	t_command	*cmd_list;
-
-	tokens = NULL;
-	cmd_list = NULL;
-	tokens = tokenizer(line);
-	if (!tokens)
-		return ;
-	expand_tokens(tokens, &g_exit_status, *my_env);
-	merge_token(&tokens);
-	strip_quotes_inplace(tokens);
-
-	// === DEBUG: Affichage des tokens ===
-	printf("=== DEBUG: TOKENS ===\n");
-	for (t_token *t = tokens; t; t = t->next)
-		printf("TOKEN: type=%d, value='%s'\n", t->type, t->value);
-	printf("=====================\n");
-	// === FIN DEBUG ===
-
-	cmd_list = parse_commands(tokens);
-	if (!cmd_list)
-	{
-		free_tokens(tokens);
-		return ;
-	}
-	if (cmd_list->next == NULL && is_builtin(cmd_list->argv[0]))
-		builtin(cmd_list->argv, my_env, env);
-	else
-		execute_external(cmd_list, env);
-	cleanup(tokens, cmd_list, NULL);
-}
-
-static void	minishell_loop(t_env **my_env, char **env)
-{
-	char	*line;
-
+	t_data	data;
+	
+	data.env = env;
+	init_signals_prompt();
 	while (1)
 	{
-		errno = 0;                     // reset errno before calling readline
-		line = readline(PROMPT);
-		if (!line)
+		data.line = readline("minishell$ ");
+		if (!data.line)
 		{
-			if (errno == EINTR)       // readline interrupted by SIGINT
-				continue;             // on boucle pour réafficher une seule fois le prompt
-			printf("exit\n");         // EOF ou autre -> on sort
+			printf("exit\n");
 			break;
 		}
-		if (*line)
-			add_history(line);
-
-		process_input(line, my_env, env);
-		free(line);
+		if (is_empty_line(data.line))
+		{
+			free(data.line);
+			continue;
+		}
+		process_command_line(&data);
+		free(data.line);
 	}
 }
 
 int	main(int argc, char *argv[], char *env[])
 {
-	t_env	*my_env;
+	t_env	*env_list;
 
-	my_env = NULL;
-	(void)argc;
-	(void)argv;
-	my_env = init_env(&my_env, env);
-	setup_parent_signals();
-	minishell_loop(&my_env, env);
-	free_env(my_env);
+	(void)argc, (void)argv;
+	env_list = NULL;
+	env_list = init_env(&env_list, env);
+	if (!env_list)
+	{
+		print_error(NULL, "failed to initialize environment");
+		return (1);
+	}
+	minishell_loop(env_list);
+	free_env_list(env_list);
 	return (g_exit_status);
 }
