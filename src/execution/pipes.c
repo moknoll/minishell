@@ -82,8 +82,6 @@ int	process_cmd_redirections(char **cmd)
 			return (handle_input_redirection(cmd, i));
 		else if (ft_strcmp(cmd[i], "<<") == 0 && cmd[i + 1])
 		{
-			// Pour l'instant, ignore les heredocs dans les pipes
-			// car ils doivent être traités différemment
 			i += 2;
 			continue;
 		}

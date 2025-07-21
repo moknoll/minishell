@@ -22,9 +22,9 @@ void	execute_pipe_command(char **cmd, t_env *env)
 	{
 		int exit_code;
 		if (ft_strcmp(cmd[0], "exit") == 0)
-			exit(0);  // Dans un pipe, exit termine juste ce processus
+			exit(0);
 		exit_code = handle_builtin(cmd, &env);
-		exit(exit_code);  // Terminer avec le code de sortie de la built-in
+		exit(exit_code);
 	}
 	else
 		execute_external_pipe_command(cmd, env);

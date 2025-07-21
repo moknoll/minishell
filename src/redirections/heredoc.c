@@ -30,6 +30,56 @@ void	hd_write(int fd, char *line)
 	write(fd, "\n", 1);
 }
 
+static char	*read_line_interactive(void)
+{
+	char	*line;
+	int		capacity = 128;
+	int		len = 0;
+	int		c;
+
+	line = malloc(capacity);
+	if (!line)
+		return (NULL);
+	
+	write(STDOUT_FILENO, "> ", 2);
+	while (1)
+	{
+		if (g_exit_status == 130)
+		{
+			free(line);
+			return (NULL);
+		}
+		c = getchar();
+		if (g_exit_status == 130)
+		{
+			free(line);
+			return (NULL);
+		}
+		if (c == EOF)
+		{
+			if (len == 0)
+			{
+				free(line);
+				return (NULL);
+			}
+			break;
+		}
+		if (c == '\n')
+			break;
+		if (len >= capacity - 1)
+		{
+			capacity *= 2;
+			line = realloc(line, capacity);
+			if (!line)
+				return (NULL);
+		}
+		
+		line[len++] = c;
+	}
+	line[len] = '\0';
+	return (line);
+}
+
 static char	*read_line_simple(int fd)
 {
 	static char	buffer[4096];
@@ -62,19 +112,30 @@ static char	*read_line_simple(int fd)
 static int	heredoc_loop(char *delim, int fd)
 {
 	char	*line;
+	int		is_interactive;
 
+	is_interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
-		write(STDOUT_FILENO, "> ", 2);
-		line = read_line_simple(STDIN_FILENO);
-		if (!line)
-			return (1);
+		if (g_exit_status == 130)
+			return (-1);
+		if (is_interactive)
+			line = read_line_interactive();
+		else
+		{
+			write(STDOUT_FILENO, "> ", 2);
+			line = read_line_simple(STDIN_FILENO);
+		}
 		if (g_exit_status == 130)
 		{
-			free(line);
+			if (line)
+				free(line);
 			return (-1);
 		}
-		if (hd_is_end(line, delim))
+		if (!line)
+			return (1);
+		if ((is_interactive && ft_strcmp(line, delim) == 0) ||
+			(!is_interactive && hd_is_end(line, delim)))
 		{
 			free(line);
 			break;
