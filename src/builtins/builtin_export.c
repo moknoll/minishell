@@ -3,113 +3,110 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/23 09:22:23 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_env_custom(t_env *env)
+static char	**env_to_sorted_array(t_env *env)
 {
-	t_env	*current;
+	int		count;
+	char	**arr;
+	int		i;
+	char	*tmp;
 
-	current = env;
-	while (current)
+	count = env_size(env);
+	i = 0;
+	arr = malloc(sizeof(char *) * (count + 1));
+	while (env)
 	{
-		if (current->exported && current->value)
-			printf("%s=%s\n", current->key, current->value);
-		current = current->next;
+		tmp = ft_strjoin(env->key, "");
+		if (env->value)
+			tmp = ft_strjoin_free(tmp, ft_strjoin("=", env->value));
+		arr[i++] = tmp;
+		env = env->next;
 	}
-	return (0);
+	arr[i] = NULL;
+	ft_sort_str_array(arr);
+	return (arr);
 }
 
-int	ft_unset(t_env **my_env, const char *key)
+int	ft_export(t_env *env)
 {
-	t_env	*current;
-	t_env	*prev;
+	char	**arr;
+	int		i;
+	char	*equal;
 
-	if (!key || !my_env || !*my_env)
+	i = 0;
+	arr = env_to_sorted_array(env);
+	if (!arr)
+	{
+		printf("minishell: export: allocation error\n");
 		return (1);
-	current = *my_env;
-	prev = NULL;
-	while (current)
-	{
-		if (ft_strcmp(current->key, key) == 0)
-		{
-			if (prev)
-				prev->next = current->next;
-			else
-				*my_env = current->next;
-			free(current->key);
-			free(current->value);
-			free(current);
-			return (0);
-		}
-		prev = current;
-		current = current->next;
 	}
-	return (0);
-}
-
-int	handle_unset(char **argv, t_env **my_env)
-{
-	int	i;
-	int	result;
-
-	if (!argv[1])
-		return (0);
-	result = 0;
-	i = 1;
-	while (argv[i])
+	while (arr[i])
 	{
-		if (ft_unset(my_env, argv[i]) != 0)
-			result = 1;
+		equal = ft_strchr(arr[i], '=');
+		if (equal)
+		{
+			*equal = '\0';
+			printf("declare -x %s=\"%s\"\n", arr[i], equal + 1);
+			*equal = '=';
+		}
+		else
+			printf("declare -x %s\n", arr[i]);
+		free(arr[i]);
 		i++;
 	}
-	return (result);
+	free(arr);
+	return (0);
 }
 
-int	process_export_arg(char *arg, t_env **my_env)
+int set_env_export_only(t_env **my_env, const char *key)
 {
-	char	*key;
-	char	*value;
-	char	*equal_sign;
+	t_env	*var;
+	t_env	*new;
 
-	equal_sign = ft_strchr(arg, '=');
-	if (equal_sign)
-	{
-		*equal_sign = '\0';
-		key = arg;
-		value = equal_sign + 1;
-		set_env_value(my_env, key, value);
-		*equal_sign = '=';
-	}
+	var = get_env(*my_env, key);
+	if (var)
+		var->exported = 1;
 	else
 	{
-		key = arg;
-		if (!get_env_value(*my_env, key))
-			set_env_value(my_env, key, "");
+		new = malloc(sizeof(t_env));
+		new->key = ft_strdup(key);
+		new->value = NULL;
+		new->exported = 1;
+		new->next = *my_env;
+		*my_env = new;
 	}
 	return (0);
 }
 
 int	handle_export(char **argv, t_env **my_env)
 {
-	int	i;
-	
+	char	*eq;
+	char	*key = NULL;
+	char	*value = NULL;
+	int		res;
+
 	if (!argv[1])
+		return (ft_export(*my_env));
+
+	eq = ft_strchr(argv[1], '=');
+	if (eq)
 	{
-		ft_env_custom(*my_env);
-		return (0);
+		key = ft_substr(argv[1], 0, eq - argv[1]);
+		value = ft_strdup(eq + 1);
+		if (!key || !value)
+			return (free(key), free(value), 1);
+		res = set_env(my_env, key, value);
+		free(key);
+		free(value);
+		return (res);
 	}
-	i = 1;
-	while (argv[i])
-	{
-		process_export_arg(argv[i], my_env);
-		i++;
-	}
-	return (0);
+	return (set_env_export_only(my_env, argv[1]));
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: radubos <radubos@student.42.fr>            +#+  +:+       +#+         #
+#    By: moritz <moritz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
-#    Updated: 2025/06/26 22:18:17 by radubos          ###   ########.fr        #
+#    Updated: 2025/07/23 09:16:53 by moritz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,9 @@ src/redirections/redirections.c src/redirections/redirect_utils.c \
 src/redirections/redirect_process.c src/execution/pipes.c \
 src/execution/pipe_execution.c src/execution/pipe_utils.c \
 src/execution/pipe_redirections.c src/execution/external_commands.c \
-src/execution/command_execution.c src/execution/path.c src/execution/path_utils.c
+src/execution/command_execution.c src/execution/path.c src/execution/path_utils.c \
+src/builtins/builtin_env_unset.c 
+
 OBJS    = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 NAME    = minishell
 

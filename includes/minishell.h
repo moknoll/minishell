@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/23 09:10:22 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,8 @@ int		is_builtin(char *cmd);
 int		ft_cd(char **argv, t_env **env);
 int		ft_exit_simple(char **argv);
 int		ft_pwd(char **argv);
+int		ft_export(t_env *env);
+int		handle_unset(char **argv, t_env **my_env);
 int		ft_echo(char **argv);
 int		ft_echo_n(char **argv);
 int		check_multiple_n(char *str);
@@ -196,6 +198,13 @@ int		ft_env_custom(t_env *env);
 int		handle_export(char **argv, t_env **my_env);
 int		process_export_arg(char *arg, t_env **my_env);
 int		handle_unset(char **argv, t_env **my_env);
+int		env_size(t_env *env);
+char	*ft_strjoin_free(char *s1, const char *s2);
+t_env	*get_env(t_env *env, const char *key);
+void	ft_sort_str_array(char **arr);
+int		ft_unset(t_env **my_env, const char *key);
+int		ft_env_custom(t_env *env);
+
 
 /* Environment functions */
 t_env	*init_env(t_env **env, char **envp);
