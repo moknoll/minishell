@@ -3,110 +3,73 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/23 12:43:40 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	hd_is_end(char *line, char *delim)
+static char	*append_read_line(char *line, int *len, int *capacity, int c)
 {
-	char	*nl;
+	char	*new_line;
 
-	nl = ft_strchr(line, '\n');
-	if (nl)
-		*nl = '\0';
-	if (ft_strcmp(line, delim) == 0)
-		return (1);
-	return (0);
+	if (*len >= *capacity - 1)
+	{
+		*capacity *= 2;
+		new_line = realloc(line, *capacity);
+		if (!new_line)
+		{
+			free(line);
+			return (NULL);
+		}
+		line = new_line;
+	}
+	line[(*len)++] = c;
+	return (line);
 }
 
-void	hd_write(int fd, char *line)
+static char	*read_line_loop(char *line, int capacity)
 {
-	write(fd, line, ft_strlen(line));
-	write(fd, "\n", 1);
-}
-
-static char	*read_line_interactive(void)
-{
-	char	*line;
-	int		capacity = 128;
 	int		len = 0;
 	int		c;
 
-	line = malloc(capacity);
-	if (!line)
-		return (NULL);
-	
-	write(STDOUT_FILENO, "> ", 2);
 	while (1)
 	{
 		if (g_exit_status == 130)
-		{
-			free(line);
-			return (NULL);
-		}
+			return (free(line), NULL);
 		c = getchar();
 		if (g_exit_status == 130)
-		{
-			free(line);
-			return (NULL);
-		}
+			return (free(line), NULL);
 		if (c == EOF)
 		{
 			if (len == 0)
-			{
-				free(line);
-				return (NULL);
-			}
+				return (free(line), NULL);
 			break;
 		}
 		if (c == '\n')
 			break;
-		if (len >= capacity - 1)
-		{
-			capacity *= 2;
-			line = realloc(line, capacity);
-			if (!line)
-				return (NULL);
-		}
-		
-		line[len++] = c;
+		line = append_read_line(line, &len, &capacity, c);
+		if (!line)
+			return (NULL);
 	}
 	line[len] = '\0';
 	return (line);
 }
 
-static char	*read_line_simple(int fd)
+char	*read_line_interactive(void)
 {
-	static char	buffer[4096];
-	static int	buffer_pos = 0;
-	static int	buffer_size = 0;
-	char		*line;
-	int			line_len;
+	char	*line;
+	int		capacity;
 
-	if (buffer_size < 0)
-	{
-		buffer_pos = 0;
-		buffer_size = 0;
-	}
-	line = allocate_line_buffer();
+	capacity = 128;
+	line = malloc(capacity);
 	if (!line)
 		return (NULL);
-	line_len = 0;
-	if (!process_line_reading(fd, buffer, &buffer_pos, &buffer_size, 
-			line, &line_len))
-	{
-		buffer_pos = 0;
-		buffer_size = 0;
-		free(line);
-		return (NULL);
-	}
-	finalize_line(line, line_len);
-	return (line);
+	write(STDOUT_FILENO, "> ", 2);
+	return (read_line_loop(line, capacity));
 }
 
 static int	heredoc_loop(char *delim, int fd)
@@ -119,23 +82,15 @@ static int	heredoc_loop(char *delim, int fd)
 	{
 		if (g_exit_status == 130)
 			return (-1);
-		if (is_interactive)
-			line = read_line_interactive();
-		else
-		{
-			write(STDOUT_FILENO, "> ", 2);
-			line = read_line_simple(STDIN_FILENO);
-		}
+		line = heredoc_read_line(is_interactive);
 		if (g_exit_status == 130)
 		{
-			if (line)
-				free(line);
+			free(line);
 			return (-1);
 		}
 		if (!line)
 			return (1);
-		if ((is_interactive && ft_strcmp(line, delim) == 0) ||
-			(!is_interactive && hd_is_end(line, delim)))
+		if (heredoc_is_delim(line, delim, is_interactive))
 		{
 			free(line);
 			break;

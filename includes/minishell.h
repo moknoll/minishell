@@ -6,7 +6,7 @@
 /*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/23 09:10:22 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/23 12:43:46 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,14 @@ typedef struct s_data
 	char	**args;
 	t_env	*env;
 }	t_data;
+
+/* Buffer state for reading lines */
+typedef struct s_buffer_state
+{
+	int pos;
+	int size;
+}	t_buffer_state;
+
 
 /* Global variable for signal handling */
 extern int	g_exit_status;
@@ -233,6 +241,14 @@ void	disable_echoctl(void);
 void	enable_echoctl(void);
 void	hd_set_signals(struct sigaction *old_int);
 void	hd_restore_signals(const struct sigaction *old_int);
+void	hd_write(int fd, char *line);
+int		hd_is_end(char *line, char *delim);
+char	*read_line_or_cleanup(int fd, char *line, char *buffer,
+	t_buffer_state *state);
+int	heredoc_is_delim(char *line, char *delim, int is_interactive);
+char	*heredoc_read_line(int is_interactive);
+char	*read_line_simple(int fd);
+char	*read_line_interactive(void);
 
 /* Utility functions */
 void	print_error(char *cmd, char *msg);
