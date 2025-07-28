@@ -1,17 +1,12 @@
-/* *************************************************************	if (!path)
-	{
-		print_error(args[0], "command not found");
-		g_exit_status = 127;
-		return;
-	}******* */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   external_commands.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Created: 2025/07/28 11:38:39 by mknoll            #+#    #+#             */
+/*   Updated: 2025/07/28 11:38:44 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +69,7 @@ void	launch_extern_command_simple(char **args, t_env *env)
 	{
 		print_error(args[0], "command not found");
 		g_exit_status = 127;
-		return;
+		return ;
 	}
 	pid = fork();
 	if (pid == -1)
@@ -82,7 +77,7 @@ void	launch_extern_command_simple(char **args, t_env *env)
 		perror("fork");
 		free(path);
 		g_exit_status = 1;
-		return;
+		return ;
 	}
 	if (pid == 0)
 		execute_child_process(args, path, env);

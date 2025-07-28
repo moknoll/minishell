@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_advanced.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 11:59:24 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ int	update_existing_env(t_env *current, char *value)
 {
 	if (current->value)
 		free(current->value);
-	current->value = ft_strdup(value ? value : "");
+	if (value)
+		current->value = ft_strdup(value);
+	else
+		current->value = ft_strdup("");
 	current->exported = 1;
 	return (SUCCESS);
 }

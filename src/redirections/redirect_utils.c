@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 11:34:21 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ int	validate_redirect_args(t_data *data, int i)
 {
 	if (!data->args[i + 1])
 	{
-		print_error("minishell", "syntax error near unexpected token `newline'");
+		print_error("minishell",
+			"syntax error near unexpected token `newline'");
 		g_exit_status = 2;
 		return (0);
 	}

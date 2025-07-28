@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:42:42 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_single_quote(char *input, int *i, int *in_single_quotes, 
+void	handle_single_quote(char *input, int *i, int *in_single_quotes,
 		int in_double_quotes)
 {
 	if (input[*i] == '\'' && !in_double_quotes)
@@ -22,7 +22,7 @@ void	handle_single_quote(char *input, int *i, int *in_single_quotes,
 	}
 }
 
-void	handle_double_quote(char *input, int *i, int in_single_quotes, 
+void	handle_double_quote(char *input, int *i, int in_single_quotes,
 		int *in_double_quotes)
 {
 	if (input[*i] == '"' && !in_single_quotes)
@@ -32,58 +32,54 @@ void	handle_double_quote(char *input, int *i, int in_single_quotes,
 	}
 }
 
-void	process_character(char *input, int *i, char **output, t_env *my_env, 
-		int in_single_quotes)
+void	process_character(t_expand_state *state)
 {
-	if (input[*i] == '$' && !in_single_quotes)
-		handle_dollar(input, i, output, my_env);
+	if (state->input[state->i] == '$' && !state->in_single_quotes)
+		handle_dollar((char *)state->input, &state->i,
+			&state->output, state->env);
 	else
 	{
-		append_char(input[*i], output);
-		(*i)++;
+		append_char(state->input[state->i], &state->output);
+		state->i++;
 	}
+}
+
+t_expand_state	init_expand_state(const char *input, t_env *env)
+{
+	t_expand_state	state;
+
+	state.input = input;
+	state.i = 0;
+	state.output = NULL;
+	state.env = env;
+	state.in_single_quotes = 0;
+	state.in_double_quotes = 0;
+	return (state);
 }
 
 char	*expand_and_parse_token(char *input, t_env *my_env)
 {
-	char	*output;
-	int		i;
-	int		in_single_quotes;
-	int		in_double_quotes;
+	t_expand_state	state;
 
 	if (!input)
 		return (NULL);
-	output = NULL;
-	i = 0;
-	in_single_quotes = 0;
-	in_double_quotes = 0;
-	while (input[i])
+	state = init_expand_state(input, my_env);
+	while (state.input[state.i])
 	{
-		if (input[i] == '\'' && !in_double_quotes)
-			handle_single_quote(input, &i, &in_single_quotes, in_double_quotes);
-		else if (input[i] == '"' && !in_single_quotes)
-			handle_double_quote(input, &i, in_single_quotes, &in_double_quotes);
+		if (state.input[state.i] == '\'' && !state.in_double_quotes)
+		{
+			state.in_single_quotes = !state.in_single_quotes;
+			state.i++;
+		}
+		else if (state.input[state.i] == '"' && !state.in_single_quotes)
+		{
+			state.in_double_quotes = !state.in_double_quotes;
+			state.i++;
+		}
 		else
-			process_character(input, &i, &output, my_env, in_single_quotes);
+			process_character(&state);
 	}
-	if (!output)
+	if (!state.output)
 		return (ft_strdup(""));
-	return (output);
-}
-
-char	*heredoc_tmp(void)
-{
-	static int	i = 0;
-	char		*num;
-	char		*filename;
-
-	num = ft_itoa(i++);
-	filename = ft_strjoin("/tmp/heredoc_", num);
-	if (!filename)
-	{
-		free(num);
-		return (NULL);
-	}
-	free(num);
-	return (filename);
+	return (state.output);
 }

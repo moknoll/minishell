@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_read_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:14:05 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	fill_buffer(int fd, char *buffer, int *buffer_pos, int *buffer_size)
 	return (1);
 }
 
-int	read_character_to_line(char *buffer, int *buffer_pos, 
+int	read_character_to_line(char *buffer, int *buffer_pos,
 		char *line, int *line_len)
 {
 	if (buffer[*buffer_pos] == '\n')
@@ -60,19 +60,19 @@ char	*allocate_line_buffer(void)
 	return (line);
 }
 
-int	process_line_reading(int fd, char *buffer, int *buffer_pos, 
-		int *buffer_size, char *line, int *line_len)
+int	process_line_reading(int fd, char *buffer, t_buffer_state *buf,
+	t_line_state *line)
 {
 	while (1)
 	{
-		if (!fill_buffer(fd, buffer, buffer_pos, buffer_size))
+		if (!fill_buffer(fd, buffer, &buf->pos, &buf->size))
 		{
-			if (*line_len == 0)
+			if (line->len == 0)
 				return (0);
-			break;
+			break ;
 		}
-		if (read_character_to_line(buffer, buffer_pos, line, line_len))
-			break;
+		if (read_character_to_line(buffer, &buf->pos, line->data, &line->len))
+			break ;
 	}
 	return (1);
 }

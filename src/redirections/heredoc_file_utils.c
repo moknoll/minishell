@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_file_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/23 12:32:34 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/28 11:35:16 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	setup_heredoc_signals(struct sigaction *old_int, int *saved)
 	g_exit_status = 0;
 }
 
-void	cleanup_heredoc_signals(const struct sigaction *old_int, 
+void	cleanup_heredoc_signals(const struct sigaction *old_int,
 		int saved, int ret, char *delimiter)
 {
 	(void)ret;

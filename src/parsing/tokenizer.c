@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:42:51 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	skip_whitespace(char *line, int *i)
-{
-	while (line[*i] && (line[*i] == ' ' || line[*i] == '\t'))
-		(*i)++;
-}
 
 int	process_single_token(char *line, int *i, char ***tokens, int *count)
 {
@@ -79,4 +73,21 @@ char	**tokenize(char *line)
 		return (NULL);
 	tokenize_line(line, tokens);
 	return (tokens);
+}
+
+char	*heredoc_tmp(void)
+{
+	static int	i = 0;
+	char		*num;
+	char		*filename;
+
+	num = ft_itoa(i++);
+	filename = ft_strjoin("/tmp/heredoc_", num);
+	if (!filename)
+	{
+		free(num);
+		return (NULL);
+	}
+	free(num);
+	return (filename);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:28:05 by mknoll            #+#    #+#             */
-/*   Updated: 2025/07/23 09:08:35 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/28 11:40:25 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	ft_exit_simple(char **argv)
 	return (0);
 }
 
-t_env *get_env(t_env *env, const char *key)
+t_env	*get_env(t_env *env, const char *key)
 {
 	while (env)
 	{

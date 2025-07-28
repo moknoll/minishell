@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:08:55 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 void	execute_pipe_command(char **cmd, t_env *env)
 {
+	int	exit_code;
+
 	if (!process_cmd_redirections(cmd))
 		exit(1);
 	if (!cmd[0])
 		exit(0);
 	if (is_builtin(cmd[0]))
 	{
-		int exit_code;
 		if (ft_strcmp(cmd[0], "exit") == 0)
 			exit(0);
 		exit_code = handle_builtin(cmd, &env);
@@ -59,7 +60,7 @@ void	execute_pipe_chain(char ***commands, int cmd_count, t_env *env)
 
 	pipes = create_pipes(cmd_count);
 	if (!pipes)
-		return;
+		return ;
 	pids = malloc(sizeof(pid_t) * cmd_count);
 	i = 0;
 	while (i < cmd_count)
@@ -97,10 +98,10 @@ char	**create_command_from_args(char **args, int start, int end)
 	return (command);
 }
 
-void	process_pipe_segment(char ***commands, char **args, int *cmd_index, 
-		int *start, int i)
+void	process_pipe_segment(char ***commands, char **args, int *cmd_index,
+		t_range range)
 {
-	commands[*cmd_index] = create_command_from_args(args, *start, i);
+	commands[*cmd_index] = create_command_from_args(args,
+			range.start, range.end);
 	(*cmd_index)++;
-	*start = i + 1;
 }

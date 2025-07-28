@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_execution.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 11:38:57 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	execute_builtin_with_redirections(t_data *data)
 		close(saved_stdout);
 		close(saved_stdin);
 		g_exit_status = 1;
-		return;
+		return ;
 	}
 	exit_code = handle_builtin(data->args, &data->env);
 	g_exit_status = exit_code;
@@ -52,14 +52,14 @@ void	execute_builtin_with_redirections(t_data *data)
 void	execute(t_data *data)
 {
 	int	pipe_count;
-	
+
 	if (!data->args || !data->args[0])
-		return;
+		return ;
 	pipe_count = count_pipes(data->args);
 	if (pipe_count > 0)
 	{
 		execute_pipe_commands(data, pipe_count);
-		return;
+		return ;
 	}
 	if (is_builtin(data->args[0]))
 		execute_builtin_with_redirections(data);

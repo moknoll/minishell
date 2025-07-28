@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 11:41:14 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_status = 0;
+int	g_exit_status = 0;
 
 void	print_error(char *cmd, char *msg)
 {
@@ -41,7 +41,8 @@ int	is_empty_line(char *line)
 
 static void	process_command_line(t_data *data)
 {
-	int	i;
+	int		i;
+	char	*expanded;
 
 	add_history(data->line);
 	data->args = tokenize(data->line);
@@ -50,7 +51,7 @@ static void	process_command_line(t_data *data)
 		i = 0;
 		while (data->args[i])
 		{
-			char *expanded = expand_and_parse_token(data->args[i], data->env);
+			expanded = expand_and_parse_token(data->args[i], data->env);
 			free(data->args[i]);
 			data->args[i] = expanded;
 			i++;
@@ -63,7 +64,7 @@ static void	process_command_line(t_data *data)
 void	minishell_loop(t_env *env)
 {
 	t_data	data;
-	
+
 	data.env = env;
 	init_signals_prompt();
 	while (1)
@@ -72,12 +73,12 @@ void	minishell_loop(t_env *env)
 		if (!data.line)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (is_empty_line(data.line))
 		{
 			free(data.line);
-			continue;
+			continue ;
 		}
 		process_command_line(&data);
 		free(data.line);

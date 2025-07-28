@@ -3,23 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 11:56:37 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	init_paths(char **standard_paths)
+{
+	standard_paths[0] = "/bin";
+	standard_paths[1] = "/usr/bin";
+	standard_paths[2] = "/usr/local/bin";
+	standard_paths[3] = "/opt/homebrew/bin";
+	standard_paths[4] = "/opt/local/bin";
+	standard_paths[5] = NULL;
+}
+
 char	*find_command_in_standard_paths(char *cmd)
 {
-	char	*standard_paths[] = {"/bin", "/usr/bin", "/usr/local/bin",
-		"/opt/homebrew/bin", "/opt/local/bin", NULL};
+	char	*standard_paths[6];
 	char	*full_path;
 	char	*result;
 	int		i;
 
+	init_paths(standard_paths);
 	if (!cmd)
 		return (NULL);
 	i = 0;
@@ -29,7 +39,7 @@ char	*find_command_in_standard_paths(char *cmd)
 		if (!full_path)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		result = check_path_access(full_path);
 		if (result)

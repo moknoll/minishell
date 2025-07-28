@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:14:28 by mknoll            #+#    #+#             */
-/*   Updated: 2025/06/27 15:16:23 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/07/28 12:42:09 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	env_size(t_env *env)
 {
 	int	count;
-	
+
 	count = 0;
 	while (env)
 	{
@@ -47,4 +47,10 @@ void	ft_sort_str_array(char **arr)
 		}
 		i++;
 	}
+}
+
+void	skip_whitespace(char *line, int *i)
+{
+	while (line[*i] && (line[*i] == ' ' || line[*i] == '\t'))
+		(*i)++;
 }

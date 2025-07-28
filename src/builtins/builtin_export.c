@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/23 09:22:23 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/28 11:40:10 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,7 @@ int	ft_export(t_env *env)
 	i = 0;
 	arr = env_to_sorted_array(env);
 	if (!arr)
-	{
-		printf("minishell: export: allocation error\n");
-		return (1);
-	}
+		return (printf("minishell: export: allocation error\n"), 1);
 	while (arr[i])
 	{
 		equal = ft_strchr(arr[i], '=');
@@ -66,7 +63,7 @@ int	ft_export(t_env *env)
 	return (0);
 }
 
-int set_env_export_only(t_env **my_env, const char *key)
+int	set_env_export_only(t_env **my_env, const char *key)
 {
 	t_env	*var;
 	t_env	*new;
@@ -89,13 +86,14 @@ int set_env_export_only(t_env **my_env, const char *key)
 int	handle_export(char **argv, t_env **my_env)
 {
 	char	*eq;
-	char	*key = NULL;
-	char	*value = NULL;
+	char	*key;
+	char	*value;
 	int		res;
 
+	key = NULL;
+	value = NULL;
 	if (!argv[1])
 		return (ft_export(*my_env));
-
 	eq = ft_strchr(argv[1], '=');
 	if (eq)
 	{

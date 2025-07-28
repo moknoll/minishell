@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/23 12:43:46 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/28 12:50:34 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@
 # include <readline/history.h>
 # include <termios.h>
 
-/* macOS compatibility for WEXITCODE */
-#ifndef WEXITCODE
-# define WEXITCODE(status) WEXITSTATUS(status)
-#endif
+// /* macOS compatibility for WEXITCODE */
+// #ifndef WEXITCODE
+// # define WEXITCODE(status) WEXITSTATUS(status)
+// #endif
 
 /* Exit codes */
 # define SUCCESS 0
@@ -56,21 +56,41 @@ typedef struct s_command
 }	t_command;
 
 /* Redirection types */
-typedef enum e_redir_type
-{
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APPEND,
-	REDIR_HEREDOC
-}	e_redir_type;
+// typedef enum e_redir_type
+// {
+// 	REDIR_IN,
+// 	REDIR_OUT,
+// 	REDIR_APPEND,
+// 	REDIR_HEREDOC
+// }	t_redir_type;
 
-/* Redirection structure */
-typedef struct s_redir
+/* Token Struct*/
+typedef struct s_token_state
 {
-	e_redir_type		type;
-	char				*file;
-	struct s_redir		*next;
-}	t_redir;
+	int		i;
+	int		count;
+	int		in_quotes;
+	char	quote_char;
+}	t_token_state;
+
+/* Expand Struct */
+typedef struct s_expand_state
+{
+	const char	*input;
+	int			i;
+	char		*output;
+	t_env		*env;
+	int			in_single_quotes;
+	int			in_double_quotes;
+}	t_expand_state;
+
+// /* Redirection structure */
+// typedef struct s_redir
+// {
+// 	tredir_type		type;
+// 	char				*file;
+// 	struct s_redir		*next;
+// }	t_redir;
 
 /* Simple data structure for direct execution */
 typedef struct s_data
@@ -84,15 +104,26 @@ typedef struct s_data
 /* Buffer state for reading lines */
 typedef struct s_buffer_state
 {
-	int pos;
-	int size;
+	int	pos;
+	int	size;
 }	t_buffer_state;
 
+/* Range struct*/
+typedef struct s_range
+{
+	int	start;
+	int	end;
+}	t_range;
+
+/* Line state for reading lines*/
+typedef struct s_line
+{
+	char	*data;
+	int		len;
+}	t_line_state;
 
 /* Global variable for signal handling */
 extern int	g_exit_status;
-
-/* Function prototypes */
 
 /* Main functions */
 int		main(int argc, char **argv, char **envp);
@@ -114,16 +145,14 @@ int		is_empty_line(char *line);
 char	**tokenize(char *line);
 char	*expand_and_parse_token(char *input, t_env *my_env);
 char	*heredoc_tmp(void);
-void	handle_single_quote(char *input, int *i, int *in_single_quotes, 
-		int in_double_quotes);
-void	handle_double_quote(char *input, int *i, int in_single_quotes, 
-		int *in_double_quotes);
-void	process_character(char *input, int *i, char **output, t_env *my_env, 
-		int in_single_quotes);
+void	handle_single_quote(char *input, int *i, int *in_single_quotes,
+			int in_double_quotes);
+void	handle_double_quote(char *input, int *i, int in_single_quotes,
+			int *in_double_quotes);
+void	process_character(t_expand_state *state);
 int		check_unclosed_quotes(char *line);
 void	advance_in_token(char *line, int *i, int *in_quotes, char *quote_char);
-void	process_token(char *line, int *i, int *count, int *in_quotes, 
-		char *quote_char);
+void	process_token(char *line, t_token_state *state);
 int		count_tokens(char *line);
 char	*extract_token(char *line, int *i);
 void	skip_whitespace(char *line, int *i);
@@ -142,8 +171,8 @@ void	hd_write(int fd, char *line);
 int		create_tmp_heredoc_file(char **filename);
 int		should_cleanup_file(int ret);
 void	setup_heredoc_signals(struct sigaction *old_int, int *saved);
-void	cleanup_heredoc_signals(const struct sigaction *old_int, 
-		int saved, int ret, char *delimiter);
+void	cleanup_heredoc_signals(const struct sigaction *old_int,
+			int saved, int ret, char *delimiter);
 void	remove_redirect_args(t_data *data, int i);
 int		setup_heredoc_fd(char *heredoc_file, int *saved_stdin);
 void	cleanup_heredoc_redirect(int saved_stdin, char *heredoc_file);
@@ -151,12 +180,12 @@ int		open_output_file(char *filename, int append);
 int		validate_redirect_args(t_data *data, int i);
 int		process_single_redirect(t_data *data, int i);
 int		fill_buffer(int fd, char *buffer, int *buffer_pos, int *buffer_size);
-int		read_character_to_line(char *buffer, int *buffer_pos, 
-		char *line, int *line_len);
+int		read_character_to_line(char *buffer, int *buffer_pos,
+			char *line, int *line_len);
 void	finalize_line(char *line, int line_len);
 char	*allocate_line_buffer(void);
-int		process_line_reading(int fd, char *buffer, int *buffer_pos, 
-		int *buffer_size, char *line, int *line_len);
+int		process_line_reading(int fd, char *buffer, t_buffer_state *buf,
+			t_line_state *line);
 
 /* Pipe functions */
 int		count_pipes(char **args);
@@ -172,8 +201,8 @@ void	setup_child_pipes(int **pipes, int cmd_count, int i);
 void	cleanup_pipes(int **pipes, int cmd_count);
 void	wait_for_children(pid_t *pids, int cmd_count);
 char	**create_command_from_args(char **args, int start, int end);
-void	process_pipe_segment(char ***commands, char **args, int *cmd_index, 
-		int *start, int i);
+void	process_pipe_segment(char ***commands, char **args, int *cmd_index,
+			t_range range);
 void	remove_redirection_args(char **cmd, int i);
 int		handle_output_redirection(char **cmd, int i);
 int		handle_append_redirection(char **cmd, int i);
@@ -213,7 +242,6 @@ void	ft_sort_str_array(char **arr);
 int		ft_unset(t_env **my_env, const char *key);
 int		ft_env_custom(t_env *env);
 
-
 /* Environment functions */
 t_env	*init_env(t_env **env, char **envp);
 char	*get_env_value(t_env *env_list, char *key);
@@ -243,9 +271,9 @@ void	hd_set_signals(struct sigaction *old_int);
 void	hd_restore_signals(const struct sigaction *old_int);
 void	hd_write(int fd, char *line);
 int		hd_is_end(char *line, char *delim);
-char	*read_line_or_cleanup(int fd, char *line, char *buffer,
-	t_buffer_state *state);
-int	heredoc_is_delim(char *line, char *delim, int is_interactive);
+char	*read_line_or_cleanup(int fd, char *buffer,
+			t_buffer_state *state, t_line_state *line);
+int		heredoc_is_delim(char *line, char *delim, int is_interactive);
 char	*heredoc_read_line(int is_interactive);
 char	*read_line_simple(int fd);
 char	*read_line_interactive(void);

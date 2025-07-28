@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 12:31:25 by moritz            #+#    #+#             */
-/*   Updated: 2025/07/23 12:42:21 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/28 12:20:09 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,19 @@ int	hd_is_end(char *line, char *delim)
 
 char	*read_line_simple(int fd)
 {
-	static char			buffer[4096];
+	static char				buffer[4096];
 	static t_buffer_state	state;
-	char				*line;
+	t_line_state			line;
 
 	if (state.size < 0)
 	{
 		state.pos = 0;
 		state.size = 0;
 	}
-	line = allocate_line_buffer();
-	if (!line)
+	line.data = allocate_line_buffer();
+	if (!line.data)
 		return (NULL);
-	return (read_line_or_cleanup(fd, line, buffer, &state));
+	return (read_line_or_cleanup(fd, buffer, &state, &line));
 }
 
 char	*heredoc_read_line(int is_interactive)
@@ -65,19 +65,17 @@ int	heredoc_is_delim(char *line, char *delim, int is_interactive)
 		return (hd_is_end(line, delim));
 }
 
-char	*read_line_or_cleanup(int fd, char *line, char *buffer,
-	t_buffer_state *state)
+char	*read_line_or_cleanup(int fd, char *buffer,
+	t_buffer_state *state, t_line_state *line)
 {
-	int	line_len = 0;
-
-	if (!process_line_reading(fd, buffer, &state->pos, &state->size,
-			line, &line_len))
+	line->len = 0;
+	if (!process_line_reading(fd, buffer, state, line))
 	{
 		state->pos = 0;
 		state->size = 0;
-		free(line);
+		free(line->data);
 		return (NULL);
 	}
-	finalize_line(line, line_len);
-	return (line);
+	finalize_line(line->data, line->len);
+	return (line->data);
 }

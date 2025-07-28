@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:42:26 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,49 +52,47 @@ void	advance_in_token(char *line, int *i, int *in_quotes, char *quote_char)
 			*in_quotes = 0;
 			*quote_char = 0;
 		}
-		else if (!*in_quotes && (line[*i] == ' ' || line[*i] == '\t' || 
-				line[*i] == '<' || line[*i] == '>' || line[*i] == '|'))
-			break;
+		else if (!*in_quotes && (line[*i] == ' ' || line[*i] == '\t'
+				|| line[*i] == '<' || line[*i] == '>' || line[*i] == '|'))
+			break ;
 		(*i)++;
 	}
 }
 
-void	process_token(char *line, int *i, int *count, int *in_quotes, 
-		char *quote_char)
+void	process_token(char *line, t_token_state *state)
 {
-	if (!*in_quotes && line[*i] == '<' && line[*i + 1] == '<')
-		*i += 2;
-	else if (!*in_quotes && line[*i] == '>' && line[*i + 1] == '>')
-		*i += 2;
-	else if (!*in_quotes && (line[*i] == '<' || line[*i] == '>'
-			|| line[*i] == '|'))
-		(*i)++;
+	if (!state->in_quotes && line[state->i] == '<' && line[state->i + 1] == '<')
+		state->i += 2;
+	else if (!state->in_quotes && line[state->i]
+		== '>' && line[state->i + 1] == '>')
+		state->i += 2;
+	else if (!state->in_quotes && (line[state->i] == '<'
+			|| line[state->i] == '>' || line[state->i] == '|'))
+		state->i++;
 	else
-		advance_in_token(line, i, in_quotes, quote_char);
-	(*count)++;
+		advance_in_token(line, &state->i,
+			&state->in_quotes, &state->quote_char);
+	state->count++;
 }
 
 int	count_tokens(char *line)
 {
-	int		i;
-	int		count;
-	int		in_quotes;
-	char	quote_char;
+	t_token_state	state;
 
-	count = 0;
-	i = 0;
-	while (line[i])
+	state.i = 0;
+	state.count = 0;
+	while (line[state.i])
 	{
-		while (line[i] && (line[i] == ' ' || line[i] == '\t'))
-			i++;
-		if (line[i])
+		while (line[state.i] && (line[state.i] == ' ' || line[state.i] == '\t'))
+			state.i++;
+		if (line[state.i])
 		{
-			in_quotes = 0;
-			quote_char = 0;
-			process_token(line, &i, &count, &in_quotes, &quote_char);
+			state.in_quotes = 0;
+			state.quote_char = 0;
+			process_token(line, &state);
 		}
 	}
-	return (count);
+	return (state.count);
 }
 
 char	*extract_token(char *line, int *i)
@@ -110,7 +108,8 @@ char	*extract_token(char *line, int *i)
 		*i += 2;
 	else if (!in_quotes && line[*i] == '>' && line[*i + 1] == '>')
 		*i += 2;
-	else if (!in_quotes && (line[*i] == '<' || line[*i] == '>' || line[*i] == '|'))
+	else if (!in_quotes && (line[*i] == '<'
+			|| line[*i] == '>' || line[*i] == '|'))
 		(*i)++;
 	else
 		advance_in_token(line, i, &in_quotes, &quote_char);

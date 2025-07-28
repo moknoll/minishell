@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/23 12:43:40 by moritz           ###   ########.fr       */
+/*   Updated: 2025/07/28 11:36:15 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ static char	*append_read_line(char *line, int *len, int *capacity, int c)
 
 static char	*read_line_loop(char *line, int capacity)
 {
-	int		len = 0;
+	int		len;
 	int		c;
 
+	len = 0;
 	while (1)
 	{
 		if (g_exit_status == 130)
@@ -47,10 +48,10 @@ static char	*read_line_loop(char *line, int capacity)
 		{
 			if (len == 0)
 				return (free(line), NULL);
-			break;
+			break ;
 		}
 		if (c == '\n')
-			break;
+			break ;
 		line = append_read_line(line, &len, &capacity, c);
 		if (!line)
 			return (NULL);
@@ -93,7 +94,7 @@ static int	heredoc_loop(char *delim, int fd)
 		if (heredoc_is_delim(line, delim, is_interactive))
 		{
 			free(line);
-			break;
+			break ;
 		}
 		hd_write(fd, line);
 		free(line);
@@ -124,4 +125,3 @@ char	*handle_heredoc(char *delimiter)
 	}
 	return (tmp_filename);
 }
-

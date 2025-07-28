@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:07:18 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char	***split_all_pipe_commands(char **args, int pipe_count)
 	int		cmd_index;
 	int		start;
 	int		i;
+	t_range	r;
 
 	commands = malloc(sizeof(char **) * (pipe_count + 2));
 	if (!commands)
@@ -44,12 +45,16 @@ char	***split_all_pipe_commands(char **args, int pipe_count)
 	while (args[i])
 	{
 		if (ft_strcmp(args[i], "|") == 0)
-			process_pipe_segment(commands, args, &cmd_index, &start, i);
+		{
+			r.start = start;
+			r.end = i;
+			process_pipe_segment(commands, args, &cmd_index, r);
+			start = i + 1;
+		}
 		i++;
 	}
 	commands[cmd_index] = create_command_from_args(args, start, i);
-	commands[cmd_index + 1] = NULL;
-	return (commands);
+	return (commands[cmd_index + 1] = NULL, commands);
 }
 
 void	free_commands(char ***commands)
@@ -57,7 +62,7 @@ void	free_commands(char ***commands)
 	int	i;
 
 	if (!commands)
-		return;
+		return ;
 	i = 0;
 	while (commands[i])
 	{
@@ -83,7 +88,7 @@ int	process_cmd_redirections(char **cmd)
 		else if (ft_strcmp(cmd[i], "<<") == 0 && cmd[i + 1])
 		{
 			i += 2;
-			continue;
+			continue ;
 		}
 		i++;
 	}
