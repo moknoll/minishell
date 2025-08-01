@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/06/27 16:01:21 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/07/28 13:09:31 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	ft_echo(char **argv)
 	return (0);
 }
 
-int	handle_builtin(char **argv, t_env **my_env)
+int	handle_builtin(char **argv, t_env **my_env, t_data *data)
 {
 	if (ft_strcmp(argv[0], "cd") == 0)
 		return (ft_cd(argv, my_env));
@@ -97,7 +97,7 @@ int	handle_builtin(char **argv, t_env **my_env)
 	else if (ft_strcmp(argv[0], "env") == 0)
 		return (ft_env_custom(*my_env));
 	else if (ft_strcmp(argv[0], "exit") == 0)
-		return (ft_exit_simple(argv));
+		return (ft_exit_simple(argv, *my_env, data));
 	else
 	{
 		print_error(argv[0], "command not found");

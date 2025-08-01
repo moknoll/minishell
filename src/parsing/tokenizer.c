@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 12:42:51 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/07/28 13:04:29 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,11 @@ void	tokenize_line(char *line, char **tokens)
 		if (line[i])
 		{
 			if (!process_single_token(line, &i, &tokens, &count))
+			{
+				ft_free_tab(tokens);
 				return ;
+			}
+				
 		}
 	}
 	tokens[count] = NULL;

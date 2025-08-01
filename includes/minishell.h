@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 12:50:34 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/07/28 13:11:34 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,10 @@ char	*search_in_path_env(char *cmd, char *path_env);
 char	*get_path(char *cmd, char *envp[]);
 
 /* Built-in functions */
-int		handle_builtin(char **argv, t_env **my_env);
+int		handle_builtin(char **argv, t_env **my_env, t_data *data);
 int		is_builtin(char *cmd);
 int		ft_cd(char **argv, t_env **env);
-int		ft_exit_simple(char **argv);
+int		ft_exit_simple(char **argv, t_env *env, t_data *data);
 int		ft_pwd(char **argv);
 int		ft_export(t_env *env);
 int		handle_unset(char **argv, t_env **my_env);
