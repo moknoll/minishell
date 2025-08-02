@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	execute_pipe_command(char **cmd, t_env *env)
+void	execute_pipe_command(char **cmd, t_env *env, t_data *data)
 {
 	int	exit_code;
 
@@ -24,7 +24,7 @@ void	execute_pipe_command(char **cmd, t_env *env)
 	{
 		if (ft_strcmp(cmd[0], "exit") == 0)
 			exit(0);
-		exit_code = handle_builtin(cmd, &env);
+		exit_code = handle_builtin(cmd, &env, data);
 		exit(exit_code);
 	}
 	else
@@ -52,7 +52,7 @@ void	wait_for_children(pid_t *pids, int cmd_count)
 	init_signals_prompt();
 }
 
-void	execute_pipe_chain(char ***commands, int cmd_count, t_env *env)
+void	execute_pipe_chain(char ***commands, int cmd_count, t_env *env, t_data *data)
 {
 	int		**pipes;
 	pid_t	*pids;
@@ -70,7 +70,7 @@ void	execute_pipe_chain(char ***commands, int cmd_count, t_env *env)
 		{
 			setup_child_pipes(pipes, cmd_count, i);
 			reset_signals_to_default();
-			execute_pipe_command(commands[i], env);
+			execute_pipe_command(commands[i], env, data);
 			exit(0);
 		}
 		i++;

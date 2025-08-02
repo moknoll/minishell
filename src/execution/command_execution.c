@@ -19,7 +19,7 @@ void	execute_pipe_commands(t_data *data, int pipe_count)
 	commands = split_all_pipe_commands(data->args, pipe_count);
 	if (commands)
 	{
-		execute_pipe_chain(commands, pipe_count + 1, data->env);
+		execute_pipe_chain(commands, pipe_count + 1, data->env, data);
 		free_commands(commands);
 	}
 }
