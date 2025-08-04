@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 13:11:34 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/04 11:48:24 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,8 @@ char	***split_all_pipe_commands(char **args, int pipe_count);
 void	free_commands(char ***commands);
 int		process_cmd_redirections(char **cmd);
 void	execute_pipe_command(char **cmd, t_env *env, t_data *data);
-void	execute_pipe_chain(char ***commands, int cmd_count, t_env *env, t_data *data);
+void	execute_pipe_chain(char ***commands, int cmd_count,
+			t_env *env, t_data *data);
 char	*prepare_pipe_command_path(char **cmd, t_env *env);
 void	execute_external_pipe_command(char **cmd, t_env *env);
 int		**create_pipes(int cmd_count);
@@ -241,6 +242,7 @@ t_env	*get_env(t_env *env, const char *key);
 void	ft_sort_str_array(char **arr);
 int		ft_unset(t_env **my_env, const char *key);
 int		ft_env_custom(t_env *env);
+void	free_all_and_exit(int exit_code, t_env *env, t_data *data);
 
 /* Environment functions */
 t_env	*init_env(t_env **env, char **envp);

@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 13:05:03 by radubos           #+#    #+#             */
-/*   Updated: 2025/06/26 22:01:52 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/04 09:45:49 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
-#include <stdarg.h>
-#include <stdio.h>
+# include <stddef.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <stdarg.h>
+# include <stdio.h>
 
 typedef struct s_list
 {
@@ -77,7 +77,7 @@ int		ft_isspace(char c);
 char	*ft_strndup(char *s, size_t n);
 char	*ft_strncpy(char *dest, char const *src, int n);
 void	ft_free_tab(char **tab);
-int	ft_tablen(char **tab);
+int		ft_tablen(char **tab);
 char	**ft_tabdup(char **tab);
 
 #endif

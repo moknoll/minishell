@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:28:05 by mknoll            #+#    #+#             */
-/*   Updated: 2025/07/28 14:05:38 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/04 09:44:54 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,32 +72,10 @@ int	is_builtin(char *cmd)
 
 void	free_all_and_exit(int exit_code, t_env *env, t_data *data)
 {
-    rl_clear_history();
-    free_env_list(env);
-    ft_free_tab(data->args);
-    exit(exit_code);
-}
-
-int	ft_exit_simple(char **argv, t_env *env, t_data *data)
-{
-    int	exit_code;
-
-    printf("exit\n");
-	if (argv[1] && argv[2])
-	{
-		printf("minishell: exit: too many arguments\n");
-		return (1);
-	}
-	if (argv[1])
-    {
-        exit_code = ft_atoi(argv[1]);
-        if (exit_code < 0 || exit_code > 255)
-            exit_code = exit_code % 256;
-    }
-    else
-        exit_code = g_exit_status;
-    free_all_and_exit(exit_code, env, data);
-    return (0);
+	rl_clear_history();
+	free_env_list(env);
+	ft_free_tab(data->args);
+	exit(exit_code);
 }
 
 t_env	*get_env(t_env *env, const char *key)

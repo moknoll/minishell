@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 12:08:55 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 09:42:26 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	wait_for_children(pid_t *pids, int cmd_count)
 	init_signals_prompt();
 }
 
-void	execute_pipe_chain(char ***commands, int cmd_count, t_env *env, t_data *data)
+void	execute_pipe_chain(char ***commands, int cmd_count,
+		t_env *env, t_data *data)
 {
 	int		**pipes;
 	pid_t	*pids;

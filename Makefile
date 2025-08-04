@@ -3,21 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: moritz <moritz@student.42.fr>              +#+  +:+       +#+         #
+#    By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
-#    Updated: 2025/07/23 12:40:26 by moritz           ###   ########.fr        #
+#    Updated: 2025/08/04 11:57:09 by mknoll           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compiler and flags
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -g3 -o3
-
-# Readline includes and libraries (macOS)
-READLINE_DIR = $(shell brew --prefix readline)
-CFLAGS   += -I$(READLINE_DIR)/include
-LDFLAGS  += -L$(READLINE_DIR)/lib
 LDLIBS   += -lreadline -lcurses
 
 # Libraries
@@ -52,7 +47,7 @@ $(LIBFT_LIB):
 	make -C libft
 
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS)
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@mkdir -p $(dir $@)
