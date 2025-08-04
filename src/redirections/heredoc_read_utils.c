@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_read_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 12:14:05 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:01:50 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	fill_buffer(int fd, char *buffer, int *buffer_pos, int *buffer_size)
 {

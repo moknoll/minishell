@@ -6,11 +6,11 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/19 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/04 14:05:16 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 static int	handle_heredoc_type(t_data *data, int i)
 {

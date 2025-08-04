@@ -6,11 +6,11 @@
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/04 13:58:04 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 char	*get_variable_value_from_env(t_env *my_env, char *var_name)
 {

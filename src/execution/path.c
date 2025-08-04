@@ -3,28 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 11:56:37 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 13:52:20 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 void	init_paths(char **standard_paths)
 {
 	standard_paths[0] = "/bin";
 	standard_paths[1] = "/usr/bin";
 	standard_paths[2] = "/usr/local/bin";
-	standard_paths[3] = "/opt/homebrew/bin";
-	standard_paths[4] = "/opt/local/bin";
-	standard_paths[5] = NULL;
+	standard_paths[3] = NULL;
 }
 
 char	*find_command_in_standard_paths(char *cmd)
 {
-	char	*standard_paths[6];
+	char	*standard_paths[4];
 	char	*full_path;
 	char	*result;
 	int		i;

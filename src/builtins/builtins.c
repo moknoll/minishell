@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/08/04 09:44:59 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:21:07 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	ft_cd(char **argv, t_env **env)
 {
@@ -82,12 +82,17 @@ int	ft_exit_simple(char **argv, t_env *env, t_data *data)
 	int	exit_code;
 
 	printf("exit\n");
+	if (argv[1] && !ft_isnumeric(argv[1]))
+	{
+		printf("minishell: exit: %s: numeric argument required\n", argv[1]);
+		g_exit_status = 2;
+	}
 	if (argv[1] && argv[2])
 	{
 		printf("minishell: exit: too many arguments\n");
 		return (1);
 	}
-	if (argv[1])
+	if (argv[1] && ft_isnumeric(argv[1]))
 	{
 		exit_code = ft_atoi(argv[1]);
 		if (exit_code < 0 || exit_code > 255)

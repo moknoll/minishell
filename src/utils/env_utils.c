@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 11:33:58 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:47:45 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 t_env	*env_array_to_list(char **envp)
 {
@@ -64,7 +64,7 @@ int	set_env_value(t_env **env_list, char *key, char *value)
 	t_env	*new_node;
 
 	if (!env_list || !key)
-		return (FAILURE);
+		return (1);
 	current = *env_list;
 	while (current)
 	{
@@ -74,10 +74,10 @@ int	set_env_value(t_env **env_list, char *key, char *value)
 	}
 	new_node = create_env_node(key, value);
 	if (!new_node)
-		return (FAILURE);
+		return (1);
 	new_node->next = *env_list;
 	*env_list = new_node;
-	return (SUCCESS);
+	return (0);
 }
 
 int	unset_env_value(t_env **env_list, char *key)
@@ -86,12 +86,12 @@ int	unset_env_value(t_env **env_list, char *key)
 	t_env	*prev;
 
 	if (!env_list || !*env_list || !key)
-		return (FAILURE);
+		return (1);
 	current = find_env_node(*env_list, key, &prev);
 	if (!current)
-		return (FAILURE);
+		return (1);
 	remove_env_node(env_list, current, prev);
-	return (SUCCESS);
+	return (0);
 }
 
 char	**env_to_array(t_env *env_list)

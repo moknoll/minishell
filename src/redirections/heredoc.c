@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 11:36:15 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:03:11 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 static char	*append_read_line(char *line, int *len, int *capacity, int c)
 {
@@ -19,7 +19,7 @@ static char	*append_read_line(char *line, int *len, int *capacity, int c)
 	if (*len >= *capacity - 1)
 	{
 		*capacity *= 2;
-		new_line = realloc(line, *capacity);
+		new_line = ft_realloc(line, *capacity);
 		if (!new_line)
 		{
 			free(line);
@@ -41,7 +41,7 @@ static char	*read_line_loop(char *line, int capacity)
 	{
 		if (g_exit_status == 130)
 			return (free(line), NULL);
-		c = getchar();
+		c = ft_getchar();
 		if (g_exit_status == 130)
 			return (free(line), NULL);
 		if (c == EOF)

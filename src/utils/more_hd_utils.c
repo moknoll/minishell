@@ -1,26 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_utils.c                                       :+:      :+:    :+:   */
+/*   more_hd_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/17 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/04 14:25:25 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
-void	free_command_list(t_command *cmd)
+void	*ft_realloc(void *ptr, size_t new_size)
 {
-	t_command	*next;
+	void	*new_ptr;
 
-	while (cmd)
+	new_ptr = malloc(new_size);
+	if (ptr == NULL)
+		return (malloc(new_size));
+	if (new_size == 0)
 	{
-		next = cmd->next;
-		ft_free_tab(cmd->argv);
-		free(cmd);
-		cmd = next;
+		free(ptr);
+		return (NULL);
 	}
+	if (!new_ptr)
+		return (NULL);
+	ft_memcpy(new_ptr, ptr, new_size);
+	free(ptr);
+	return (new_ptr);
+}
+
+int	ft_getchar(void)
+{
+	char	c;
+	ssize_t	result;
+
+	result = read(STDIN_FILENO, &c, 1);
+	if (result == 1)
+		return ((unsigned char)c);
+	else
+		return (-1);
 }

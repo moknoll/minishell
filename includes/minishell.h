@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 11:48:24 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:48:55 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,6 @@
 # include <readline/history.h>
 # include <termios.h>
 
-// /* macOS compatibility for WEXITCODE */
-// #ifndef WEXITCODE
-// # define WEXITCODE(status) WEXITSTATUS(status)
-// #endif
-
-/* Exit codes */
-# define SUCCESS 0
-# define FAILURE 1
-# define ERROR 2
-
 /* Environment variable structure */
 typedef struct s_env
 {
@@ -54,15 +44,6 @@ typedef struct s_command
 	struct s_redir		*redirs;
 	struct s_command	*next;
 }	t_command;
-
-/* Redirection types */
-// typedef enum e_redir_type
-// {
-// 	REDIR_IN,
-// 	REDIR_OUT,
-// 	REDIR_APPEND,
-// 	REDIR_HEREDOC
-// }	t_redir_type;
 
 /* Token Struct*/
 typedef struct s_token_state
@@ -83,14 +64,6 @@ typedef struct s_expand_state
 	int			in_single_quotes;
 	int			in_double_quotes;
 }	t_expand_state;
-
-// /* Redirection structure */
-// typedef struct s_redir
-// {
-// 	tredir_type		type;
-// 	char				*file;
-// 	struct s_redir		*next;
-// }	t_redir;
 
 /* Simple data structure for direct execution */
 typedef struct s_data
@@ -124,9 +97,6 @@ typedef struct s_line
 
 /* Global variable for signal handling */
 extern int	g_exit_status;
-
-/* Main functions */
-int		main(int argc, char **argv, char **envp);
 
 /* Simple shell functions */
 void	minishell_loop(t_env *env);
@@ -234,7 +204,6 @@ int		ft_echo_n(char **argv);
 int		check_multiple_n(char *str);
 int		ft_env_custom(t_env *env);
 int		handle_export(char **argv, t_env **my_env);
-int		process_export_arg(char *arg, t_env **my_env);
 int		handle_unset(char **argv, t_env **my_env);
 int		env_size(t_env *env);
 char	*ft_strjoin_free(char *s1, const char *s2);
@@ -288,5 +257,8 @@ void	handle_status_and_print(int status);
 void	init_signals_prompt(void);
 void	reset_signals_to_default(void);
 void	ignore_sigint(void);
+
+int		ft_getchar(void);
+void	*ft_realloc(void *ptr, size_t new_size);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 13:05:03 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 09:45:49 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:45:48 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <limits.h>
 # include <stdarg.h>
 # include <stdio.h>
+# ifndef SIZE_MAX
+#  define SIZE_MAX 18446744073709551614
+# endif
 
 typedef struct s_list
 {

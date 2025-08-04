@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   external_commands.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:38:39 by mknoll            #+#    #+#             */
-/*   Updated: 2025/07/28 11:38:44 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 13:45:22 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 char	*prepare_command_path(char **args, t_env *env)
 {

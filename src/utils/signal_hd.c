@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal_hd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:32:08 by mknoll            #+#    #+#             */
-/*   Updated: 2025/07/28 11:32:18 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:25:51 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 static void	sigint_hd(int sig)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 11:32:31 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:33:21 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 static void	sigint_prompt(int sig)
 {
@@ -26,7 +26,7 @@ void	init_signals_prompt(void)
 {
 	struct sigaction	sa;
 
-	memset(&sa, 0, sizeof(sa));
+	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = sigint_prompt;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
@@ -57,7 +57,7 @@ void	reset_signals_to_default(void)
 {
 	struct sigaction	sa;
 
-	memset(&sa, 0, sizeof(sa));
+	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = SIG_DFL;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
@@ -68,7 +68,7 @@ void	ignore_sigint(void)
 {
 	struct sigaction	sa;
 
-	memset(&sa, 0, sizeof(sa));
+	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = SIG_IGN;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);

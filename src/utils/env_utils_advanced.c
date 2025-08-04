@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_advanced.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/28 11:59:24 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:08:56 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	update_existing_env(t_env *current, char *value)
 {
@@ -21,7 +21,7 @@ int	update_existing_env(t_env *current, char *value)
 	else
 		current->value = ft_strdup("");
 	current->exported = 1;
-	return (SUCCESS);
+	return (0);
 }
 
 int	count_exported_vars(t_env *env_list)
