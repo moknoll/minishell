@@ -13,7 +13,13 @@
 # Compiler and flags
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -g3
-LDLIBS   += -lreadline
+#-----------------------------only for mac
+READLINE_DIR = $(shell brew --prefix readline)
+CFLAGS   += -I$(READLINE_DIR)/include
+LDFLAGS  += -L$(READLINE_DIR)/lib
+LDLIBS   += -lreadline -lcurses
+#-----------------------------delete it before push and uncomment what is next
+#LDLIBS   += -lreadline
 
 # Libraries
 LIBFT_LIB = libft/libft.a
@@ -26,7 +32,7 @@ OBJ_DIR = obj
 SRCS    = src/main.c src/builtins/builtins.c src/builtins/builtin_utils.c \
 src/builtins/builtin_export.c src/utils/env_list.c src/utils/env_utils.c \
 src/utils/env_utils_advanced.c src/utils/signal.c src/utils/signal_hd.c \
-src/utils/free_utils.c src/utils/export_utils.c src/parsing/tokenizer.c \
+src/utils/export_utils.c src/parsing/tokenizer.c \
 src/parsing/tokenizer_utils.c src/parsing/token_utils.c \
 src/parsing/expand_utils.c src/redirections/heredoc.c \
 src/redirections/heredoc_read_utils.c src/redirections/heredoc_file_utils.c \
@@ -34,7 +40,7 @@ src/redirections/redirections.c src/redirections/redirect_utils.c \
 src/redirections/redirect_process.c src/execution/pipes.c \
 src/execution/pipe_execution.c src/execution/pipe_utils.c \
 src/execution/pipe_redirections.c src/execution/external_commands.c \
-src/execution/command_execution.c src/execution/path.c src/execution/path_utils.c \
+src/execution/command_execution.c src/execution/path.c \
 src/builtins/builtin_env_unset.c src/utils/heredoc_utils.c src/utils/more_hd_utils.c \
 
 OBJS    = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
@@ -47,7 +53,7 @@ $(LIBFT_LIB):
 	make -C libft
 
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@mkdir -p $(dir $@)

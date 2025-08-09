@@ -41,7 +41,6 @@ typedef struct s_env
 typedef struct s_command
 {
 	char				**argv;
-	struct s_redir		*redirs;
 	struct s_command	*next;
 }	t_command;
 

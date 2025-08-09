@@ -1,49 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:52:20 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/04 13:49:37 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	init_paths(char **standard_paths)
+char	*build_full_path(char *dir, char *cmd)
 {
-	standard_paths[0] = "/bin";
-	standard_paths[1] = "/usr/bin";
-	standard_paths[2] = "/usr/local/bin";
-	standard_paths[3] = NULL;
+	char	*temp;
+	char	*full_path;
+
+	temp = ft_strjoin(dir, "/");
+	if (!temp)
+		return (NULL);
+	full_path = ft_strjoin(temp, cmd);
+	free(temp);
+	return (full_path);
 }
 
-char	*find_command_in_standard_paths(char *cmd)
+char	*check_path_access(char *path)
 {
-	char	*standard_paths[4];
+	if (access(path, F_OK | X_OK) == 0)
+		return (path);
+	free(path);
+	return (NULL);
+}
+
+char	*check_direct_path(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
+	}
+	return (NULL);
+}
+
+char	*search_in_path_env(char *cmd, char *path_env)
+{
+	char	**all_paths;
 	char	*full_path;
-	char	*result;
 	int		i;
 
-	init_paths(standard_paths);
-	if (!cmd)
+	all_paths = ft_split(path_env, ':');
+	if (!all_paths)
 		return (NULL);
 	i = 0;
-	while (standard_paths[i])
+	while (all_paths[i])
 	{
-		full_path = build_full_path(standard_paths[i], cmd);
-		if (!full_path)
+		full_path = build_full_path(all_paths[i], cmd);
+		if (full_path && access(full_path, F_OK | X_OK) == 0)
 		{
-			i++;
-			continue ;
+			ft_free_tab(all_paths);
+			return (full_path);
 		}
-		result = check_path_access(full_path);
-		if (result)
-			return (result);
+		free(full_path);
 		i++;
 	}
+	ft_free_tab(all_paths);
 	return (NULL);
 }
 
@@ -62,5 +84,5 @@ char	*find_command_path(char *cmd, t_env *env)
 		if (result)
 			return (result);
 	}
-	return (find_command_in_standard_paths(cmd));
+	return (NULL);
 }
