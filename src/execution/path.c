@@ -25,14 +25,6 @@ char	*build_full_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-char	*check_path_access(char *path)
-{
-	if (access(path, F_OK | X_OK) == 0)
-		return (path);
-	free(path);
-	return (NULL);
-}
-
 char	*check_direct_path(char *cmd)
 {
 	if (ft_strchr(cmd, '/'))

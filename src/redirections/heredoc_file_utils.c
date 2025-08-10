@@ -34,10 +34,8 @@ void	setup_heredoc_signals(struct sigaction *old_int, int *saved)
 }
 
 void	cleanup_heredoc_signals(const struct sigaction *old_int,
-		int saved, int ret, char *delimiter)
+		int saved)
 {
-	(void)ret;
-	(void)delimiter;
 	enable_echoctl();
 	hd_restore_signals(old_int);
 	if (g_exit_status != 130)

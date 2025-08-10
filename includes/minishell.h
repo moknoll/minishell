@@ -141,7 +141,7 @@ int		create_tmp_heredoc_file(char **filename);
 int		should_cleanup_file(int ret);
 void	setup_heredoc_signals(struct sigaction *old_int, int *saved);
 void	cleanup_heredoc_signals(const struct sigaction *old_int,
-			int saved, int ret, char *delimiter);
+			int saved);
 void	remove_redirect_args(t_data *data, int i);
 int		setup_heredoc_fd(char *heredoc_file, int *saved_stdin);
 void	cleanup_heredoc_redirect(int saved_stdin, char *heredoc_file);
@@ -183,12 +183,9 @@ void	execute(t_data *data);
 
 /* Path and execution utilities */
 char	*find_command_path(char *cmd, t_env *env);
-char	*find_command_in_standard_paths(char *cmd);
 char	*build_full_path(char *dir, char *cmd);
-char	*check_path_access(char *path);
 char	*check_direct_path(char *cmd);
 char	*search_in_path_env(char *cmd, char *path_env);
-char	*get_path(char *cmd, char *envp[]);
 
 /* Built-in functions */
 int		handle_builtin(char **argv, t_env **my_env, t_data *data);

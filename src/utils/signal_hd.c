@@ -23,6 +23,7 @@ void	hd_set_signals(struct sigaction *old_int)
 {
 	struct sigaction	sa;
 
+	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = sigint_hd;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;

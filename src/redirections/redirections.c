@@ -17,7 +17,7 @@ int	handle_heredoc_redirect(t_data *data, int i)
 	char	*heredoc_file;
 	int		saved_stdin;
 
-	if (!data->args[i + 1])
+	if (!validate_redirect_args(data, i))
 		return (0);
 	heredoc_file = handle_heredoc(data->args[i + 1]);
 	if (!heredoc_file)

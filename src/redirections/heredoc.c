@@ -115,7 +115,7 @@ char	*handle_heredoc(char *delimiter)
 		return (NULL);
 	setup_heredoc_signals(&old_int, &saved);
 	ret = heredoc_loop(delimiter, tmp_fd);
-	cleanup_heredoc_signals(&old_int, saved, ret, delimiter);
+	cleanup_heredoc_signals(&old_int, saved);
 	close(tmp_fd);
 	if (should_cleanup_file(ret))
 	{
