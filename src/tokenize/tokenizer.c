@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 14:00:32 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/11 07:17:00 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	process_single_token(char *line, int *i, char ***tokens, int *count)
+int	parse_and_add_token(char *line, int *i, char ***tokens, int *count)
 {
 	char	*token;
 
@@ -28,7 +28,7 @@ int	process_single_token(char *line, int *i, char ***tokens, int *count)
 	return (1);
 }
 
-char	**allocate_tokens_array(char *line)
+char	**prepare_token_array(char *line)
 {
 	char	**tokens;
 	int		count;
@@ -43,7 +43,7 @@ char	**allocate_tokens_array(char *line)
 	return (tokens);
 }
 
-void	tokenize_line(char *line, char **tokens)
+void	split_line_into_tokens(char *line, char **tokens)
 {
 	int	i;
 	int	count;
@@ -55,7 +55,7 @@ void	tokenize_line(char *line, char **tokens)
 		skip_whitespace(line, &i);
 		if (line[i])
 		{
-			if (!process_single_token(line, &i, &tokens, &count))
+			if (!parse_and_add_token(line, &i, &tokens, &count))
 			{
 				ft_free_tab(tokens);
 				return ;
@@ -71,10 +71,10 @@ char	**tokenize(char *line)
 
 	if (!line)
 		return (NULL);
-	tokens = allocate_tokens_array(line);
+	tokens = prepare_token_array(line);
 	if (!tokens)
 		return (NULL);
-	tokenize_line(line, tokens);
+	split_line_into_tokens(line, tokens);
 	return (tokens);
 }
 

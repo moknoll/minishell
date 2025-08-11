@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:58:04 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/11 07:14:13 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_variable_value_from_env(t_env *my_env, char *var_name)
 	return (ft_strdup(""));
 }
 
-char	*get_variable_value(char *input, int *i, t_env *my_env)
+char	*extract_and_expand_variable(char *input, int *i, t_env *my_env)
 {
 	int		start;
 	char	*var_name;
@@ -42,7 +42,7 @@ char	*get_variable_value(char *input, int *i, t_env *my_env)
 	return (var_value);
 }
 
-void	append_str(const char *str, char **output)
+void	concatenate_string(const char *str, char **output)
 {
 	char	*new;
 
@@ -58,16 +58,16 @@ void	append_str(const char *str, char **output)
 	*output = new;
 }
 
-void	append_char(char c, char **output)
+void	concatenate_character(char c, char **output)
 {
 	char	temp[2];
 
 	temp[0] = c;
 	temp[1] = '\0';
-	append_str(temp, output);
+	concatenate_string(temp, output);
 }
 
-void	handle_dollar(char *input, int *i, char **output, t_env *my_env)
+void	expand_dollar_expression(char *input, int *i, char **output, t_env *my_env)
 {
 	char	*exit_status_str;
 	char	*var_value;
@@ -76,16 +76,16 @@ void	handle_dollar(char *input, int *i, char **output, t_env *my_env)
 	if (input[*i] == '?')
 	{
 		exit_status_str = ft_itoa(g_exit_status);
-		append_str(exit_status_str, output);
+		concatenate_string(exit_status_str, output);
 		free(exit_status_str);
 		(*i)++;
 	}
 	else if (ft_isalpha(input[*i]) || input[*i] == '_')
 	{
-		var_value = get_variable_value(input, i, my_env);
-		append_str(var_value, output);
+		var_value = extract_and_expand_variable(input, i, my_env);
+		concatenate_string(var_value, output);
 		free(var_value);
 	}
 	else
-		append_char('$', output);
+		concatenate_character('$', output);
 }

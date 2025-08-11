@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	handle_single_quote(char *input, int *i, int *in_single_quotes,
+void	toggle_single_quote_state(char *input, int *i, int *in_single_quotes,
 		int in_double_quotes)
 {
 	if (input[*i] == '\'' && !in_double_quotes)
@@ -22,7 +22,7 @@ void	handle_single_quote(char *input, int *i, int *in_single_quotes,
 	}
 }
 
-void	handle_double_quote(char *input, int *i, int in_single_quotes,
+void	toggle_double_quote_state(char *input, int *i, int in_single_quotes,
 		int *in_double_quotes)
 {
 	if (input[*i] == '"' && !in_single_quotes)
@@ -32,19 +32,19 @@ void	handle_double_quote(char *input, int *i, int in_single_quotes,
 	}
 }
 
-void	process_character(t_expand_state *state)
+void	expand_or_append_character(t_expand_state *state)
 {
 	if (state->input[state->i] == '$' && !state->in_single_quotes)
-		handle_dollar((char *)state->input, &state->i,
+		expand_dollar_expression((char *)state->input, &state->i,
 			&state->output, state->env);
 	else
 	{
-		append_char(state->input[state->i], &state->output);
+		concatenate_character(state->input[state->i], &state->output);
 		state->i++;
 	}
 }
 
-t_expand_state	init_expand_state(const char *input, t_env *env)
+t_expand_state	create_expansion_state(const char *input, t_env *env)
 {
 	t_expand_state	state;
 
@@ -57,13 +57,13 @@ t_expand_state	init_expand_state(const char *input, t_env *env)
 	return (state);
 }
 
-char	*expand_and_parse_token(char *input, t_env *my_env)
+char	*expand_variables_and_remove_quotes(char *input, t_env *my_env)
 {
 	t_expand_state	state;
 
 	if (!input)
 		return (NULL);
-	state = init_expand_state(input, my_env);
+	state = create_expansion_state(input, my_env);
 	while (state.input[state.i])
 	{
 		if (state.input[state.i] == '\'' && !state.in_double_quotes)
@@ -77,7 +77,7 @@ char	*expand_and_parse_token(char *input, t_env *my_env)
 			state.i++;
 		}
 		else
-			process_character(&state);
+			expand_or_append_character(&state);
 	}
 	if (!state.output)
 		return (ft_strdup(""));

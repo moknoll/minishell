@@ -32,9 +32,9 @@ OBJ_DIR = obj
 SRCS    = src/main.c src/builtins/builtins.c src/builtins/builtin_utils.c \
 src/builtins/builtin_export.c src/utils/env_list.c src/utils/env_utils.c \
 src/utils/env_utils_advanced.c src/utils/signal.c src/utils/signal_hd.c \
-src/utils/export_utils.c src/parsing/tokenizer.c \
-src/parsing/tokenizer_utils.c src/parsing/token_utils.c \
-src/parsing/expand_utils.c src/redirections/heredoc.c \
+src/utils/export_utils.c src/tokenize/tokenizer.c \
+src/tokenize/tokenizer_utils.c src/tokenize/token_expansion.c \
+src/tokenize/variable_expansion.c src/redirections/heredoc.c \
 src/redirections/heredoc_read_utils.c src/redirections/heredoc_file_utils.c \
 src/redirections/redirections.c src/redirections/redirect_utils.c \
 src/redirections/redirect_process.c src/execution/pipes.c \

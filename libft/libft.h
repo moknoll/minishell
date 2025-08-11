@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 13:05:03 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 14:45:48 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/11 08:49:31 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <limits.h>
 # include <stdarg.h>
 # include <stdio.h>
+# include <stdint.h>
+
 # ifndef SIZE_MAX
 #  define SIZE_MAX 18446744073709551614
 # endif

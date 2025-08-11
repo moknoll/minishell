@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 14:48:55 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/11 07:16:13 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,22 +112,22 @@ int		is_empty_line(char *line);
 
 /* Tokenizer functions */
 char	**tokenize(char *line);
-char	*expand_and_parse_token(char *input, t_env *my_env);
+char	*expand_variables_and_remove_quotes(char *input, t_env *my_env);
 char	*heredoc_tmp(void);
 void	handle_single_quote(char *input, int *i, int *in_single_quotes,
 			int in_double_quotes);
 void	handle_double_quote(char *input, int *i, int in_single_quotes,
 			int *in_double_quotes);
-void	process_character(t_expand_state *state);
+void	expand_or_append_character(t_expand_state *state);
 int		check_unclosed_quotes(char *line);
 void	advance_in_token(char *line, int *i, int *in_quotes, char *quote_char);
 void	process_token(char *line, t_token_state *state);
 int		count_tokens(char *line);
 char	*extract_token(char *line, int *i);
 void	skip_whitespace(char *line, int *i);
-int		process_single_token(char *line, int *i, char ***tokens, int *count);
-char	**allocate_tokens_array(char *line);
-void	tokenize_line(char *line, char **tokens);
+int		parse_and_add_token(char *line, int *i, char ***tokens, int *count);
+char	**prepare_token_array(char *line);
+void	split_line_into_tokens(char *line, char **tokens);
 
 /* Redirection functions */
 char	*handle_heredoc(char *delimiter);
@@ -225,11 +225,11 @@ t_env	*create_env_node(const char *key, const char *value);
 void	free_env_list(t_env *env_list);
 
 /* Token expansion functions */
-char	*get_variable_value_from_env(t_env *my_env, char *var_name);
-char	*get_variable_value(char *input, int *i, t_env *my_env);
-void	append_str(const char *str, char **output);
-void	append_char(char c, char **output);
-void	handle_dollar(char *input, int *i, char **output, t_env *my_env);
+char	*lookup_environment_variable(t_env *my_env, char *var_name);
+char	*extract_and_expand_variable(char *input, int *i, t_env *my_env);
+void	concatenate_string(const char *str, char **output);
+void	concatenate_character(char c, char **output);
+void	expand_dollar_expression(char *input, int *i, char **output, t_env *my_env);
 
 /* Signal handling functions */
 void	disable_echoctl(void);
