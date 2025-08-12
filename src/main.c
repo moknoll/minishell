@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/11 07:20:19 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/11 11:50:18 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static void	process_command_line(t_data *data)
 		i = 0;
 		while (data->args[i])
 		{
-			expanded = expand_variables_and_remove_quotes(data->args[i], data->env);
+			expanded = expand_variables_and_remove_quotes(data->args[i],
+					data->env);
 			free(data->args[i]);
 			data->args[i] = expanded;
 			i++;

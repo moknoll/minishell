@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:28:05 by mknoll            #+#    #+#             */
-/*   Updated: 2025/08/04 13:40:41 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:06:27 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ int	ft_echo_n(char **argv)
 {
 	int	i;
 
-	i = 2;
+	i = 1;
+	while (argv[i] && check_multiple_n(argv[i]))
+		i++;
+	while (argv[i])
 	{
-		while (argv[i])
-		{
-			printf("%s", argv[i]);
-			if (argv[i + 1])
-				printf(" ");
-			i++;
-		}
+		printf("%s", argv[i]);
+		if (argv[i + 1])
+			printf(" ");
+		i++;
 	}
 	return (0);
 }

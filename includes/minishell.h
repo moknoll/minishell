@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/11 07:16:13 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/11 12:33:21 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,6 @@ typedef struct s_env
 	int				exported;
 	struct s_env	*next;
 }	t_env;
-
-/* Command structure */
-typedef struct s_command
-{
-	char				**argv;
-	struct s_command	*next;
-}	t_command;
 
 /* Token Struct*/
 typedef struct s_token_state
@@ -105,7 +98,6 @@ void	execute_child_process(char **args, char *path, t_env *env);
 void	handle_parent_process(pid_t pid, char *path, int *status);
 void	execute_pipe_commands(t_data *data, int pipe_count);
 void	execute_builtin_with_redirections(t_data *data);
-void	execute(t_data *data);
 
 /* Shell main loop */
 int		is_empty_line(char *line);
@@ -114,10 +106,6 @@ int		is_empty_line(char *line);
 char	**tokenize(char *line);
 char	*expand_variables_and_remove_quotes(char *input, t_env *my_env);
 char	*heredoc_tmp(void);
-void	handle_single_quote(char *input, int *i, int *in_single_quotes,
-			int in_double_quotes);
-void	handle_double_quote(char *input, int *i, int in_single_quotes,
-			int *in_double_quotes);
 void	expand_or_append_character(t_expand_state *state);
 int		check_unclosed_quotes(char *line);
 void	advance_in_token(char *line, int *i, int *in_quotes, char *quote_char);
@@ -225,11 +213,12 @@ t_env	*create_env_node(const char *key, const char *value);
 void	free_env_list(t_env *env_list);
 
 /* Token expansion functions */
-char	*lookup_environment_variable(t_env *my_env, char *var_name);
 char	*extract_and_expand_variable(char *input, int *i, t_env *my_env);
 void	concatenate_string(const char *str, char **output);
 void	concatenate_character(char c, char **output);
-void	expand_dollar_expression(char *input, int *i, char **output, t_env *my_env);
+void	expand_dollar_expression(char *input, int *i, char **output,
+			t_env *my_env);
+char	*get_variable_value_from_env(t_env *env, char *var_name);
 
 /* Signal handling functions */
 void	disable_echoctl(void);

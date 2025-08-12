@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/11 07:14:13 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/11 11:49:58 by radubos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void	concatenate_character(char c, char **output)
 	concatenate_string(temp, output);
 }
 
-void	expand_dollar_expression(char *input, int *i, char **output, t_env *my_env)
+void	expand_dollar_expression(char *input, int *i, char **output,
+	t_env *my_env)
 {
 	char	*exit_status_str;
 	char	*var_value;

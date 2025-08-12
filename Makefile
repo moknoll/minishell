@@ -6,20 +6,14 @@
 #    By: radubos <radubos@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
-#    Updated: 2025/08/04 14:36:03 by radubos          ###   ########.fr        #
+#    Updated: 2025/08/11 12:52:11 by radubos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compiler and flags
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -g3
-#-----------------------------only for mac
-READLINE_DIR = $(shell brew --prefix readline)
-CFLAGS   += -I$(READLINE_DIR)/include
-LDFLAGS  += -L$(READLINE_DIR)/lib
-LDLIBS   += -lreadline -lcurses
-#-----------------------------delete it before push and uncomment what is next
-#LDLIBS   += -lreadline
+LDLIBS   = -lreadline
 
 # Libraries
 LIBFT_LIB = libft/libft.a
@@ -53,7 +47,7 @@ $(LIBFT_LIB):
 	make -C libft
 
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_LIB) $(LDLIBS)
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@mkdir -p $(dir $@)
@@ -63,7 +57,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
 clean:
-	rm -f $(OBJ_DIR)/*.o
+	rm -rf $(OBJ_DIR)
 	make -C libft clean
 
 fclean: clean
