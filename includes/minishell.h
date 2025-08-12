@@ -190,10 +190,6 @@ int		ft_env_custom(t_env *env);
 int		handle_export(char **argv, t_env **my_env);
 int		handle_unset(char **argv, t_env **my_env);
 int		env_size(t_env *env);
-<<<<<<< HEAD
-=======
-// char	*ft_strjoin_free(char *s1, const char *s2);
->>>>>>> origin/main
 t_env	*get_env(t_env *env, const char *key);
 void	ft_sort_str_array(char **arr);
 int		ft_unset(t_env **my_env, const char *key);
