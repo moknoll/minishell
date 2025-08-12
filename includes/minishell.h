@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/11 12:33:21 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/12 15:08:44 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_data
 	char	*line;
 	char	**tokens;
 	char	**args;
-	t_env	*env;
+	t_env	**env;
 }	t_data;
 
 /* Buffer state for reading lines */
@@ -91,7 +91,7 @@ typedef struct s_line
 extern int	g_exit_status;
 
 /* Simple shell functions */
-void	minishell_loop(t_env *env);
+void	minishell_loop(t_env **env);
 void	launch_extern_command_simple(char **args, t_env *env);
 char	*prepare_command_path(char **args, t_env *env);
 void	execute_child_process(char **args, char *path, t_env *env);
@@ -190,7 +190,7 @@ int		ft_env_custom(t_env *env);
 int		handle_export(char **argv, t_env **my_env);
 int		handle_unset(char **argv, t_env **my_env);
 int		env_size(t_env *env);
-char	*ft_strjoin_free(char *s1, const char *s2);
+// char	*ft_strjoin_free(char *s1, const char *s2);
 t_env	*get_env(t_env *env, const char *key);
 void	ft_sort_str_array(char **arr);
 int		ft_unset(t_env **my_env, const char *key);

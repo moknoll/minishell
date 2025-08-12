@@ -6,7 +6,7 @@
 /*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:38:39 by mknoll            #+#    #+#             */
-/*   Updated: 2025/08/11 08:35:59 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/12 15:09:40 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ void	execute_child_process(char **args, char *path, t_env *env)
 {
 	char	**env_array;
 	t_data	data;
+	t_env	*env_ptr;
 
 	reset_signals_to_default();
 	data.args = args;
-	data.env = env;
+	env_ptr = env;
+	data.env = &env_ptr;
 	if (!process_redirections(&data))
 		exit(1);
 	env_array = env_to_array(env);

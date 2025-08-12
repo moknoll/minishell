@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_execution.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:44:11 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/12 15:10:42 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	execute_pipe_commands(t_data *data, int pipe_count)
 	commands = split_all_pipe_commands(data->args, pipe_count);
 	if (commands)
 	{
-		execute_pipe_chain(commands, pipe_count + 1, data->env, data);
+		execute_pipe_chain(commands, pipe_count + 1, *data->env, data);
 		free_commands(commands);
 	}
 }
@@ -41,7 +41,7 @@ void	execute_builtin_with_redirections(t_data *data)
 		g_exit_status = 1;
 		return ;
 	}
-	exit_code = handle_builtin(data->args, &data->env, data);
+	exit_code = handle_builtin(data->args, data->env, data);
 	g_exit_status = exit_code;
 	dup2(saved_stdout, STDOUT_FILENO);
 	dup2(saved_stdin, STDIN_FILENO);
@@ -64,5 +64,5 @@ void	execute(t_data *data)
 	if (is_builtin(data->args[0]))
 		execute_builtin_with_redirections(data);
 	else
-		launch_extern_command_simple(data->args, data->env);
+		launch_extern_command_simple(data->args, *data->env);
 }
