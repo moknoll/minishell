@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/07/20 00:00:00 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/12 13:20:52 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,14 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	char	*result;
 
 	result = ft_strjoin(s1, s2);
+<<<<<<< HEAD
 	if (s1)
 		free(s1);
 	if (s2)
 		free(s2);
+=======
+	free(s1);
+	free(s2);
+>>>>>>> origin/main
 	return (result);
 }

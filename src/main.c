@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/11 11:50:18 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/12 17:45:22 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,23 @@ static void	process_command_line(t_data *data)
 		while (data->args[i])
 		{
 			expanded = expand_variables_and_remove_quotes(data->args[i],
-					data->env);
+					*data->env);
 			free(data->args[i]);
 			data->args[i] = expanded;
 			i++;
+		}
+		if (data->args[0] && data->args[0][0] == '\0')
+		{
+			print_error("", "command not found");
+			ft_free_tab(data->args);
+			return ;
 		}
 		execute(data);
 		ft_free_tab(data->args);
 	}
 }
 
-void	minishell_loop(t_env *env)
+void	minishell_loop(t_env **env)
 {
 	t_data	data;
 
@@ -98,7 +104,7 @@ int	main(int argc, char *argv[], char *env[])
 		print_error(NULL, "failed to initialize environment");
 		return (1);
 	}
-	minishell_loop(env_list);
+	minishell_loop(&env_list);
 	free_env_list(env_list);
 	return (g_exit_status);
 }
