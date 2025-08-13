@@ -12,43 +12,43 @@
 
 #include "../../includes/minishell.h"
 
-static int	handle_heredoc_type(t_data *data, int i)
+static int	handle_heredoc_type(char **cmd, int i)
 {
-	if (!handle_heredoc_redirect(data, i))
+	if (!handle_heredoc_redirection(cmd, i))
 		return (0);
 	return (1);
 }
 
-static int	handle_append_type(t_data *data, int i)
+static int	handle_append_type(char **cmd, int i)
 {
-	if (!handle_output_redirect(data, i, 1))
+	if (!handle_output_redirection(cmd, i, 1))
 		return (0);
 	return (1);
 }
 
-static int	handle_output_type(t_data *data, int i)
+static int	handle_output_type(char **cmd, int i)
 {
-	if (!handle_output_redirect(data, i, 0))
+	if (!handle_output_redirection(cmd, i, 0))
 		return (0);
 	return (1);
 }
 
-static int	handle_input_type(t_data *data, int i)
+static int	handle_input_type(char **cmd, int i)
 {
-	if (!handle_input_redirect(data, i))
+	if (!handle_input_redirection(cmd, i))
 		return (0);
 	return (1);
 }
 
-int	process_single_redirect(t_data *data, int i)
+int	process_cmd_redirections(char **cmd, int i)
 {
-	if (ft_strcmp(data->args[i], "<<") == 0)
-		return (handle_heredoc_type(data, i));
-	else if (ft_strcmp(data->args[i], ">>") == 0)
-		return (handle_append_type(data, i));
-	else if (ft_strcmp(data->args[i], ">") == 0)
-		return (handle_output_type(data, i));
-	else if (ft_strcmp(data->args[i], "<") == 0)
-		return (handle_input_type(data, i));
+	if (ft_strcmp(cmd[i], ">") == 0)
+		return (handle_output_type(cmd, i));
+	else if (ft_strcmp(cmd[i], ">>") == 0)
+		return (handle_append_type(cmd, i));
+	else if (ft_strcmp(cmd[i], "<") == 0)
+		return (handle_input_type(cmd, i));
+	else if (ft_strcmp(cmd[i], "<<") == 0)
+		return (handle_heredoc_type(cmd, i));
 	return (-1);
 }

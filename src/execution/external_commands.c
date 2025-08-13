@@ -28,19 +28,14 @@ char	*prepare_command_path(char **args, t_env *env)
 void	execute_child_process(char **args, char *path, t_env *env)
 {
 	char	**env_array;
-	t_data	data;
-	t_env	*env_ptr;
 
 	reset_signals_to_default();
-	data.args = args;
-	env_ptr = env;
-	data.env = &env_ptr;
-	if (!process_redirections(&data))
+	if (!process_redirections(args))
 		exit(1);
 	env_array = env_to_array(env);
-	if (execve(path, data.args, env_array) == -1)
+	if (execve(path, args, env_array) == -1)
 	{
-		print_error(data.args[0], "No such file or directory");
+		print_error(args[0], "No such file or directory");
 		ft_free_tab(env_array);
 		free(path);
 		exit(127);

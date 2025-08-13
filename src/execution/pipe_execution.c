@@ -16,7 +16,7 @@ void	execute_pipe_command(char **cmd, t_env *env, t_data *data)
 {
 	int	exit_code;
 
-	if (!process_cmd_redirections(cmd))
+	if (!process_redirections(cmd))
 		exit(1);
 	if (!cmd[0])
 		exit(0);

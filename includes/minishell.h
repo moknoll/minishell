@@ -119,10 +119,10 @@ void	split_line_into_tokens(char *line, char **tokens);
 
 /* Redirection functions */
 char	*handle_heredoc(char *delimiter);
-int		handle_heredoc_redirect(t_data *data, int i);
-int		handle_output_redirect(t_data *data, int i, int append);
-int		handle_input_redirect(t_data *data, int i);
-int		process_redirections(t_data *data);
+int		handle_heredoc_redirection(char **cmd, int i);
+int		handle_output_redirection(char **cmd, int i, int append);
+int		handle_input_redirection(char **cmd, int i);
+int		process_redirections(char **cmd);
 int		hd_is_end(char *line, char *delim);
 void	hd_write(int fd, char *line);
 int		create_tmp_heredoc_file(char **filename);
@@ -130,12 +130,12 @@ int		should_cleanup_file(int ret);
 void	setup_heredoc_signals(struct sigaction *old_int, int *saved);
 void	cleanup_heredoc_signals(const struct sigaction *old_int,
 			int saved);
-void	remove_redirect_args(t_data *data, int i);
+void	remove_redirection_args(char **cmd, int i);
 int		setup_heredoc_fd(char *heredoc_file, int *saved_stdin);
 void	cleanup_heredoc_redirect(int saved_stdin, char *heredoc_file);
 int		open_output_file(char *filename, int append);
-int		validate_redirect_args(t_data *data, int i);
-int		process_single_redirect(t_data *data, int i);
+int		validate_cmd_redirection_args(char **cmd, int i);
+int		process_cmd_redirections(char **cmd, int i);
 int		fill_buffer(int fd, char *buffer, int *buffer_pos, int *buffer_size);
 int		read_character_to_line(char *buffer, int *buffer_pos,
 			char *line, int *line_len);
@@ -148,7 +148,6 @@ int		process_line_reading(int fd, char *buffer, t_buffer_state *buf,
 int		count_pipes(char **args);
 char	***split_all_pipe_commands(char **args, int pipe_count);
 void	free_commands(char ***commands);
-int		process_cmd_redirections(char **cmd);
 void	execute_pipe_command(char **cmd, t_env *env, t_data *data);
 void	execute_pipe_chain(char ***commands, int cmd_count,
 			t_env *env, t_data *data);
@@ -161,10 +160,6 @@ void	wait_for_children(pid_t *pids, int cmd_count);
 char	**create_command_from_args(char **args, int start, int end);
 void	process_pipe_segment(char ***commands, char **args, int *cmd_index,
 			t_range range);
-void	remove_redirection_args(char **cmd, int i);
-int		handle_output_redirection(char **cmd, int i);
-int		handle_append_redirection(char **cmd, int i);
-int		handle_input_redirection(char **cmd, int i);
 
 /* Execution functions */
 void	execute(t_data *data);

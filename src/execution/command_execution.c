@@ -12,57 +12,75 @@
 
 #include "../../includes/minishell.h"
 
-void	execute_pipe_commands(t_data *data, int pipe_count)
+static int prepare_redirections(char **cmd)
 {
-	char	***commands;
+	int saved_stdout = dup(STDOUT_FILENO);
+	int saved_stdin = dup(STDIN_FILENO);
 
-	commands = split_all_pipe_commands(data->args, pipe_count);
-	if (commands)
-	{
-		execute_pipe_chain(commands, pipe_count + 1, *data->env, data);
-		free_commands(commands);
-	}
-}
-
-void	execute_builtin_with_redirections(t_data *data)
-{
-	int	saved_stdout;
-	int	saved_stdin;
-	int	exit_code;
-
-	saved_stdout = dup(STDOUT_FILENO);
-	saved_stdin = dup(STDIN_FILENO);
-	if (!process_redirections(data))
+	if (!process_redirections(cmd))
 	{
 		dup2(saved_stdout, STDOUT_FILENO);
 		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdout);
 		close(saved_stdin);
 		g_exit_status = 1;
-		return ;
+		return 0;
 	}
-	exit_code = handle_builtin(data->args, data->env, data);
-	g_exit_status = exit_code;
+	if (!cmd[0])
+	{
+		dup2(saved_stdout, STDOUT_FILENO);
+		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdout);
+		close(saved_stdin);
+		return 0;
+	}
+	return 1;
+}
+
+static void execute_command(char **cmd, t_env *env, t_data *data)
+{
+	int exit_code = 0;
+	if (is_builtin(cmd[0]))
+	{
+		exit_code = handle_builtin(cmd, &env, data);
+		g_exit_status = exit_code;
+	}
+	else
+		launch_extern_command_simple(cmd, env);
+}
+
+static void execute_single_command(char **cmd, t_env *env, t_data *data)
+{
+	int saved_stdout = dup(STDOUT_FILENO);
+	int saved_stdin = dup(STDIN_FILENO);
+
+	if (!prepare_redirections(cmd))
+		return;
+	execute_command(cmd, env, data);
 	dup2(saved_stdout, STDOUT_FILENO);
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdout);
 	close(saved_stdin);
 }
 
-void	execute(t_data *data)
+void execute(t_data *data)
 {
-	int	pipe_count;
+	int pipe_count;
+	char ***commands;
 
 	if (!data->args || !data->args[0])
-		return ;
+		return;
 	pipe_count = count_pipes(data->args);
+	commands = split_all_pipe_commands(data->args, pipe_count);
+	if (!commands)
+		return;
 	if (pipe_count > 0)
 	{
-		execute_pipe_commands(data, pipe_count);
-		return ;
+		execute_pipe_chain(commands, pipe_count + 1, *data->env, data);
 	}
-	if (is_builtin(data->args[0]))
-		execute_builtin_with_redirections(data);
 	else
-		launch_extern_command_simple(data->args, *data->env);
+	{
+		execute_single_command(commands[0], *data->env, data);
+	}
+	free_commands(commands);
 }

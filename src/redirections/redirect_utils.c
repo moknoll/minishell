@@ -12,22 +12,22 @@
 
 #include "../../includes/minishell.h"
 
-void	remove_redirect_args(t_data *data, int i)
+void	remove_redirection_args(char **cmd, int i)
 {
 	char	*redirect_op;
 	char	*filename;
 	int		j;
 
-	redirect_op = data->args[i];
-	filename = data->args[i + 1];
+	redirect_op = cmd[i];
+	filename = cmd[i + 1];
 	j = i;
-	while (data->args[j + 2])
+	while (cmd[j + 2])
 	{
-		data->args[j] = data->args[j + 2];
+		cmd[j] = cmd[j + 2];
 		j++;
 	}
-	data->args[j] = NULL;
-	data->args[j + 1] = NULL;
+	cmd[j] = NULL;
+	cmd[j + 1] = NULL;
 	free(redirect_op);
 	free(filename);
 }
@@ -76,9 +76,9 @@ int	open_output_file(char *filename, int append)
 	return (fd);
 }
 
-int	validate_redirect_args(t_data *data, int i)
+int	validate_cmd_redirection_args(char **cmd, int i)
 {
-	if (!data->args[i + 1])
+	if (!cmd[i + 1])
 	{
 		print_error("minishell",
 			"syntax error near unexpected token `newline'");

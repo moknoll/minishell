@@ -38,7 +38,7 @@ src/redirections/heredoc_read_utils.c src/redirections/heredoc_file_utils.c \
 src/redirections/redirections.c src/redirections/redirect_utils.c \
 src/redirections/redirect_process.c src/execution/pipes.c \
 src/execution/pipe_execution.c src/execution/pipe_utils.c \
-src/execution/pipe_redirections.c src/execution/external_commands.c \
+src/execution/external_commands.c \
 src/execution/command_execution.c src/execution/path.c \
 src/builtins/builtin_env_unset.c src/utils/heredoc_utils.c src/utils/more_hd_utils.c \
 
