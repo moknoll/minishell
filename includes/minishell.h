@@ -87,6 +87,16 @@ typedef struct s_line
 	int		len;
 }	t_line_state;
 
+typedef struct s_pipe_commands
+{
+    char ***commands;
+    int cmd_count;
+	int **pipes;
+	pid_t *pids;
+} t_pipe_commands;
+
+
+
 /* Global variable for signal handling */
 extern int	g_exit_status;
 
@@ -149,7 +159,7 @@ int		count_pipes(char **args);
 char	***split_all_pipe_commands(char **args, int pipe_count);
 void	free_commands(char ***commands);
 int		process_cmd_redirections(char **cmd);
-void	execute_pipe_command(char **cmd, t_env *env, t_data *data);
+void	execute_pipe_command(char **cmd, t_env *env, t_data *data,t_pipe_commands *pipe_cmds);
 void	execute_pipe_chain(char ***commands, int cmd_count,
 			t_env *env, t_data *data);
 char	*prepare_pipe_command_path(char **cmd, t_env *env);

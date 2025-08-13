@@ -49,6 +49,24 @@ void	execute_builtin_with_redirections(t_data *data)
 	close(saved_stdin);
 }
 
+int has_redirection(t_data *data)
+{
+	int i = 0;
+	while (data->args && data->args[i])
+	{
+		if (
+			ft_strcmp(data->args[i], ">") == 0 ||
+			ft_strcmp(data->args[i], ">>") == 0 ||
+			ft_strcmp(data->args[i], "<") == 0 ||
+			ft_strcmp(data->args[i], "<<") == 0 ||
+			ft_strcmp(data->args[i], "|") == 0
+		)
+			return 1;
+		i++;
+	}
+	return 0;
+}
+
 void	execute(t_data *data)
 {
 	int	pipe_count;
@@ -62,7 +80,12 @@ void	execute(t_data *data)
 		return ;
 	}
 	if (is_builtin(data->args[0]))
-		execute_builtin_with_redirections(data);
+	{
+		if (has_redirection(data))
+			execute_builtin_with_redirections(data);
+		else
+			g_exit_status = handle_builtin(data->args, data->env, data);
+	}
 	else
 		launch_extern_command_simple(data->args, *data->env);
 }

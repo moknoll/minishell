@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	execute_pipe_command(char **cmd, t_env *env, t_data *data)
+void execute_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds)
 {
 	int	exit_code;
 
@@ -25,7 +25,10 @@ void	execute_pipe_command(char **cmd, t_env *env, t_data *data)
 		if (ft_strcmp(cmd[0], "exit") == 0)
 			exit(0);
 		exit_code = handle_builtin(cmd, &env, data);
-		exit(exit_code);
+		free_commands(pipe_cmds->commands);
+		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->cmd_count);
+		free(pipe_cmds->pids);
+		free_all_and_exit(exit_code, env, data);
 	}
 	else
 		execute_external_pipe_command(cmd, env);
@@ -52,32 +55,42 @@ void	wait_for_children(pid_t *pids, int cmd_count)
 	init_signals_prompt();
 }
 
+void init_pipe_commands(t_pipe_commands *pipe_cmds, int cmd_count, char ***commands)
+{
+	pipe_cmds->commands = commands;
+	pipe_cmds->cmd_count = cmd_count;
+	pipe_cmds->pipes = create_pipes(cmd_count);
+	if (!pipe_cmds->pipes)
+	{
+		return ;
+	}
+}
+
 void	execute_pipe_chain(char ***commands, int cmd_count,
 		t_env *env, t_data *data)
 {
-	int		**pipes;
+	t_pipe_commands pipe_cmds;
 	pid_t	*pids;
 	int		i;
 
-	pipes = create_pipes(cmd_count);
-	if (!pipes)
-		return ;
-	pids = malloc(sizeof(pid_t) * cmd_count);
+	pids = NULL;
+	init_pipe_commands(&pipe_cmds, cmd_count, commands);
+	pipe_cmds.pids = malloc(sizeof(pid_t) * cmd_count);
 	i = 0;
 	while (i < cmd_count)
 	{
-		pids[i] = fork();
-		if (pids[i] == 0)
+		pipe_cmds.pids[i] = fork();
+		if (pipe_cmds.pids[i] == 0)
 		{
-			setup_child_pipes(pipes, cmd_count, i);
+			setup_child_pipes(pipe_cmds.pipes, cmd_count, i);
 			reset_signals_to_default();
-			execute_pipe_command(commands[i], env, data);
+			execute_pipe_command(commands[i], env, data, &pipe_cmds);
 			exit(0);
 		}
 		i++;
 	}
-	cleanup_pipes(pipes, cmd_count);
-	wait_for_children(pids, cmd_count);
+	cleanup_pipes(pipe_cmds.pipes, cmd_count);
+	wait_for_children(pipe_cmds.pids, cmd_count);
 }
 
 char	**create_command_from_args(char **args, int start, int end)
