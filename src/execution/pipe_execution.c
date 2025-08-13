@@ -61,21 +61,22 @@ void init_pipe_commands(t_pipe_commands *pipe_cmds, int cmd_count, char ***comma
 	pipe_cmds->cmd_count = cmd_count;
 	pipe_cmds->pipes = create_pipes(cmd_count);
 	if (!pipe_cmds->pipes)
-	{
 		return ;
-	}
 }
 
 void	execute_pipe_chain(char ***commands, int cmd_count,
 		t_env *env, t_data *data)
 {
 	t_pipe_commands pipe_cmds;
-	pid_t	*pids;
 	int		i;
 
-	pids = NULL;
 	init_pipe_commands(&pipe_cmds, cmd_count, commands);
 	pipe_cmds.pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!pipe_cmds.pids)
+	{
+		cleanup_pipes(pipe_cmds.pipes, cmd_count);
+		return ;
+	}
 	i = 0;
 	while (i < cmd_count)
 	{

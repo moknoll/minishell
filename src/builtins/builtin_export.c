@@ -92,6 +92,9 @@ int	handle_export(char **argv, t_env **my_env)
 
 	key = NULL;
 	value = NULL;
+	if (ft_isdigit(argv[1][0]))
+		return (printf("minishell: export: `%s': not a valid identifier\n",
+			argv[1]), 1);
 	if (!argv[1])
 		return (ft_export(*my_env));
 	eq = ft_strchr(argv[1], '=');
