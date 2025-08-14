@@ -37,16 +37,17 @@ void	execute_child_process(char **args, char *path, t_env *env)
 	data.env = &env_ptr;
 	data.path = path;
 	if (!process_redirections(&data))
-		exit(1);
+	{
+		free(data.path);
+		free_all_and_exit(1, env, &data);
+	}
 	env_array = env_to_array(env);
 	if (execve(path, data.args, env_array) == -1)
 	{
 		print_error(data.args[0], "No such file or directory");
 		ft_free_tab(env_array);
 		free(path);
-		ft_free_tab(data.args);
-		free_env_list(env);
-		exit(127);
+		free_all_and_exit(127, env, &data);
 	}
 }
 
