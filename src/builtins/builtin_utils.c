@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 07:28:05 by mknoll            #+#    #+#             */
-/*   Updated: 2025/08/11 15:06:27 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:26:52 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,6 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-void	free_all_and_exit(int exit_code, t_env *env, t_data *data)
-{
-	rl_clear_history();
-	free_env_list(env);
-	ft_free_tab(data->args);
-	exit(exit_code);
-}
-
 t_env	*get_env(t_env *env, const char *key)
 {
 	while (env)
@@ -87,4 +79,16 @@ t_env	*get_env(t_env *env, const char *key)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+int	ft_pwd(char **argv)
+{
+	char	cwd[1024];
+
+	(void)argv;
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		printf("%s\n", cwd);
+	else
+		perror("pwd");
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/12 13:27:21 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:22:26 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	handle_export(char **argv, t_env **my_env)
 		return (ft_export(*my_env));
 	if (ft_isdigit(argv[1][0]))
 		return (printf("minishell: export: `%s': not a valid identifier\n",
-			argv[1]), 1);
+				argv[1]), 1);
 	eq = ft_strchr(argv[1], '=');
 	if (eq)
 	{

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/11 08:28:43 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:19:09 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds)
+char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data,
+	t_pipe_commands *pipe_cmds)
 {
 	char	*path;
 
@@ -26,13 +27,14 @@ char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data, t_pipe_com
 		free_commands(pipe_cmds->commands);
 		free(path);
 		free(pipe_cmds->pids);
-		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->cmd_count);
+		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->command_count);
 		free_all_and_exit(127, env, data);
 	}
 	return (path);
 }
 
-void	execute_external_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds)
+void	execute_external_pipe_command(char **cmd, t_env *env,
+	t_data *data, t_pipe_commands *pipe_cmds)
 {
 	char	*path;
 	char	**env_array;
@@ -83,17 +85,10 @@ void	setup_child_pipes(int **pipes, int cmd_count, int i)
 	}
 }
 
-void	cleanup_pipes(int **pipes, int cmd_count)
+void	process_pipe_segment(char ***commands, char **args, int *cmd_index,
+		t_range range)
 {
-	int	i;
-
-	i = 0;
-	while (i < cmd_count - 1)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		free(pipes[i]);
-		i++;
-	}
-	free(pipes);
+	commands[*cmd_index] = create_command_from_args(args,
+			range.start, range.end);
+	(*cmd_index)++;
 }

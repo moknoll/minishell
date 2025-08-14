@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path_utils.c                                       :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:49:37 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/14 13:20:18 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,19 @@ char	*find_command_path(char *cmd, t_env *env)
 			return (result);
 	}
 	return (NULL);
+}
+
+void	free_commands(char ***commands)
+{
+	int	i;
+
+	if (!commands)
+		return ;
+	i = 0;
+	while (commands[i])
+	{
+		ft_free_tab(commands[i]);
+		i++;
+	}
+	free(commands);
 }

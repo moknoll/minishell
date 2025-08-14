@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:57:39 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/14 13:19:54 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,6 @@ char	***split_all_pipe_commands(char **args, int pipe_count)
 	return (commands[cmd_index + 1] = NULL, commands);
 }
 
-void	free_commands(char ***commands)
-{
-	int	i;
-
-	if (!commands)
-		return ;
-	i = 0;
-	while (commands[i])
-	{
-		ft_free_tab(commands[i]);
-		i++;
-	}
-	free(commands);
-}
-
 int	handle_heredoc_pipe(char **cmd, int i)
 {
 	char	*heredoc_file;
@@ -111,4 +96,19 @@ int	process_cmd_redirections(char **cmd)
 		i++;
 	}
 	return (1);
+}
+
+void	cleanup_pipes(int **pipes, int cmd_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd_count - 1)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		free(pipes[i]);
+		i++;
+	}
+	free(pipes);
 }

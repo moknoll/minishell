@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isnumeric.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:00:33 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/12 13:41:50 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:25:19 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,29 @@
 
 int	ft_isnumeric(const char *str)
 {
+	long	result;
+	int		sign;
+
+	result = 0;
+	sign = 1;
 	if (!str || !*str)
 		return (0);
-	while (*str)
+	if (*str == '-' || *str == '+')
 	{
-		if (!ft_isdigit(*str) )
-			return (0);
+		if (*str == '-')
+			sign = -1;
 		str++;
 	}
-	return (1);
+	if (!*str)
+		return (0);
+	while (*str >= '0' && *str <= '9')
+	{
+		if (sign == 1 && (result > (LONG_MAX - (*str - '0')) / 10))
+			return (0);
+		if (sign == -1 && (-result < (LONG_MIN + (*str - '0')) / 10))
+			return (0);
+		result = result * 10 + (*str - '0');
+		str++;
+	}
+	return (*str == '\0');
 }

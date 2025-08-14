@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/12 15:08:44 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:13:27 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
+
+/* Global variable for signal handling */
+extern int	g_exit_status;
 
 /* Environment variable structure */
 typedef struct s_env
@@ -90,16 +93,11 @@ typedef struct s_line
 
 typedef struct s_pipe_commands
 {
-    char ***commands;
-    int cmd_count;
-	int **pipes;
-	pid_t *pids;
-} t_pipe_commands;
-
-
-
-/* Global variable for signal handling */
-extern int	g_exit_status;
+	char	***commands;
+	int		command_count;
+	int		**pipes;
+	pid_t	*pids;
+}	t_pipe_commands;
 
 /* Simple shell functions */
 void	minishell_loop(t_env **env);
@@ -160,11 +158,14 @@ int		count_pipes(char **args);
 char	***split_all_pipe_commands(char **args, int pipe_count);
 void	free_commands(char ***commands);
 int		process_cmd_redirections(char **cmd);
-void	execute_pipe_command(char **cmd, t_env *env, t_data *data,t_pipe_commands *pipe_cmds);
+void	execute_pipe_command(char **cmd, t_env *env, t_data *data,
+			t_pipe_commands *pipe_cmds);
 void	execute_pipe_chain(char ***commands, int cmd_count,
 			t_env *env, t_data *data);
-char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds);
-void	execute_external_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds);
+char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data,
+			t_pipe_commands *pipe_cmds);
+void	execute_external_pipe_command(char **cmd, t_env *env, t_data *data,
+			t_pipe_commands *pipe_cmds);
 int		**create_pipes(int cmd_count);
 void	setup_child_pipes(int **pipes, int cmd_count, int i);
 void	cleanup_pipes(int **pipes, int cmd_count);

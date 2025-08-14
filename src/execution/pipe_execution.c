@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:53:02 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/14 13:20:07 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void execute_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds)
+void	execute_pipe_command(char **cmd, t_env *env, t_data *data,
+	t_pipe_commands *pipe_cmds)
 {
 	int	exit_code;
 
@@ -26,7 +27,7 @@ void execute_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands 
 			exit(0);
 		exit_code = handle_builtin(cmd, &env, data);
 		free_commands(pipe_cmds->commands);
-		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->cmd_count);
+		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->command_count);
 		free(pipe_cmds->pids);
 		free_all_and_exit(exit_code, env, data);
 	}
@@ -55,10 +56,11 @@ void	wait_for_children(pid_t *pids, int cmd_count)
 	init_signals_prompt();
 }
 
-void init_pipe_commands(t_pipe_commands *pipe_cmds, int cmd_count, char ***commands)
+void	init_pipe_commands(t_pipe_commands *pipe_cmds, int cmd_count,
+	char ***commands)
 {
 	pipe_cmds->commands = commands;
-	pipe_cmds->cmd_count = cmd_count;
+	pipe_cmds->command_count = cmd_count;
 	pipe_cmds->pipes = create_pipes(cmd_count);
 	if (!pipe_cmds->pipes)
 		return ;
@@ -67,8 +69,8 @@ void init_pipe_commands(t_pipe_commands *pipe_cmds, int cmd_count, char ***comma
 void	execute_pipe_chain(char ***commands, int cmd_count,
 		t_env *env, t_data *data)
 {
-	t_pipe_commands pipe_cmds;
-	int		i;
+	t_pipe_commands	pipe_cmds;
+	int				i;
 
 	init_pipe_commands(&pipe_cmds, cmd_count, commands);
 	pipe_cmds.pids = malloc(sizeof(pid_t) * cmd_count);
@@ -111,12 +113,4 @@ char	**create_command_from_args(char **args, int start, int end)
 	}
 	command[arg_index] = NULL;
 	return (command);
-}
-
-void	process_pipe_segment(char ***commands, char **args, int *cmd_index,
-		t_range range)
-{
-	commands[*cmd_index] = create_command_from_args(args,
-			range.start, range.end);
-	(*cmd_index)++;
 }

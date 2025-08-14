@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 13:05:03 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/12 13:21:46 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:23:27 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@
 # include <stdio.h>
 # include <stdint.h>
 
-# ifndef SIZE_MAX
-#  define SIZE_MAX 18446744073709551614
-# endif
-
 typedef struct s_list
 {
 	void			*content;
@@ -32,6 +28,7 @@ typedef struct s_list
 }	t_list;
 
 int		ft_isalpha(int c);
+long	ft_atol(const char *str);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);

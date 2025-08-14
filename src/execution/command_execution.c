@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_execution.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/12 15:10:42 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:21:18 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,24 @@ void	execute_builtin_with_redirections(t_data *data)
 	close(saved_stdin);
 }
 
-int has_redirection(t_data *data)
+int	has_redirection(t_data *data)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (data->args && data->args[i])
 	{
 		if (
-			ft_strcmp(data->args[i], ">") == 0 ||
-			ft_strcmp(data->args[i], ">>") == 0 ||
-			ft_strcmp(data->args[i], "<") == 0 ||
-			ft_strcmp(data->args[i], "<<") == 0 ||
-			ft_strcmp(data->args[i], "|") == 0
+			ft_strcmp(data->args[i], ">") == 0
+			|| ft_strcmp(data->args[i], ">>") == 0
+			|| ft_strcmp(data->args[i], "<") == 0
+			|| ft_strcmp(data->args[i], "<<") == 0
+			|| ft_strcmp(data->args[i], "|") == 0
 		)
-			return 1;
+			return (1);
 		i++;
 	}
-	return 0;
+	return (0);
 }
 
 void	execute(t_data *data)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:54:32 by moritzknoll       #+#    #+#             */
-/*   Updated: 2025/08/12 14:02:59 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/14 13:26:43 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,16 @@ static char	*get_cd_path(char **argv, t_env **env, char **allocated_path)
 		path = get_variable_value_from_env(*env, "HOME");
 		*allocated_path = path;
 		if (!path || !*path)
-			return (free(*allocated_path), perror("minishell: cd: HOME not set\n"), NULL);
+			return (free(*allocated_path),
+				perror("minishell: cd: HOME not set\n"), NULL);
 	}
 	else if (ft_strcmp(argv[1], "-") == 0)
 	{
 		path = get_variable_value_from_env(*env, "OLDPWD");
 		*allocated_path = path;
 		if (!path || !*path)
-			return (free(*allocated_path), perror("minishell: cd: OLDPWD not set\n"),
-				NULL);
+			return (free(*allocated_path),
+				perror("minishell: cd: OLDPWD not set\n"), NULL);
 	}
 	else
 		path = argv[1];
@@ -64,18 +65,6 @@ int	ft_cd(char **argv, t_env **env)
 	return (free(allocated_path), result);
 }
 
-int	ft_pwd(char **argv)
-{
-	char	cwd[1024];
-
-	(void)argv;
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd);
-	else
-		perror("pwd");
-	return (0);
-}
-
 int	ft_echo(char **argv)
 {
 	int	i;
@@ -102,13 +91,14 @@ int	ft_echo(char **argv)
 
 int	ft_exit_simple(char **argv, t_env *env, t_data *data)
 {
-	int	exit_code;
+	long	exit_code;
 
 	printf("exit\n");
 	if (argv[1] && !ft_isnumeric(argv[1]))
 	{
 		printf("minishell: exit: %s: numeric argument required\n", argv[1]);
 		g_exit_status = 2;
+		free_all_and_exit(2, env, data);
 	}
 	if (argv[1] && argv[2])
 	{
@@ -116,14 +106,10 @@ int	ft_exit_simple(char **argv, t_env *env, t_data *data)
 		return (1);
 	}
 	if (argv[1] && ft_isnumeric(argv[1]))
-	{
-		exit_code = ft_atoi(argv[1]);
-		if (exit_code < 0 || exit_code > 255)
-			exit_code = exit_code % 256;
-	}
+		exit_code = ft_atol(argv[1]);
 	else
 		exit_code = g_exit_status;
-	free_all_and_exit(exit_code, env, data);
+	free_all_and_exit((int)(exit_code % 256), env, data);
 	return (0);
 }
 
