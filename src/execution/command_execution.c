@@ -87,5 +87,5 @@ void	execute(t_data *data)
 			g_exit_status = handle_builtin(data->args, data->env, data);
 	}
 	else
-		launch_extern_command_simple(data->args, *data->env);
+		launch_extern_command_simple(data, *data->env);
 }

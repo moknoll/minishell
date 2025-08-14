@@ -35,6 +35,7 @@ void	execute_child_process(char **args, char *path, t_env *env)
 	data.args = args;
 	env_ptr = env;
 	data.env = &env_ptr;
+	data.path = path;
 	if (!process_redirections(&data))
 		exit(1);
 	env_array = env_to_array(env);
@@ -43,9 +44,8 @@ void	execute_child_process(char **args, char *path, t_env *env)
 		print_error(data.args[0], "No such file or directory");
 		ft_free_tab(env_array);
 		free(path);
-		free(data.args);
+		ft_free_tab(data.args);
 		free_env_list(env);
-		g_exit_status = 2; 
 		exit(127);
 	}
 }
@@ -63,16 +63,15 @@ void	handle_parent_process(pid_t pid, char *path, int *status)
 	init_signals_prompt();
 }
 
-void	launch_extern_command_simple(char **args, t_env *env)
+void	launch_extern_command_simple(t_data *data, t_env *env)
 {
 	pid_t	pid;
-	char	*path;
 	int		status;
 
-	path = prepare_command_path(args, env);
-	if (!path)
+	data->path = prepare_command_path(data->args, env);
+	if (!data->path)
 	{
-		print_error(args[0], "command not found");
+		print_error(data->args[0], "command not found");
 		g_exit_status = 127;
 		return ;
 	}
@@ -80,12 +79,12 @@ void	launch_extern_command_simple(char **args, t_env *env)
 	if (pid == -1)
 	{
 		perror("fork");
-		free(path);
+		free(data->path);
 		g_exit_status = 1;
 		return ;
 	}
 	if (pid == 0)
-		execute_child_process(args, path, env);
+		execute_child_process(data->args, data->path, env);
 	else
-		handle_parent_process(pid, path, &status);
+		handle_parent_process(pid, data->path, &status);
 }

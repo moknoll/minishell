@@ -64,6 +64,7 @@ typedef struct s_data
 	char	**tokens;
 	char	**args;
 	t_env	**env;
+	char	*path;
 }	t_data;
 
 /* Buffer state for reading lines */
@@ -102,7 +103,7 @@ extern int	g_exit_status;
 
 /* Simple shell functions */
 void	minishell_loop(t_env **env);
-void	launch_extern_command_simple(char **args, t_env *env);
+void	launch_extern_command_simple(t_data *data, t_env *env);
 char	*prepare_command_path(char **args, t_env *env);
 void	execute_child_process(char **args, char *path, t_env *env);
 void	handle_parent_process(pid_t pid, char *path, int *status);

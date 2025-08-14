@@ -41,7 +41,14 @@ int	handle_output_redirect(t_data *data, int i, int append)
 		return (0);
 	fd = open_output_file(data->args[i + 1], append);
 	if (fd == -1)
+	{
+		perror(data->args[i + 1]);
+		g_exit_status = 1;
+		free_env_list(*data->env);
+		ft_free_tab(data->args);
+		free(data->path);
 		return (0);
+	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 	remove_redirect_args(data, i);
@@ -59,6 +66,7 @@ int	handle_input_redirect(t_data *data, int i)
 	{
 		perror(data->args[i + 1]);
 		g_exit_status = 1;
+		free_env_list(*data->env);
 		return (0);
 	}
 	dup2(fd, STDIN_FILENO);
