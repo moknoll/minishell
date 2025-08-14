@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 14:06:18 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/14 14:13:48 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ int	handle_output_redirect(t_data *data, int i, int append)
 	if (fd == -1)
 	{
 		perror(data->args[i + 1]);
-		g_exit_status = 1;
-		free_env_list(*data->env);
-		ft_free_tab(data->args);
-		free(data->path);
+		g_exit_status = 1;;
 		return (0);
 	}
 	dup2(fd, STDOUT_FILENO);
@@ -66,7 +63,6 @@ int	handle_input_redirect(t_data *data, int i)
 	{
 		perror(data->args[i + 1]);
 		g_exit_status = 1;
-		free_env_list(*data->env);
 		return (0);
 	}
 	dup2(fd, STDIN_FILENO);
