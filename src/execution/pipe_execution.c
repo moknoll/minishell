@@ -31,7 +31,7 @@ void execute_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands 
 		free_all_and_exit(exit_code, env, data);
 	}
 	else
-		execute_external_pipe_command(cmd, env);
+		execute_external_pipe_command(cmd, env, data, pipe_cmds);
 }
 
 void	wait_for_children(pid_t *pids, int cmd_count)

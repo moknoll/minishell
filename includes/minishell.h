@@ -162,8 +162,8 @@ int		process_cmd_redirections(char **cmd);
 void	execute_pipe_command(char **cmd, t_env *env, t_data *data,t_pipe_commands *pipe_cmds);
 void	execute_pipe_chain(char ***commands, int cmd_count,
 			t_env *env, t_data *data);
-char	*prepare_pipe_command_path(char **cmd, t_env *env);
-void	execute_external_pipe_command(char **cmd, t_env *env);
+char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds);
+void	execute_external_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds);
 int		**create_pipes(int cmd_count);
 void	setup_child_pipes(int **pipes, int cmd_count, int i);
 void	cleanup_pipes(int **pipes, int cmd_count);

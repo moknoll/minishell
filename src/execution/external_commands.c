@@ -43,6 +43,9 @@ void	execute_child_process(char **args, char *path, t_env *env)
 		print_error(data.args[0], "No such file or directory");
 		ft_free_tab(env_array);
 		free(path);
+		free(data.args);
+		free_env_list(env);
+		g_exit_status = 2; 
 		exit(127);
 	}
 }

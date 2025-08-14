@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-char	*prepare_pipe_command_path(char **cmd, t_env *env)
+char	*prepare_pipe_command_path(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds)
 {
 	char	*path;
 
@@ -23,17 +23,21 @@ char	*prepare_pipe_command_path(char **cmd, t_env *env)
 	if (!path)
 	{
 		print_error(cmd[0], "command not found");
-		exit(127);
+		free_commands(pipe_cmds->commands);
+		free(path);
+		free(pipe_cmds->pids);
+		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->cmd_count);
+		free_all_and_exit(127, env, data);
 	}
 	return (path);
 }
 
-void	execute_external_pipe_command(char **cmd, t_env *env)
+void	execute_external_pipe_command(char **cmd, t_env *env, t_data *data, t_pipe_commands *pipe_cmds)
 {
 	char	*path;
 	char	**env_array;
 
-	path = prepare_pipe_command_path(cmd, env);
+	path = prepare_pipe_command_path(cmd, env, data, pipe_cmds);
 	env_array = env_to_array(env);
 	if (execve(path, cmd, env_array) == -1)
 	{
