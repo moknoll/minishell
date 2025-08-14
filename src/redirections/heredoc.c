@@ -102,13 +102,41 @@ static int	heredoc_loop(char *delim, int fd)
 	return (0);
 }
 
+static int	handle_heredoc_child(char *delimiter, int *pipe_fd)
+{
+	int	ret;
+
+	close(pipe_fd[0]);
+	ret = heredoc_loop(delimiter, pipe_fd[1]);
+	close(pipe_fd[1]);
+	if (ret == -1)
+		exit(130);
+	exit(0);
+}
+
+static int	handle_heredoc_parent(int *pipe_fd, pid_t pid, 
+		struct sigaction *old_int, int saved)
+{
+	int	ret;
+
+	close(pipe_fd[1]);
+	waitpid(pid, &ret, 0);
+	cleanup_heredoc_signals(old_int, saved);
+	if (WEXITSTATUS(ret) == 130)
+	{
+		close(pipe_fd[0]);
+		g_exit_status = 130;
+		return (-1);
+	}
+	return (pipe_fd[0]);
+}
+
 int	handle_heredoc(char *delimiter)
 {
 	int					pipe_fd[2];
 	pid_t				pid;
 	struct sigaction	old_int;
 	int					saved;
-	int					ret;
 
 	if (pipe(pipe_fd) == -1)
 	{
@@ -125,21 +153,6 @@ int	handle_heredoc(char *delimiter)
 		return (-1);
 	}
 	if (pid == 0)
-	{
-		close(pipe_fd[0]);
-		ret = heredoc_loop(delimiter, pipe_fd[1]);
-		close(pipe_fd[1]);
-		cleanup_heredoc_signals(&old_int, saved);
-		exit(ret == -1 ? 130 : 0);
-	}
-	close(pipe_fd[1]);
-	waitpid(pid, &ret, 0);
-	cleanup_heredoc_signals(&old_int, saved);
-	if (WEXITSTATUS(ret) == 130)
-	{
-		close(pipe_fd[0]);
-		g_exit_status = 130;
-		return (-1);
-	}
-	return (pipe_fd[0]);
+		handle_heredoc_child(delimiter, pipe_fd);
+	return (handle_heredoc_parent(pipe_fd, pid, &old_int, saved));
 }
