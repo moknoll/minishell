@@ -114,7 +114,6 @@ int		is_empty_line(char *line);
 /* Tokenizer functions */
 char	**tokenize(char *line);
 char	*expand_variables_and_remove_quotes(char *input, t_env *my_env);
-char	*heredoc_tmp(void);
 void	expand_or_append_character(t_expand_state *state);
 int		check_unclosed_quotes(char *line);
 void	advance_in_token(char *line, int *i, int *in_quotes, char *quote_char);
@@ -127,21 +126,18 @@ char	**prepare_token_array(char *line);
 void	split_line_into_tokens(char *line, char **tokens);
 
 /* Redirection functions */
-char	*handle_heredoc(char *delimiter);
+int		handle_heredoc(char *delimiter);
 int		handle_heredoc_redirect(t_data *data, int i);
 int		handle_output_redirect(t_data *data, int i, int append);
 int		handle_input_redirect(t_data *data, int i);
 int		process_redirections(t_data *data);
 int		hd_is_end(char *line, char *delim);
 void	hd_write(int fd, char *line);
-int		create_tmp_heredoc_file(char **filename);
-int		should_cleanup_file(int ret);
 void	setup_heredoc_signals(struct sigaction *old_int, int *saved);
 void	cleanup_heredoc_signals(const struct sigaction *old_int,
 			int saved);
 void	remove_redirect_args(t_data *data, int i);
-int		setup_heredoc_fd(char *heredoc_file, int *saved_stdin);
-void	cleanup_heredoc_redirect(int saved_stdin, char *heredoc_file);
+int		setup_heredoc_fd(int heredoc_fd);
 int		open_output_file(char *filename, int append);
 int		validate_redirect_args(t_data *data, int i);
 int		process_single_redirect(t_data *data, int i);

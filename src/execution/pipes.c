@@ -59,22 +59,22 @@ char	***split_all_pipe_commands(char **args, int pipe_count)
 
 int	handle_heredoc_pipe(char **cmd, int i)
 {
-	char	*heredoc_file;
-	int		saved_stdin;
+	int	heredoc_fd;
 
 	if (!cmd[i + 1])
 		return (0);
-	heredoc_file = handle_heredoc(cmd[i + 1]);
-	if (!heredoc_file)
+	heredoc_fd = handle_heredoc(cmd[i + 1]);
+	if (heredoc_fd == -1)
 	{
 		g_exit_status = 130;
 		return (0);
 	}
-	if (setup_heredoc_fd(heredoc_file, &saved_stdin) == -1)
+	if (setup_heredoc_fd(heredoc_fd) == -1)
+	{
+		close(heredoc_fd);
 		return (0);
+	}
 	remove_redirection_args(cmd, i);
-	close(saved_stdin);
-	free(heredoc_file);
 	return (1);
 }
 

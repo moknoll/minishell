@@ -32,31 +32,11 @@ void	remove_redirect_args(t_data *data, int i)
 	free(filename);
 }
 
-int	setup_heredoc_fd(char *heredoc_file, int *saved_stdin)
+int	setup_heredoc_fd(int heredoc_fd)
 {
-	int	heredoc_fd;
-
-	heredoc_fd = open(heredoc_file, O_RDONLY);
-	if (heredoc_fd == -1)
-	{
-		perror("open heredoc");
-		unlink(heredoc_file);
-		free(heredoc_file);
-		g_exit_status = 1;
-		return (-1);
-	}
-	*saved_stdin = dup(STDIN_FILENO);
 	dup2(heredoc_fd, STDIN_FILENO);
 	close(heredoc_fd);
 	return (0);
-}
-
-void	cleanup_heredoc_redirect(int saved_stdin, char *heredoc_file)
-{
-	dup2(saved_stdin, STDIN_FILENO);
-	close(saved_stdin);
-	unlink(heredoc_file);
-	free(heredoc_file);
 }
 
 int	open_output_file(char *filename, int append)

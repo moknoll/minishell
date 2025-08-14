@@ -77,20 +77,3 @@ char	**tokenize(char *line)
 	split_line_into_tokens(line, tokens);
 	return (tokens);
 }
-
-char	*heredoc_tmp(void)
-{
-	static int	i = 0;
-	char		*num;
-	char		*filename;
-
-	num = ft_itoa(i++);
-	filename = ft_strjoin("/tmp/heredoc_", num);
-	if (!filename)
-	{
-		free(num);
-		return (NULL);
-	}
-	free(num);
-	return (filename);
-}

@@ -14,22 +14,22 @@
 
 int	handle_heredoc_redirect(t_data *data, int i)
 {
-	char	*heredoc_file;
-	int		saved_stdin;
+	int	heredoc_fd;
 
 	if (!validate_redirect_args(data, i))
 		return (0);
-	heredoc_file = handle_heredoc(data->args[i + 1]);
-	if (!heredoc_file)
+	heredoc_fd = handle_heredoc(data->args[i + 1]);
+	if (heredoc_fd == -1)
 	{
 		g_exit_status = 130;
 		return (0);
 	}
-	if (setup_heredoc_fd(heredoc_file, &saved_stdin) == -1)
+	if (setup_heredoc_fd(heredoc_fd) == -1)
+	{
+		close(heredoc_fd);
 		return (0);
+	}
 	remove_redirect_args(data, i);
-	close(saved_stdin);
-	free(heredoc_file);
 	return (1);
 }
 

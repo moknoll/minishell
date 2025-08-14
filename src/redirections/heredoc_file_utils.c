@@ -12,19 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-int	create_tmp_heredoc_file(char **filename)
-{
-	*filename = heredoc_tmp();
-	if (!*filename)
-		return (-1);
-	return (open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0600));
-}
-
-int	should_cleanup_file(int ret)
-{
-	return (ret == -1 || g_exit_status == 130);
-}
-
 void	setup_heredoc_signals(struct sigaction *old_int, int *saved)
 {
 	*saved = g_exit_status;

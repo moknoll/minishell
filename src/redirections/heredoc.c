@@ -102,26 +102,44 @@ static int	heredoc_loop(char *delim, int fd)
 	return (0);
 }
 
-char	*handle_heredoc(char *delimiter)
+int	handle_heredoc(char *delimiter)
 {
-	char				*tmp_filename;
-	int					tmp_fd;
+	int					pipe_fd[2];
+	pid_t				pid;
 	struct sigaction	old_int;
 	int					saved;
 	int					ret;
 
-	tmp_fd = create_tmp_heredoc_file(&tmp_filename);
-	if (tmp_fd == -1)
-		return (NULL);
-	setup_heredoc_signals(&old_int, &saved);
-	ret = heredoc_loop(delimiter, tmp_fd);
-	cleanup_heredoc_signals(&old_int, saved);
-	close(tmp_fd);
-	if (should_cleanup_file(ret))
+	if (pipe(pipe_fd) == -1)
 	{
-		unlink(tmp_filename);
-		free(tmp_filename);
-		return (NULL);
+		perror("pipe");
+		return (-1);
 	}
-	return (tmp_filename);
+	setup_heredoc_signals(&old_int, &saved);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		close(pipe_fd[0]);
+		ret = heredoc_loop(delimiter, pipe_fd[1]);
+		close(pipe_fd[1]);
+		cleanup_heredoc_signals(&old_int, saved);
+		exit(ret == -1 ? 130 : 0);
+	}
+	close(pipe_fd[1]);
+	waitpid(pid, &ret, 0);
+	cleanup_heredoc_signals(&old_int, saved);
+	if (WEXITSTATUS(ret) == 130)
+	{
+		close(pipe_fd[0]);
+		g_exit_status = 130;
+		return (-1);
+	}
+	return (pipe_fd[0]);
 }
