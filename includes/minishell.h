@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/14 13:13:27 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/15 07:33:58 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ void	remove_redirection_args(char **cmd, int i);
 int		handle_output_redirection(char **cmd, int i);
 int		handle_append_redirection(char **cmd, int i);
 int		handle_input_redirection(char **cmd, int i);
+void cleanup_pipe_commands(t_pipe_commands *pipe_cmds);
 
 /* Execution functions */
 void	execute(t_data *data);

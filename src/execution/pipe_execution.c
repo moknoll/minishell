@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/14 13:20:07 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/15 07:57:00 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,24 @@ void	execute_pipe_command(char **cmd, t_env *env, t_data *data,
 	int	exit_code;
 
 	if (!process_cmd_redirections(cmd))
-		exit(1);
-	if (!cmd[0])
-		exit(0);
+	{
+		cleanup_pipe_commands(pipe_cmds);
+		free_all_and_exit(1, env, data);
+	}
+	if (!cmd[0] || !cmd[0][0])
+	{
+		cleanup_pipe_commands(pipe_cmds);
+		free_all_and_exit(127, env, data);
+	}
 	if (is_builtin(cmd[0]))
 	{
 		if (ft_strcmp(cmd[0], "exit") == 0)
-			exit(0);
+		{
+			cleanup_pipe_commands(pipe_cmds);
+			free_all_and_exit(0, env, data);
+		}
 		exit_code = handle_builtin(cmd, &env, data);
-		free_commands(pipe_cmds->commands);
-		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->command_count);
-		free(pipe_cmds->pids);
+		cleanup_pipe_commands(pipe_cmds);
 		free_all_and_exit(exit_code, env, data);
 	}
 	else
@@ -113,4 +120,14 @@ char	**create_command_from_args(char **args, int start, int end)
 	}
 	command[arg_index] = NULL;
 	return (command);
+}
+
+void cleanup_pipe_commands(t_pipe_commands *pipe_cmds)
+{
+	if (pipe_cmds->commands)
+		free_commands(pipe_cmds->commands);
+	if (pipe_cmds->pipes)
+		cleanup_pipes(pipe_cmds->pipes, pipe_cmds->command_count);
+	if (pipe_cmds->pids)
+		free(pipe_cmds->pids);
 }
