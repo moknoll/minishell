@@ -6,7 +6,7 @@
 /*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/12 17:45:22 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/16 11:11:25 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static void	process_command_line(t_data *data)
 		{
 			print_error("", "command not found");
 			ft_free_tab(data->args);
+			g_exit_status = 127;
 			return ;
 		}
 		execute(data);
