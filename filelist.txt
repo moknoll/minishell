@@ -1,0 +1,11 @@
+total 124
+-rw-r--r-- 1 mknoll 2024_mulhouse      0 août  16 13:31 file1
+-rw-r--r-- 1 mknoll 2024_mulhouse      0 août  16 14:31 filelist.txt
+drwxr-xr-x 2 mknoll 2024_mulhouse     25 août  16 13:31 includes
+drwxr-xr-x 2 mknoll 2024_mulhouse   4096 août  16 13:34 libft
+-rw-r--r-- 1 mknoll 2024_mulhouse   2694 août  16 13:30 Makefile
+-rwxr-xr-x 1 mknoll 2024_mulhouse 104768 août  16 13:34 minishell
+drwxr-xr-x 3 mknoll 2024_mulhouse     17 août  16 13:34 obj
+-rw-r--r-- 1 mknoll 2024_mulhouse     12 août  16 14:31 output.txt
+drwxr-xr-x 7 mknoll 2024_mulhouse    102 août  16 13:31 src
+-rw-r--r-- 1 mknoll 2024_mulhouse     85 août  16 13:30 valgrind.supp

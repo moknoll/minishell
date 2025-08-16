@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/14 13:19:09 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/16 13:32:54 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ void	execute_external_pipe_command(char **cmd, t_env *env,
 	if (execve(path, cmd, env_array) == -1)
 	{
 		print_error(cmd[0], "No such file or directory");
-		exit(127);
+		cleanup_pipe_commands(pipe_cmds);
+		free(path);
+		ft_free_tab(env_array);
+		free_all_and_exit(127, env, data);
 	}
 }
 
