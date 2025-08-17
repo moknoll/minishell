@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_utils.c                                      :+:      :+:    :+:   */
+/*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: radubos <radubos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/04 13:58:33 by radubos          ###   ########.fr       */
+/*   Updated: 2025/08/17 09:12:37 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*expand_variables_and_remove_quotes(char *input, t_env *my_env)
 		else
 			expand_or_append_character(&state);
 	}
-	if (!state.output)
+	if (!state.output) 
 		return (ft_strdup(""));
 	return (state.output);
 }

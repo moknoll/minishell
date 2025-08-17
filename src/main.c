@@ -6,7 +6,7 @@
 /*   By: moritz <moritz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/16 11:11:25 by moritz           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:43:09 by moritz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static void	process_command_line(t_data *data)
 	int		i;
 	char	*expanded;
 
+	i = 0;
 	add_history(data->line);
 	data->args = tokenize(data->line);
 	if (data->args)
