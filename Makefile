@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: radubos <radubos@student.42.fr>            +#+  +:+       +#+         #
+#    By: moritz <moritz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
-#    Updated: 2025/08/11 12:52:11 by radubos          ###   ########.fr        #
+#    Updated: 2025/08/17 10:14:24 by moritz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,10 @@
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -g3
 # Readline includes and libraries (macOS)
-READLINE_DIR = $(shell brew --prefix readline)
-CFLAGS   += -I$(READLINE_DIR)/include
-LDFLAGS  += -L$(READLINE_DIR)/lib
-LDLIBS   += -lreadline -lcurses
+# READLINE_DIR = $(shell brew --prefix readline)
+# CFLAGS   += -I$(READLINE_DIR)/include
+# LDFLAGS  += -L$(READLINE_DIR)/lib
+LDLIBS   = -lreadline 
 #LDLIBS   = -lreadline
 
 # Libraries
