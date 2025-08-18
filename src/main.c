@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/16 13:31:46 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/18 10:15:26 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	is_empty_line(char *line)
 	return (line[i] == '\0');
 }
 
-static void	process_command_line(t_data *data)
+static int	process_command_line(t_data *data)
 {
 	int		i;
 	char	*expanded;
@@ -58,15 +58,13 @@ static void	process_command_line(t_data *data)
 			i++;
 		}
 		if (data->args[0] && data->args[0][0] == '\0')
-		{
-			print_error("", "command not found");
-			ft_free_tab(data->args);
-			g_exit_status = 127;
-			return ;
-		}
+			return (print_error("", "command not found"),
+				ft_free_tab(data->args), g_exit_status = 127, 127);
 		execute(data);
 		ft_free_tab(data->args);
+		return (0);
 	}
+	return (0);
 }
 
 void	minishell_loop(t_env **env)

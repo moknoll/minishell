@@ -3,22 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: moritz <moritz@student.42.fr>              +#+  +:+       +#+         #
+#    By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/25 09:08:41 by radubos           #+#    #+#              #
-#    Updated: 2025/08/17 10:14:24 by moritz           ###   ########.fr        #
+#    Updated: 2025/08/18 10:16:03 by mknoll           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compiler and flags
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -g3
-# Readline includes and libraries (macOS)
-# READLINE_DIR = $(shell brew --prefix readline)
-# CFLAGS   += -I$(READLINE_DIR)/include
-# LDFLAGS  += -L$(READLINE_DIR)/lib
 LDLIBS   = -lreadline 
-#LDLIBS   = -lreadline
 
 # Libraries
 LIBFT_LIB = libft/libft.a

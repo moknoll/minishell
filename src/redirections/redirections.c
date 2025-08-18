@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:00:00 by radubos           #+#    #+#             */
-/*   Updated: 2025/08/14 14:13:48 by mknoll           ###   ########.fr       */
+/*   Updated: 2025/08/18 10:06:19 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	handle_output_redirect(t_data *data, int i, int append)
 	if (fd == -1)
 	{
 		perror(data->args[i + 1]);
-		g_exit_status = 1;;
+		g_exit_status = 1;
 		return (0);
 	}
 	dup2(fd, STDOUT_FILENO);
